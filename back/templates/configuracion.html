@@ -84,6 +84,20 @@
         </div>
     </div>
 
+    <div class="settings-section">
+        <h2><i class="fas fa-key" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span>{{ _("Cambiar contraseña") }}</span></h2>
+        <form action="/configuracion/password" method="POST" class="password-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="pw-actual">{{ _("Contraseña actual") }}</label>
+            <input id="pw-actual" type="password" name="actual" autocomplete="current-password" required>
+            <label for="pw-nueva">{{ _("Nueva contraseña") }}</label>
+            <input id="pw-nueva" type="password" name="nueva" autocomplete="new-password" required minlength="8">
+            <label for="pw-confirmar">{{ _("Confirmar nueva contraseña") }}</label>
+            <input id="pw-confirmar" type="password" name="confirmar" autocomplete="new-password" required minlength="8">
+            <button type="submit" class="btn-sec">{{ _("Actualizar contraseña") }}</button>
+        </form>
+    </div>
+
     <div class="settings-section danger">
         <h2><i class="fas fa-exclamation-triangle" style="margin-right: 12px; color: var(--danger-ink);"></i><span>{{ _("Zona Peligrosa") }}</span></h2>
         <form action="/configuracion/eliminar" method="POST" class="setting-item"

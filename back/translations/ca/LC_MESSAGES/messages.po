@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Resilio \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 16:46+0100\n"
+"POT-Creation-Date: 2026-11-27 17:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ca\n"
@@ -110,6 +110,15 @@ msgstr "Freqüència no vàlida."
 
 msgid "Preferencia de recordatorios guardada."
 msgstr "Preferència de recordatoris desada."
+
+msgid "La contraseña actual no es correcta."
+msgstr "La contrasenya actual no és correcta."
+
+msgid "La nueva contraseña debe ser distinta de la actual."
+msgstr "La contrasenya nova ha de ser diferent de l'actual."
+
+msgid "Contraseña actualizada correctamente."
+msgstr "Contrasenya actualitzada correctament."
 
 msgid "Una cuenta de administrador no se puede eliminar desde aquí."
 msgstr "Un compte d'administrador no es pot eliminar des d'aquí."
@@ -325,6 +334,21 @@ msgstr "Descarrega les teves respostes, puntuacions i consells en JSON"
 
 msgid "Descargar"
 msgstr "Descarregar"
+
+msgid "Cambiar contraseña"
+msgstr "Canviar contrasenya"
+
+msgid "Contraseña actual"
+msgstr "Contrasenya actual"
+
+msgid "Nueva contraseña"
+msgstr "Contrasenya nova"
+
+msgid "Confirmar nueva contraseña"
+msgstr "Confirmar la contrasenya nova"
+
+msgid "Actualizar contraseña"
+msgstr "Actualitzar contrasenya"
 
 msgid "Zona Peligrosa"
 msgstr "Zona Perillosa"

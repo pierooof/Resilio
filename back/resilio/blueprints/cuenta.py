@@ -3,11 +3,12 @@ from datetime import datetime
 
 from flask_babel import gettext as _
 from flask import Blueprint, Response, flash, redirect, render_template, request, session, url_for
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from ..extensions import db
+from ..extensions import db, limiter
 from ..models import Pregunta, TestBorrador, Usuario
 from ..security import login_required
+from .auth import MIN_PASSWORD
 
 bp = Blueprint("cuenta", __name__)
 
@@ -53,6 +54,28 @@ def recordatorio():
     u.recordatorio_semanas = semanas or None
     db.session.commit()
     flash(_("Preferencia de recordatorios guardada."), "success")
+    return redirect(url_for("cuenta.configuracion"))
+
+
+@bp.route("/configuracion/password", methods=["POST"])
+@login_required
+@limiter.limit("5 per hour")  # evita adivinar la contraseña actual con una sesión abierta
+def cambiar_password():
+    u = _usuario()
+    f = request.form
+    nueva = f.get("nueva", "")
+    if not check_password_hash(u.password, f.get("actual", "")):
+        flash(_("La contraseña actual no es correcta."), "error")
+    elif nueva != f.get("confirmar", ""):
+        flash(_("Las contraseñas no coinciden."), "error")
+    elif len(nueva) < MIN_PASSWORD:
+        flash(_("La contraseña debe tener al menos %(n)s caracteres.", n=MIN_PASSWORD), "error")
+    elif check_password_hash(u.password, nueva):
+        flash(_("La nueva contraseña debe ser distinta de la actual."), "error")
+    else:
+        u.password = generate_password_hash(nueva)  # también invalida los enlaces de recuperación pendientes
+        db.session.commit()
+        flash(_("Contraseña actualizada correctamente."), "success")
     return redirect(url_for("cuenta.configuracion"))
 
 

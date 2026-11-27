@@ -243,6 +243,43 @@ def test_eliminar_cuenta_pide_contrasena_y_borra_todo(client):
     assert client.get("/dashboard").headers["Location"].endswith("/login")
 
 
+def test_cambiar_password_valida_y_cambia(client):
+    u = usuario()
+    login(client)
+    url = "/configuracion/password"
+    mal = [
+        {"actual": "equivocada", "nueva": "otra-clave-123", "confirmar": "otra-clave-123"},  # actual incorrecta
+        {"actual": PASS, "nueva": "otra-clave-123", "confirmar": "distinta-123"},            # no coinciden
+        {"actual": PASS, "nueva": "corta", "confirmar": "corta"},                              # muy corta
+        {"actual": PASS, "nueva": PASS, "confirmar": PASS},                                    # igual a la actual
+    ]
+    for datos in mal:
+        client.post(url, data=datos)
+    assert login(client, password=PASS).headers["Location"] == "/dashboard"  # sigue valiendo la vieja
+    client.post(url, data={"actual": PASS, "nueva": "otra-clave-123", "confirmar": "otra-clave-123"})
+    anonimo = client.application.test_client()
+    assert login(anonimo, password=PASS).headers["Location"] == "/login"           # la vieja ya no entra
+    assert login(anonimo, password="otra-clave-123").headers["Location"] == "/dashboard"
+
+
+def test_cambiar_password_invalida_enlaces_de_recuperacion(app, client):
+    usuario()
+    enlace = _enlace_reset(app, client, "u@x.com")
+    login(client)
+    client.post("/configuracion/password", data={"actual": PASS, "nueva": "otra-clave-123", "confirmar": "otra-clave-123"})
+    assert client.get(enlace).status_code == 302  # el token ligado a la contraseña anterior ya no vale
+
+
+def test_cambiar_password_requiere_sesion_y_se_muestra_en_configuracion(client):
+    assert client.post("/configuracion/password", data={}).headers["Location"].endswith("/login")
+    usuario()
+    login(client)
+    html = client.get("/configuracion").get_data(as_text=True)
+    assert 'action="/configuracion/password"' in html and "Cambiar contraseña" in html
+    client.set_cookie("lang", "en")
+    assert "Change password" in client.get("/configuracion").get_data(as_text=True)
+
+
 def test_admin_no_se_elimina_desde_configuracion(client):
     usuario(rol=1, email="admin@x.com")
     login(client, "admin@x.com")

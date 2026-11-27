@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Resilio \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 16:46+0100\n"
+"POT-Creation-Date: 2026-11-27 17:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -110,6 +110,15 @@ msgstr "Invalid frequency."
 
 msgid "Preferencia de recordatorios guardada."
 msgstr "Reminder preference saved."
+
+msgid "La contraseña actual no es correcta."
+msgstr "The current password is incorrect."
+
+msgid "La nueva contraseña debe ser distinta de la actual."
+msgstr "The new password must be different from the current one."
+
+msgid "Contraseña actualizada correctamente."
+msgstr "Password updated successfully."
 
 msgid "Una cuenta de administrador no se puede eliminar desde aquí."
 msgstr "An administrator account cannot be deleted from here."
@@ -325,6 +334,21 @@ msgstr "Download your answers, scores and advice as JSON"
 
 msgid "Descargar"
 msgstr "Download"
+
+msgid "Cambiar contraseña"
+msgstr "Change password"
+
+msgid "Contraseña actual"
+msgstr "Current password"
+
+msgid "Nueva contraseña"
+msgstr "New password"
+
+msgid "Confirmar nueva contraseña"
+msgstr "Confirm new password"
+
+msgid "Actualizar contraseña"
+msgstr "Update password"
 
 msgid "Zona Peligrosa"
 msgstr "Danger Zone"

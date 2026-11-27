@@ -100,3 +100,9 @@
     .toggle input:checked + .toggle-slider:before {
         transform: translateX(24px);
     }
+
+.password-form { display: grid; gap: 8px; max-width: 360px; }
+.password-form label { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+.password-form input { padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-sm);
+                       background: var(--surface-2); color: var(--ink); font: inherit; }
+.password-form button { justify-self: start; margin-top: 10px; }
