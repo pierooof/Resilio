@@ -1,41 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resilio | Registro</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <script>
-        // Aplicar tema antes de cargar
-        (function() {
-            const savedTheme = localStorage.getItem('resilio-theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
-    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
-</head>
+{% block title %}{{ _("Resilio | Registro") }}{% endblock %}
+{% block body_class %}auth-page{% endblock %}
 
-<body class="auth-page">
+{% block body %}
     <aside class="auth-brand" aria-hidden="true">
         <span class="brand-mark">Resilio</span>
         <div class="brand-word">Resilio</div>
-        <div class="brand-foot">BAT-12 · Burnout Assessment Tool</div>
+        <div class="brand-foot">{{ _("BAT-12 · Burnout Assessment Tool") }}</div>
     </aside>
     <main class="auth-main">
-        <div class="language-switcher" role="group" aria-label="Idioma">
-            <button type="button" class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
-            <button type="button" class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
-            <button type="button" class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
-        </div>
+        {% include "_idioma.html" %}
     <div class="login-wrapper">
         <div class="register-card">
             <header class="logo-container">
-                <p class="tagline" data-i18n="tagline">Únete a Resilio y mide tu bienestar mental</p>
+                <p class="tagline">{{ _("Únete a Resilio y mide tu bienestar mental") }}</p>
             </header>
 
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -47,94 +26,60 @@
             {% endwith %}
 
             <form action="/register" method="POST" class="login-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="input-field">
-                    <label for="register-nombre" data-i18n="nombre">Nombre</label>
+                    <label for="register-nombre">{{ _("Nombre") }}</label>
                     <div class="input-icon-wrapper">
                         <i class="fas fa-user" aria-hidden="true"></i>
-                        <input id="register-nombre" autocomplete="given-name" type="text" name="nombre" placeholder="Ej. Piero" required>
+                        <input id="register-nombre" autocomplete="given-name" type="text" name="nombre" placeholder="{{ _('Ej. Piero') }}" required>
                     </div>
                 </div>
 
                 <div class="input-field">
-                    <label for="register-apellidos" data-i18n="apellidos">Apellidos</label>
+                    <label for="register-apellidos">{{ _("Apellidos") }}</label>
                     <div class="input-icon-wrapper">
                         <i class="fas fa-users" aria-hidden="true"></i>
-                        <input id="register-apellidos" autocomplete="family-name" type="text" name="apellidos" placeholder="Ej. Funes Larios">
+                        <input id="register-apellidos" autocomplete="family-name" type="text" name="apellidos" placeholder="{{ _('Ej. Funes Larios') }}">
                     </div>
                 </div>
 
                 <div class="input-field">
-                    <label for="register-email" data-i18n="email">Email</label>
+                    <label for="register-email">{{ _("Email") }}</label>
                     <div class="input-icon-wrapper">
                         <i class="fas fa-at" aria-hidden="true"></i>
-                        <input id="register-email" autocomplete="email" type="email" name="email" placeholder="usuario@resilio.com" required>
+                        <input id="register-email" autocomplete="email" type="email" name="email" placeholder="{{ _('usuario@resilio.com') }}" required>
                     </div>
                 </div>
 
                 <div class="input-field">
-                    <label for="register-password" data-i18n="contrasena">Contraseña</label>
+                    <label for="register-password">{{ _("Contraseña") }}</label>
                     <div class="input-icon-wrapper">
                         <i class="fas fa-lock" aria-hidden="true"></i>
-                        <input id="register-password" autocomplete="new-password" type="password" name="password" placeholder="Mínimo 8 caracteres" required minlength="8">
+                        <input id="register-password" autocomplete="new-password" type="password" name="password" placeholder="{{ _('Mínimo 8 caracteres') }}" required minlength="8">
                     </div>
                 </div>
                 <div class="input-field">
-                    <label for="register-codigo_empresa" data-i18n="codigoEmpresa">Código de Empresa (Opcional)</label>
+                    <label for="register-codigo_empresa">{{ _("Código de Empresa (Opcional)") }}</label>
                     <div class="input-icon-wrapper">
                         <i class="fas fa-building" aria-hidden="true"></i>
-                        <input id="register-codigo_empresa" autocomplete="off" type="text" name="codigo_empresa" placeholder="Ej. ACME-HR-2026">
+                        <input id="register-codigo_empresa" autocomplete="off" type="text" name="codigo_empresa" placeholder="{{ _('Ej. ACME-HR-2026') }}">
                     </div>
-                    <small style="color: var(--muted); font-size: 0.75rem; display: block; margin-top: 6px;" data-i18n="codigoAyuda">Déjalo en blanco si eres usuario personal</small>
+                    <small style="color: var(--muted); font-size: 0.75rem; display: block; margin-top: 6px;">{{ _("Déjalo en blanco si eres usuario personal") }}</small>
                 </div>
 
-                <button type="submit" class="btn-primary" data-i18n="crearCuenta">Crear Cuenta</button>
+                <label style="display: flex; gap: 10px; align-items: flex-start; margin: 12px 0; font-size: 0.85rem;">
+                    <input type="checkbox" name="acepto" value="1" style="margin-top: 3px;">
+                    <span>{{ _("Acepto que Resilio guarde mis respuestas del test BAT-12 y mis puntuaciones (podrás exportarlos o borrarlos desde Configuración). Si no lo marcas ahora, te lo preguntaremos antes de tu primer test.") }}</span>
+                </label>
+
+                <button type="submit" class="btn-primary">{{ _("Crear Cuenta") }}</button>
 
                 <div class="form-footer">
-                    <a href="/login" data-i18n="yaTienesCuenta">¿Ya tienes cuenta? Inicia sesión aquí</a>
+                    <a href="/login">{{ _("¿Ya tienes cuenta? Inicia sesión aquí") }}</a>
                 </div>
             </form>
         </div>
     </div>
     </main>
 
-    <script>
-        // Textos de esta página (el motor está en static/js/i18n.js)
-        Resilio.i18n.add({
-            "es": {
-                "tagline": "Únete a Resilio y mide tu bienestar mental",
-                "nombre": "Nombre",
-                "apellidos": "Apellidos",
-                "email": "Email",
-                "contrasena": "Contraseña",
-                "codigoEmpresa": "Código de Empresa (Opcional)",
-                "codigoAyuda": "Déjalo en blanco si eres usuario personal",
-                "crearCuenta": "Crear Cuenta",
-                "yaTienesCuenta": "¿Ya tienes cuenta? Inicia sesión aquí"
-            },
-            "en": {
-                "tagline": "Join Resilio and measure your mental wellbeing",
-                "nombre": "Name",
-                "apellidos": "Surname",
-                "email": "Email",
-                "contrasena": "Password",
-                "codigoEmpresa": "Company Code (Optional)",
-                "codigoAyuda": "Leave blank if you are a personal user",
-                "crearCuenta": "Create Account",
-                "yaTienesCuenta": "Already have an account? Sign in here"
-            },
-            "ca": {
-                "tagline": "Uneix-te a Resilio i mesura el teu benestar mental",
-                "nombre": "Nom",
-                "apellidos": "Cognoms",
-                "email": "Email",
-                "contrasena": "Contrasenya",
-                "codigoEmpresa": "Codi d'Empresa (Opcional)",
-                "codigoAyuda": "Deixa-ho en blanc si ets usuari personal",
-                "crearCuenta": "Crear Comptee",
-                "yaTienesCuenta": "Ja tens compte? Inicia sessió aquí"
-            }
-        });
-    </script>
-</body>
-
-</html>
+{% endblock %}

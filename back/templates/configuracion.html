@@ -1,26 +1,27 @@
 {% extends "layout.html" %}
+{% block head_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/paginas/configuracion.css') }}">{% endblock %}
 
 {% block content %}
 <div class="welcome-section">
-    <h1 data-i18n="configuracion">Configuracion</h1>
-    <p data-i18n="configDesc">Personaliza tu experiencia en Resilio.</p>
+    <h1>{{ _("Configuracion") }}</h1>
+    <p>{{ _("Personaliza tu experiencia en Resilio.") }}</p>
 </div>
 
 <div class="settings-container">
     <div class="settings-section">
-        <h2><i class="fas fa-palette" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span data-i18n="apariencia">Apariencia</span></h2>
+        <h2><i class="fas fa-palette" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span>{{ _("Apariencia") }}</span></h2>
         
         <div class="setting-item">
             <div class="setting-info">
-                <span class="setting-title" data-i18n="temaColor">Tema de color</span>
-                <span class="setting-desc" data-i18n="temaDesc">Elige entre modo oscuro o claro</span>
+                <span class="setting-title">{{ _("Tema de color") }}</span>
+                <span class="setting-desc">{{ _("Elige entre modo oscuro o claro") }}</span>
             </div>
             <div class="theme-switcher">
                 <button type="button" class="theme-btn active" data-theme="dark" onclick="setTheme('dark')">
-                    <i class="fas fa-moon"></i> <span data-i18n="oscuro">Oscuro</span>
+                    <i class="fas fa-moon"></i> <span>{{ _("Oscuro") }}</span>
                 </button>
                 <button type="button" class="theme-btn" data-theme="light" onclick="setTheme('light')">
-                    <i class="fas fa-sun"></i> <span data-i18n="claro">Claro</span>
+                    <i class="fas fa-sun"></i> <span>{{ _("Claro") }}</span>
                 </button>
             </div>
         </div>
@@ -28,353 +29,76 @@
     
     
     <div class="settings-section">
-        <h2><i class="fas fa-user" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span data-i18n="cuenta">Cuenta</span></h2>
+        <h2><i class="fas fa-user" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span>{{ _("Cuenta") }}</span></h2>
         
         <div class="setting-item">
             <div class="setting-info">
-                <span class="setting-title" data-i18n="nombre">Nombre</span>
+                <span class="setting-title">{{ _("Nombre") }}</span>
                 <span class="setting-desc">{{ session['nombre'] }}</span>
             </div>
         </div>
         
         <div class="setting-item">
             <div class="setting-info">
-                <span class="setting-title">Email</span>
-                <span class="setting-desc">{{ session.get('email', 'No disponible') }}</span>
+                <span class="setting-title">{{ _("Email") }}</span>
+                <span class="setting-desc">{{ usuario.email }}</span>
             </div>
         </div>
         
         <div class="setting-item">
             <div class="setting-info">
-                <span class="setting-title" data-i18n="tipoCuenta">Tipo de cuenta</span>
+                <span class="setting-title">{{ _("Tipo de cuenta") }}</span>
                 <span class="setting-desc">
-                    {% if session['rol'] == 1 %}<span data-i18n="admin">Administrador</span>{% elif session['rol'] == 2 %}<span data-i18n="rrhh">Recursos Humanos</span>{% elif session['rol'] == 3 %}<span data-i18n="usuarioPersonal">Usuario Personal</span>{% else %}<span data-i18n="empleado">Empleado</span>{% endif %}
+                    {% if session['rol'] == 1 %}<span>{{ _("Administrador") }}</span>{% elif session['rol'] == 2 %}<span>{{ _("Recursos Humanos") }}</span>{% elif session['rol'] == 3 %}<span>{{ _("Usuario Personal") }}</span>{% else %}<span>{{ _("Empleado") }}</span>{% endif %}
                 </span>
             </div>
         </div>
     </div>
     
     <div class="settings-section">
-        <h2><i class="fas fa-bell" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span data-i18n="notificaciones">Notificaciones</span></h2>
-        
+        <h2><i class="fas fa-bell" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span>{{ _("Notificaciones") }}</span></h2>
+        <form action="/configuracion/recordatorio" method="POST" class="setting-item">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="setting-info">
+                <label class="setting-title" for="semanas">{{ _("Recordatorios de evaluacion") }}</label>
+                <span class="setting-desc">{{ _("Recibe recordatorios para evaluar tu bienestar") }}</span>
+            </div>
+            <select id="semanas" name="semanas">
+                <option value="0" {% if not usuario.recordatorio_semanas %}selected{% endif %}>{{ _("No recordarme") }}</option>
+                {% for w in cadencias %}
+                <option value="{{ w }}" {% if usuario.recordatorio_semanas == w %}selected{% endif %} >{{ _("Cada %(n)s semanas", n=w) }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn-sec">{{ _("Guardar") }}</button>
+        </form>
+    </div>
+
+    <div class="settings-section">
+        <h2><i class="fas fa-file-export" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span>{{ _("Mis datos") }}</span></h2>
         <div class="setting-item">
             <div class="setting-info">
-                <span class="setting-title" data-i18n="recordatorios">Recordatorios de evaluacion</span>
-                <span class="setting-desc" data-i18n="recordatoriosDesc">Recibe recordatorios para evaluar tu bienestar</span>
+                <span class="setting-title">{{ _("Exportar mis datos") }}</span>
+                <span class="setting-desc">{{ _("Descarga tus respuestas, puntuaciones y consejos en JSON") }}</span>
             </div>
-            <label class="toggle">
-                <input type="checkbox" checked>
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-        
-        <div class="setting-item">
-            <div class="setting-info">
-                <span class="setting-title" data-i18n="notifEmail">Notificaciones por email</span>
-                <span class="setting-desc" data-i18n="notifEmailDesc">Recibe actualizaciones sobre tu progreso</span>
-            </div>
-            <label class="toggle">
-                <input type="checkbox">
-                <span class="toggle-slider"></span>
-            </label>
+            <a class="btn-sec" href="/configuracion/exportar">{{ _("Descargar") }}</a>
         </div>
     </div>
-    
+
     <div class="settings-section danger">
-        <h2><i class="fas fa-exclamation-triangle" style="margin-right: 12px; color: var(--danger-ink);"></i><span data-i18n="zonaPeligrosa">Zona Peligrosa</span></h2>
-        
-        <div class="setting-item">
+        <h2><i class="fas fa-exclamation-triangle" style="margin-right: 12px; color: var(--danger-ink);"></i><span>{{ _("Zona Peligrosa") }}</span></h2>
+        <form action="/configuracion/eliminar" method="POST" class="setting-item"
+              onsubmit="return confirm({{ _('¿Seguro? Se borrarán tu cuenta y todos tus datos y no se puede deshacer.')|tojson|forceescape }});">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="setting-info">
-                <span class="setting-title" data-i18n="eliminarCuenta">Eliminar cuenta</span>
-                <span class="setting-desc" data-i18n="eliminarCuentaDesc">Elimina permanentemente tu cuenta y todos tus datos</span>
+                <label class="setting-title" for="pw-eliminar">{{ _("Eliminar cuenta") }}</label>
+                <span class="setting-desc">{{ _("Elimina permanentemente tu cuenta y todos tus datos") }}</span>
             </div>
-            <button class="btn-danger"><span data-i18n="eliminar">Eliminar Cuenta</span></button>
-        </div>
+            <input id="pw-eliminar" type="password" name="password" autocomplete="current-password" required>
+            <button type="submit" class="btn-danger"><span>{{ _("Eliminar Cuenta") }}</span></button>
+        </form>
     </div>
 </div>
 
-<style>
-    .settings-container {
-        max-width: 800px;
-    }
-    
-    .settings-section {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: var(--r);
-        padding: 24px;
-        margin-bottom: 24px;
-    }
-    
-    .settings-section h2 {
-        font-size: var(--t2);
-        letter-spacing: -0.025em;
-        margin-bottom: 20px;
-        color: var(--ink);
-    }
-    
-    .settings-section.danger {
-        border-color: var(--danger-dim);
-    }
-    
-    .settings-section.danger {
-        border-color: var(--danger);
-    }
 
-    .settings-section.danger h2 {
-        color: var(--danger-ink);
-    }
-    
-    .setting-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 0;
-        border-bottom: 1px solid var(--line);
-    }
-    
-    .setting-item:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-    
-    .setting-item:first-of-type {
-        padding-top: 0;
-    }
-    
-    .setting-info {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-    
-    .setting-title {
-        font-weight: 600;
-        color: var(--ink);
-    }
-    
-    .setting-desc {
-        font-size: 0.85rem;
-        color: var(--muted);
-    }
-    
-    .theme-switcher {
-        display: flex;
-        gap: 10px;
-    }
-    
-    .theme-btn {
-        padding: 10px 20px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        background: transparent;
-        color: var(--muted);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .theme-btn:hover {
-        border-color: var(--accent-ink);
-        color: var(--ink);
-    }
-    
-    .theme-btn.active {
-        background: var(--accent);
-        color: var(--on-accent);
-        border-color: var(--accent-ink);
-    }
-    
-    .language-select {
-        padding: 10px 16px;
-        border-radius: 10px;
-        border: 1px solid var(--line);
-        background: var(--ground);
-        color: var(--ink);
-        cursor: pointer;
-        min-width: 150px;
-    }
-    
-    .language-select:focus {
-        outline: none;
-        border-color: var(--accent-ink);
-    }
-    
-    .toggle {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 26px;
-    }
-    
-    .toggle input {
-        position: absolute;
-        opacity: 0;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        cursor: pointer;
-        z-index: 1;
-    }
-    
-    .toggle-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: var(--fill-3);
-        transition: background-color 0.3s var(--ease);
-        border-radius: 34px;
-    }
-    
-    .toggle-slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 4px;
-        bottom: 4px;
-        background-color: #fff;
-        transition: transform 0.3s var(--ease);
-        border-radius: 50%;
-    }
-    
-    .toggle input:focus-visible + .toggle-slider {
-        outline: 2px solid var(--accent-ink);
-        outline-offset: 3px;
-    }
 
-    .toggle input:checked + .toggle-slider {
-        background-color: var(--accent);
-    }
-    
-    .toggle input:checked + .toggle-slider:before {
-        transform: translateX(24px);
-    }
-    
-    .btn-danger {
-        padding: 10px 20px;
-        border: 1px solid var(--danger-ink);
-        border-radius: 10px;
-        background: transparent;
-        color: var(--danger-ink);
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-danger:hover {
-        background: var(--danger);
-        color: white;
-    }
-</style>
-
-<script>
-    // Textos de esta página (el motor está en static/js/i18n.js)
-    Resilio.i18n.add({
-        "es": {
-            "configuracion": "Configuracion",
-            "configDesc": "Personaliza tu experiencia en Resilio.",
-            "apariencia": "Apariencia",
-            "temaColor": "Tema de color",
-            "temaDesc": "Elige entre modo oscuro o claro",
-            "oscuro": "Oscuro",
-            "claro": "Claro",
-            "idioma": "Idioma",
-            "idiomaInterfaz": "Idioma de la interfaz",
-            "idiomaDesc": "Selecciona el idioma preferido",
-            "cuenta": "Cuenta",
-            "nombre": "Nombre",
-            "tipoCuenta": "Tipo de cuenta",
-            "admin": "Administrador",
-            "rrhh": "Recursos Humanos",
-            "usuarioPersonal": "Usuario Personal",
-            "empleado": "Empleado",
-            "notificaciones": "Notificaciones",
-            "recordatorios": "Recordatorios de evaluacion",
-            "recordatoriosDesc": "Recibe recordatorios para evaluar tu bienestar",
-            "notifEmail": "Notificaciones por email",
-            "notifEmailDesc": "Recibe actualizaciones sobre tu progreso",
-            "zonaPeligrosa": "Zona Peligrosa",
-            "eliminarCuenta": "Eliminar cuenta",
-            "eliminarCuentaDesc": "Elimina permanentemente tu cuenta y todos tus datos",
-            "eliminar": "Eliminar Cuenta",
-            "inicio": "Inicio",
-            "realizarTest": "Realizar Test",
-            "historial": "Historial",
-            "cerrarSesion": "Cerrar Sesion",
-            "hola": "Hola"
-        },
-        "en": {
-            "configuracion": "Settings",
-            "configDesc": "Customize your Resilio experience.",
-            "apariencia": "Appearance",
-            "temaColor": "Color theme",
-            "temaDesc": "Choose between dark or light mode",
-            "oscuro": "Dark",
-            "claro": "Light",
-            "idioma": "Language",
-            "idiomaInterfaz": "Interface language",
-            "idiomaDesc": "Select your preferred language",
-            "cuenta": "Account",
-            "nombre": "Name",
-            "tipoCuenta": "Account type",
-            "admin": "Administrator",
-            "rrhh": "Human Resources",
-            "usuarioPersonal": "Personal User",
-            "empleado": "Employee",
-            "notificaciones": "Notifications",
-            "recordatorios": "Evaluation reminders",
-            "recordatoriosDesc": "Receive reminders to evaluate your well-being",
-            "notifEmail": "Email notifications",
-            "notifEmailDesc": "Receive updates about your progress",
-            "zonaPeligrosa": "Danger Zone",
-            "eliminarCuenta": "Delete account",
-            "eliminarCuentaDesc": "Permanently delete your account and all your data",
-            "eliminar": "Delete Account",
-            "inicio": "Home",
-            "realizarTest": "Take Test",
-            "historial": "History",
-            "cerrarSesion": "Logout",
-            "hola": "Hello"
-        },
-        "ca": {
-            "configuracion": "Configuracio",
-            "configDesc": "Personalitza la teva experiencia a Resilio.",
-            "apariencia": "Aparencia",
-            "temaColor": "Tema de color",
-            "temaDesc": "Tria entre mode fosc o clar",
-            "oscuro": "Fosc",
-            "claro": "Clar",
-            "idioma": "Idioma",
-            "idiomaInterfaz": "Idioma de la interfície",
-            "idiomaDesc": "Selecciona l'idioma preferit",
-            "cuenta": "Compte",
-            "nombre": "Nom",
-            "tipoCuenta": "Tipus de compte",
-            "admin": "Administrador",
-            "rrhh": "Recursos Humans",
-            "usuarioPersonal": "Usuari Personal",
-            "empleado": "Empleat",
-            "notificaciones": "Notificacions",
-            "recordatorios": "Recordatoris d'avaluacio",
-            "recordatoriosDesc": "Rep recordatoris per avaluar el teu benestar",
-            "notifEmail": "Notificacions per email",
-            "notifEmailDesc": "Rep actualitzacions sobre el teu progrés",
-            "zonaPeligrosa": "Zona Perillosa",
-            "eliminarCuenta": "Eliminar compte",
-            "eliminarCuentaDesc": "Elimina permanentment el teu compte i totes les teves dades",
-            "eliminar": "Eliminar Compte",
-            "inicio": "Inici",
-            "realizarTest": "Fer Test",
-            "historial": "Historial",
-            "cerrarSesion": "Tancar Sessio",
-            "hola": "Hola"
-        }
-    });
-</script>
 {% endblock %}

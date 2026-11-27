@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1>{{ _("Antes de empezar") }}</h1>
+    <p>{{ _("Para hacer el test necesitamos tu consentimiento para tratar tus respuestas.") }}</p>
+</div>
+
+<div class="settings-section" style="max-width: 760px;">
+    {# Texto orientativo: revisar con asesoría legal antes de uso en producción. #}
+    <ul style="line-height: 1.7; margin: 0 0 20px 20px;">
+        <li>{{ _("Guardamos tus respuestas al test BAT-12, tus puntuaciones y los consejos generados.") }}</li>
+        <li>{{ _("Para generar los consejos pueden enviarse a Google Gemini tu puntuación y las medias por dimensión, sin tu nombre.") }}</li>
+        <li>{{ _("Si te registraste con un código de empresa, su equipo de RR. HH. solo ve datos agregados, no tus respuestas con tu nombre. Los administradores de la plataforma sí pueden ver tus datos para mantener el servicio.") }}</li>
+        <li>{{ _("Resilio es una herramienta de cribado, no un diagnóstico médico.") }}</li>
+        <li>{{ _("Puedes exportar tus datos o eliminar tu cuenta cuando quieras desde Configuración.") }}</li>
+    </ul>
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 20px;">
+            <input type="checkbox" name="acepto" value="1" required style="margin-top: 5px;">
+            <span>{{ _("Acepto el tratamiento de mis datos tal y como se describe arriba.") }}</span>
+        </label>
+        <button type="submit" class="btn-primary">{{ _("Aceptar y continuar") }}</button>
+    </form>
+</div>
+
+{% endblock %}

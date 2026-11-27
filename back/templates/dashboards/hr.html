@@ -1,321 +1,169 @@
 {% extends "layout.html" %}
+{% block head_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/paginas/hr.css') }}">{% endblock %}
 {% block head_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
 {% endblock %}
 
-{% block title %}Dashboard HR{% endblock %}
+{% block title %}{{ _("Dashboard HR") }}{% endblock %}
 
 {% block content %}
 <div class="dashboard-content hr-dashboard">
     <div class="page-header">
         <div>
-            <h1>Panel de Recursos Humanos</h1>
+            <h1>{{ _("Panel de Recursos Humanos") }}</h1>
             <p class="page-subtitle">
-                Vista agregada y anónima de la empresa
-                {% if session.get("nombre_empresa") %}
-                    <strong>{{ session["nombre_empresa"] }}</strong>
-                {% endif %}
+                {{ _("Vista agregada y anónima de la empresa") }}
+                {% if empresa %}<strong>{{ empresa.nombre }}</strong>{% endif %}
             </p>
+        </div>
+        <div class="hr-actions no-print">
+            <nav class="periodo-nav" aria-label="{{ _('Periodo') }}">
+                {% for m in periodos %}
+                <a href="?periodo={{ m }}" class="{% if m == periodo %}active{% endif %}" {% if m == periodo %}aria-current="true"{% endif %}>
+                    {{ _('%(n)s meses', n=m) if m else _('Todo') }}</a>
+                {% endfor %}
+            </nav>
+            <a class="btn-sec" href="/hr/exportar_csv?periodo={{ periodo }}"><i class="fas fa-file-csv" aria-hidden="true"></i> CSV</a>
+            <button type="button" class="btn-sec" onclick="window.print()"><i class="fas fa-print" aria-hidden="true"></i> {{ _("Imprimir / PDF") }}</button>
         </div>
     </div>
 
+    {% if alerta %}
+    <div class="hr-alert" role="alert">
+        <i class="fas fa-bell" aria-hidden="true"></i>
+        <span>{{ _("<strong>%(pct)s%%</strong> de los empleados evaluados está en riesgo alto, por encima de vuestro umbral de alerta (%(umbral)s%%).", pct=d.pct_riesgo_alto, umbral=empresa.umbral_alerta_pct)|safe }}</span>
+    </div>
+    {% endif %}
+
+    {% if not d.suficiente %}
+    <div class="hr-panel-card hr-aviso">
+        <p><strong>{{ _("Aún no hay datos suficientes para mostrar resultados agregados.") }}</strong></p>
+        <p>{{ _("Para proteger el anonimato solo se muestran datos cuando al menos %(k)s empleados han hecho el test en el periodo elegido. Ahora hay %(n)s de %(total)s empleados registrados.", k=K, n=d.n_evaluados, total=d.total_empleados) }}</p>
+    </div>
+    {% else %}
     <section class="stats-grid">
         <article class="stat-card">
             <div class="stat-icon green"><i class="fas fa-users"></i></div>
-            <span class="stat-label">Empleados</span>
-            <strong class="stat-value">{{ stats.total_empleados }}</strong>
-        </article>
-        <article class="stat-card">
-            <div class="stat-icon green"><i class="fas fa-clipboard-check"></i></div>
-            <span class="stat-label">Evaluaciones</span>
-            <strong class="stat-value">{{ stats.total_evaluaciones }}</strong>
+            <span class="stat-label">{{ _("Empleados evaluados") }}</span>
+            <strong class="stat-value">{{ d.n_evaluados }} <small>/ {{ d.total_empleados }}</small></strong>
         </article>
         <article class="stat-card">
             <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
-            <span class="stat-label">Riesgo alto</span>
-            <strong class="stat-value">{{ stats.empleados_riesgo_alto }}</strong>
+            <span class="stat-label">{{ _("Riesgo alto") }}</span>
+            <strong class="stat-value">{{ d.empleados_riesgo_alto }}</strong>
         </article>
         <article class="stat-card">
             <div class="stat-icon yellow"><i class="fas fa-chart-pie"></i></div>
-            <span class="stat-label">% riesgo alto</span>
-            <strong class="stat-value">{{ stats.pct_riesgo_alto }}%</strong>
+            <span class="stat-label">{{ _("%% riesgo alto") }}</span>
+            <strong class="stat-value">{{ d.pct_riesgo_alto }}%</strong>
+        </article>
+        <article class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-bullseye"></i></div>
+            <span class="stat-label">{{ _("Dimensión más afectada") }}</span>
+            <strong class="stat-value stat-text">{{ d.dim_max.nombre }} <small>{{ d.dim_max.valor }}</small></strong>
         </article>
     </section>
 
     <section class="charts-grid">
         <article class="hr-panel-card">
-            <div class="hr-panel-header">
-                <h2>Tendencia mensual</h2>
-            </div>
-            <div class="chart-wrap">
-                <canvas id="trendChart"></canvas>
-            </div>
+            <div class="hr-panel-header"><h2>{{ _("Tendencia mensual") }}</h2></div>
+            <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+            {% if not tendencia_mensual %}<p class="empty-cell">{{ _("Aún no hay meses con %(k)s o más empleados evaluados.", k=K) }}</p>{% endif %}
         </article>
-
         <article class="hr-panel-card">
-            <div class="hr-panel-header">
-                <h2>Distribución de riesgo</h2>
-            </div>
-            <div class="chart-wrap doughnut-wrap">
-                <canvas id="riskChart"></canvas>
-            </div>
+            <div class="hr-panel-header"><h2>{{ _("Distribución de riesgo") }}</h2></div>
+            <div class="chart-wrap doughnut-wrap"><canvas id="riskChart"></canvas></div>
         </article>
     </section>
 
     <section class="tables-grid">
         <article class="hr-panel-card">
-            <div class="hr-panel-header">
-                <h2>Promedios BAT-12</h2>
-            </div>
+            <div class="hr-panel-header"><h2>{{ _("Promedios BAT-12") }}</h2></div>
             <div class="metrics-list">
-                <div class="metric-item">
-                    <span>Media global</span>
-                    <strong>{{ medias.media_global or 0 }}</strong>
-                </div>
-                <div class="metric-item">
-                    <span>Agotamiento</span>
-                    <strong>{{ medias.agotamiento or 0 }}</strong>
-                </div>
-                <div class="metric-item">
-                    <span>Distanciamiento</span>
-                    <strong>{{ medias.distanciamiento or 0 }}</strong>
-                </div>
-                <div class="metric-item">
-                    <span>Deterioro cognitivo</span>
-                    <strong>{{ medias.cognitivo or 0 }}</strong>
-                </div>
-                <div class="metric-item">
-                    <span>Deterioro emocional</span>
-                    <strong>{{ medias.emocional or 0 }}</strong>
-                </div>
+                <div class="metric-item"><span>{{ _("Media global") }}</span><strong>{{ d.medias.media_global }}</strong></div>
+                <div class="metric-item"><span>{{ _("Agotamiento") }}</span><strong>{{ d.medias.agotamiento }}</strong></div>
+                <div class="metric-item"><span>{{ _("Distanciamiento") }}</span><strong>{{ d.medias.distanciamiento }}</strong></div>
+                <div class="metric-item"><span>{{ _("Deterioro cognitivo") }}</span><strong>{{ d.medias.cognitivo }}</strong></div>
+                <div class="metric-item"><span>{{ _("Deterioro emocional") }}</span><strong>{{ d.medias.emocional }}</strong></div>
             </div>
         </article>
 
         <article class="hr-panel-card">
-            <div class="hr-panel-header">
-                <h2>Departamentos</h2>
-            </div>
+            <div class="hr-panel-header"><h2>{{ _("Departamentos") }}</h2></div>
             <div class="table-wrap">
                 <div class="table-scroll"><table class="resilio-table">
-                    <thead>
-                        <tr>
-                            <th>Departamento</th>
-                            <th>Empleados</th>
-                            <th>Evaluaciones</th>
-                            <th>Media global</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>{{ _("Departamento") }}</th><th>{{ _("Empleados") }}</th><th>{{ _("Evaluaciones") }}</th><th>{{ _("Media global") }}</th></tr></thead>
                     <tbody>
-                        {% if departamentos %}
-                            {% for depto in departamentos %}
-                            <tr>
-                                <td>{{ depto.departamento }}</td>
-                                <td>{{ depto.empleados }}</td>
-                                <td>{{ depto.evaluaciones }}</td>
-                                <td>{{ depto.media_global if depto.media_global is not none else "—" }}</td>
-                            </tr>
-                            {% endfor %}
+                        {% for depto in d.departamentos %}
+                        <tr>
+                            <td>{{ depto.departamento }}</td>
+                            <td>{{ depto.empleados }}</td>
+                            <td>{{ depto.evaluaciones if depto.evaluaciones is not none else "—" }}</td>
+                            <td>{{ depto.media_global if depto.media_global is not none else "—" }}</td>
+                        </tr>
                         {% else %}
-                            <tr>
-                                <td colspan="4" class="empty-cell">No hay datos disponibles.</td>
-                            </tr>
-                        {% endif %}
+                        <tr><td colspan="4" class="empty-cell">{{ _("No hay datos disponibles.") }}</td></tr>
+                        {% endfor %}
                     </tbody>
                 </table></div>
+                <p class="nota-k">{{ _("Los grupos con menos de %(k)s empleados evaluados se agrupan en «Otros grupos» para proteger el anonimato.", k=K) }}</p>
             </div>
         </article>
     </section>
+    {% endif %}
 
-    <section class="tables-grid">
-        <article class="hr-panel-card">
-            <div class="hr-panel-header">
-                <h2>Evaluaciones recientes</h2>
+    <section class="hr-panel-card no-print">
+        <div class="hr-panel-header"><h2>{{ _("Acceso y avisos") }}</h2></div>
+        <div class="hr-gestion">
+            <h3>{{ _("Códigos de registro") }}</h3>
+            <p class="nota-k">{{ _("Quien se registra con un código entra en su empresa (y en el departamento del código, si lo tiene).") }}</p>
+            <div class="codigo-fila">
+                <span>{{ _("Código general de la empresa:") }} <code>{{ empresa.codigo_registro or '—' }}</code>
+                    {% if empresa.codigo_expira %}{{ _("· caduca el %(fecha)s", fecha=empresa.codigo_expira.strftime('%d/%m/%Y')) }}
+                    {% if empresa.codigo_expira < hoy %}<strong class="caducado">{{ _("(caducado)") }}</strong>{% endif %}{% else %}{{ _("· no caduca") }}{% endif %}</span>
+                <form action="/hr/codigo_empresa" method="POST" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <label>{{ _("Caduca en (días, 0 = nunca)") }} <input type="number" name="dias" min="0" max="365" value="0"></label>
+                    <button type="submit" class="btn-sec">{{ _("Guardar") }}</button>
+                </form>
             </div>
-            <div class="table-wrap">
-                <div class="table-scroll"><table class="resilio-table">
-                    <thead>
-                        <tr>
-                            <th>Empleado</th>
-                            <th>Fecha</th>
-                            <th>Puntuación global</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if evaluaciones_recientes %}
-                            {% for ev in evaluaciones_recientes %}
-                            <tr>
-                                <td>{{ ev.alias }}</td>
-                                <td>{{ ev.fecha }}</td>
-                                <td>{{ ev.puntuacion_total }}</td>
-                            </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr>
-                                <td colspan="3" class="empty-cell">Aún no hay evaluaciones registradas.</td>
-                            </tr>
-                        {% endif %}
-                    </tbody>
-                </table></div>
+            {% for dep in gestion %}
+            <div class="codigo-fila">
+                <span><strong>{{ dep.nombre }}</strong> ·
+                    {% if dep.codigo_registro %}<code>{{ dep.codigo_registro }}</code>
+                        {% if dep.codigo_expira %}{{ _("· caduca el %(fecha)s", fecha=dep.codigo_expira.strftime('%d/%m/%Y')) }}
+                        {% if dep.codigo_expira < hoy %}<strong class="caducado">{{ _("(caducado)") }}</strong>{% endif %}{% else %}{{ _("· no caduca") }}{% endif %}
+                    {% else %}{{ _("sin código") }}{% endif %}</span>
+                <form action="/hr/departamentos/{{ dep.id }}/codigo" method="POST" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <label>{{ _("Caduca en (días, 0 = nunca)") }} <input type="number" name="dias" min="0" max="365" value="0"></label>
+                    <button type="submit" class="btn-sec">{{ _('Nuevo código') if dep.codigo_registro else _('Generar código') }}</button>
+                </form>
+                {% if dep.codigo_registro %}
+                <form action="/hr/departamentos/{{ dep.id }}/codigo/revocar" method="POST" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn-sec">{{ _("Revocar") }}</button>
+                </form>
+                {% endif %}
             </div>
-        </article>
+            {% endfor %}
+            <form action="/hr/departamentos" method="POST" class="inline-form" style="margin-top: 14px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label>{{ _("Nuevo departamento") }} <input type="text" name="nombre" maxlength="100" required></label>
+                <button type="submit" class="btn-sec">{{ _("Crear") }}</button>
+            </form>
+
+            <h3 style="margin-top: 24px;">{{ _("Alerta de riesgo alto") }}</h3>
+            <form action="/hr/umbral" method="POST" class="inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label>{{ _("Avisar cuando el %% en riesgo alto llegue a") }} <input type="number" name="pct" min="1" max="100" value="{{ empresa.umbral_alerta_pct }}"> %</label>
+                <button type="submit" class="btn-sec">{{ _("Guardar") }}</button>
+            </form>
+        </div>
     </section>
 </div>
 
-<style>
-/* =============================================
-   HR DASHBOARD — usa las variables de Resilio
-   ============================================= */
 
-.hr-dashboard {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.page-header h1 {
-    margin: 0 0 6px;
-    font-size: 1.8rem;
-    color: var(--ink);
-}
-
-.page-subtitle {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.95rem;
-}
-
-/* Reutiliza .stats-grid y .stat-card del style.css global */
-.stats-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-/* Paneles de gráficas y tablas */
-.hr-panel-card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--r);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    transition: background 0.3s ease;
-}
-
-.hr-panel-header {
-    padding: 20px 24px 0;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 14px;
-    margin-bottom: 4px;
-}
-
-.hr-panel-header h2 {
-    margin: 0;
-    color: var(--ink);
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.charts-grid,
-.tables-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap: 18px;
-}
-
-.chart-wrap {
-    padding: 20px;
-    height: 300px;
-}
-
-.doughnut-wrap {
-    max-width: 420px;
-}
-
-/* Items de métricas BAT-12 */
-.metrics-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    padding: 20px;
-}
-
-.metric-item {
-    background: var(--surface-2);
-    border: 1px solid var(--line);
-    border-radius: var(--r-sm);
-    padding: 14px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-}
-
-.metric-item span {
-    color: var(--muted);
-    font-size: 0.85rem;
-}
-
-.metric-item strong {
-    color: var(--accent-ink);
-    font-size: 1.1rem;
-    font-weight: 700;
-}
-
-/* Tablas */
-.table-wrap {
-    padding: 0 20px 20px;
-    overflow-x: auto;
-}
-
-.resilio-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.resilio-table thead th {
-    text-align: left;
-    font-size: 0.75rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 14px 10px;
-    border-bottom: 1px solid var(--line);
-}
-
-.resilio-table tbody tr {
-    transition: background 0.15s ease;
-}
-
-.resilio-table tbody tr:hover {
-    background: var(--surface-2);
-}
-
-.resilio-table tbody td {
-    padding: 14px 10px;
-    color: var(--ink);
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--line);
-}
-
-.empty-cell {
-    text-align: center;
-    color: var(--muted);
-    padding: 28px 10px;
-    font-size: 0.9rem;
-}
-
-/* Responsive */
-@media (max-width: 1100px) {
-    .stats-grid,
-    .charts-grid,
-    .tables-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .metrics-list {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
 
 <script>
     const trendData = {{ tendencia_mensual | tojson }};
@@ -337,7 +185,7 @@
                 labels: trendData.map(d => d.mes),
                 datasets: [
                     {
-                        label: 'Evaluaciones',
+                        label: {{ _("Evaluaciones")|tojson }},
                         data: trendData.map(d => d.total),
                         borderColor: neonGreen,
                         backgroundColor: 'rgba(73,243,190,0.12)',
@@ -346,7 +194,7 @@
                         borderWidth: 2.5
                     },
                     {
-                        label: 'Riesgo alto',
+                        label: {{ _("Riesgo alto")|tojson }},
                         data: trendData.map(d => d.riesgo_alto),
                         borderColor: coralRed,
                         backgroundColor: 'rgba(243,73,73,0.08)',
@@ -382,7 +230,7 @@
         new Chart(riskCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Riesgo bajo', 'Riesgo medio', 'Riesgo alto'],
+                labels: [{{ _("Riesgo bajo")|tojson }}, {{ _("Riesgo medio")|tojson }}, {{ _("Riesgo alto")|tojson }}],
                 datasets: [{
                     data: [riskData.bajo || 0, riskData.medio || 0, riskData.alto || 0],
                     backgroundColor: [neonGreen, yellow, coralRed],

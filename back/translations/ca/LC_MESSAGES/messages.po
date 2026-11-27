@@ -1,0 +1,1129 @@
+# Catalan translations for Resilio.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the Resilio project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Resilio \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-27 16:46+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ca\n"
+"Language-Team: ca <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.19.0\n"
+
+msgid "Acceso restringido a administradores."
+msgstr "Accés restringit a administradors."
+
+msgid "Acceso restringido a usuarios HR."
+msgstr "Accés restringit a usuaris de RR. HH."
+
+msgid "Tu usuario HR no tiene una empresa asignada."
+msgstr "El teu usuari de RR. HH. no té cap empresa assignada."
+
+msgid "ahora mismo"
+msgstr "ara mateix"
+
+msgid "El nombre y el código de registro son obligatorios."
+msgstr "El nom i el codi de registre són obligatoris."
+
+#, python-format
+msgid "El código '%(codigo)s' ya está en uso. Elige otro."
+msgstr "El codi '%(codigo)s' ja s'està fent servir. Tria'n un altre."
+
+#, python-format
+msgid "✓ Empresa '%(nombre)s' creada con código %(codigo)s."
+msgstr "✓ Empresa '%(nombre)s' creada amb el codi %(codigo)s."
+
+msgid "Datos no válidos."
+msgstr "Dades no vàlides."
+
+#, python-format
+msgid "Nombre, email válido y contraseña de al menos %(n)s caracteres son obligatorios."
+msgstr "Cal un nom, un correu vàlid i una contrasenya d'almenys %(n)s caràcters."
+
+msgid "Rol no válido."
+msgstr "Rol no vàlid."
+
+msgid "Empresa no válida."
+msgstr "Empresa no vàlida."
+
+msgid "HR y empleados necesitan una empresa."
+msgstr "Els usuaris de RR. HH. i els empleats necessiten una empresa."
+
+msgid "El departamento no pertenece a esa empresa."
+msgstr "El departament no pertany a aquesta empresa."
+
+#, python-format
+msgid "El email '%(email)s' ya está registrado."
+msgstr "El correu '%(email)s' ja està registrat."
+
+#, python-format
+msgid "✓ Usuario '%(nombre)s' creado correctamente."
+msgstr "✓ Usuari '%(nombre)s' creat correctament."
+
+msgid "Error al generar el CSV."
+msgstr "Error en generar el CSV."
+
+msgid "Error al generar el informe."
+msgstr "Error en generar l'informe."
+
+msgid "Email o contraseña incorrectos"
+msgstr "Correu o contrasenya incorrectes"
+
+msgid "Nombre y email válidos son obligatorios."
+msgstr "Cal un nom i un correu vàlid."
+
+#, python-format
+msgid "La contraseña debe tener al menos %(n)s caracteres."
+msgstr "La contrasenya ha de tenir almenys %(n)s caràcters."
+
+msgid "Este email ya está registrado. Por favor, inicia sesión."
+msgstr "Aquest correu ja està registrat. Si us plau, inicia la sessió."
+
+msgid "¡Cuenta creada con éxito! Ya puedes iniciar sesión."
+msgstr "Compte creat amb èxit! Ja pots iniciar la sessió."
+
+msgid "Si el correo existe en nuestro sistema, recibirás un enlace de recuperación."
+msgstr "Si el correu existeix al nostre sistema, rebràs un enllaç de recuperació."
+
+msgid "El enlace es inválido o ha expirado."
+msgstr "L'enllaç no és vàlid o ha caducat."
+
+msgid "Las contraseñas no coinciden."
+msgstr "Les contrasenyes no coincideixen."
+
+msgid "Tu contraseña ha sido actualizada exitosamente."
+msgstr "La teva contrasenya s'ha actualitzat correctament."
+
+msgid "Para hacer el test tienes que aceptar el tratamiento de tus datos."
+msgstr "Per fer el test has d'acceptar el tractament de les teves dades."
+
+msgid "Frecuencia no válida."
+msgstr "Freqüència no vàlida."
+
+msgid "Preferencia de recordatorios guardada."
+msgstr "Preferència de recordatoris desada."
+
+msgid "Una cuenta de administrador no se puede eliminar desde aquí."
+msgstr "Un compte d'administrador no es pot eliminar des d'aquí."
+
+msgid "Contraseña incorrecta: no se ha eliminado nada."
+msgstr "Contrasenya incorrecta: no s'ha eliminat res."
+
+msgid "Tu cuenta y todos tus datos se han eliminado."
+msgstr "El teu compte i totes les teves dades s'han eliminat."
+
+msgid "Nuevo usuario registrado"
+msgstr "Nou usuari registrat"
+
+msgid "Evaluación completada"
+msgstr "Avaluació completada"
+
+msgid "Error al cargar el panel."
+msgstr "Error en carregar el tauler."
+
+msgid "Agotamiento"
+msgstr "Esgotament"
+
+msgid "Distanciamiento mental"
+msgstr "Distanciament mental"
+
+msgid "Deterioro cognitivo"
+msgstr "Deteriorament cognitiu"
+
+msgid "Deterioro emocional"
+msgstr "Deteriorament emocional"
+
+msgid "Error al cargar el panel HR."
+msgstr "Error en carregar el tauler de RR. HH."
+
+msgid "El departamento necesita un nombre."
+msgstr "El departament necessita un nom."
+
+msgid "Ya existe un departamento con ese nombre."
+msgstr "Ja existeix un departament amb aquest nom."
+
+#, python-format
+msgid "Departamento '%(nombre)s' creado con su código de registro."
+msgstr "Departament '%(nombre)s' creat amb el seu codi de registre."
+
+msgid "La caducidad debe estar entre 0 y 365 días."
+msgstr "La caducitat ha d'estar entre 0 i 365 dies."
+
+msgid "No se pudo generar el código; inténtalo de nuevo."
+msgstr "No s'ha pogut generar el codi; torna-ho a provar."
+
+#, python-format
+msgid "Nuevo código para '%(nombre)s'. El anterior ya no sirve."
+msgstr "Codi nou per a '%(nombre)s'. L'anterior ja no serveix."
+
+#, python-format
+msgid "Código de '%(nombre)s' revocado."
+msgstr "Codi de '%(nombre)s' revocat."
+
+msgid "Caducidad del código general actualizada."
+msgstr "Caducitat del codi general actualitzada."
+
+msgid "El umbral debe ser un porcentaje entre 1 y 100."
+msgstr "El llindar ha de ser un percentatge entre 1 i 100."
+
+msgid "Umbral de alerta actualizado."
+msgstr "Llindar d'alerta actualitzat."
+
+msgid "Error inesperado al procesar tu test. Inténtalo de nuevo."
+msgstr "Error inesperat en processar el teu test. Torna-ho a provar."
+
+#, python-format
+msgid "Error al procesar: %(e)s"
+msgstr "Error en processar: %(e)s"
+
+msgid "El código de empresa no es válido."
+msgstr "El codi d'empresa no és vàlid."
+
+msgid "El código ha caducado. Pide uno nuevo a tu equipo de RR. HH."
+msgstr "El codi ha caducat. Demana'n un de nou al teu equip de RR. HH."
+
+msgid "Respuesta no válida."
+msgstr "Resposta no vàlida."
+
+msgid "Debes responder a todas las preguntas."
+msgstr "Has de respondre totes les preguntes."
+
+msgid "Idioma"
+msgstr "Idioma"
+
+msgid "Evolución"
+msgstr "Evolució"
+
+msgid "Puntuación"
+msgstr "Puntuació"
+
+msgid "En riesgo"
+msgstr "En risc"
+
+msgid "Burnout severo"
+msgstr "Burnout sever"
+
+msgid "Progreso"
+msgstr "Progrés"
+
+msgid "Has respondido todas las preguntas."
+msgstr "Has respost totes les preguntes."
+
+msgid "Aún te quedan preguntas por responder."
+msgstr "Encara et queden preguntes per respondre."
+
+msgid "Atrás"
+msgstr "Enrere"
+
+msgid "Enviar Respuestas"
+msgstr "Enviar Respostes"
+
+msgid "Pregunta"
+msgstr "Pregunta"
+
+msgid "de"
+msgstr "de"
+
+msgid "Nunca"
+msgstr "Mai"
+
+msgid "Raramente"
+msgstr "Rarament"
+
+msgid "Algunas veces"
+msgstr "Algunes vegades"
+
+msgid "A menudo"
+msgstr "Sovint"
+
+msgid "Siempre"
+msgstr "Sempre"
+
+msgid "Siguiente"
+msgstr "Següent"
+
+msgid "Configuracion"
+msgstr "Configuracio"
+
+msgid "Personaliza tu experiencia en Resilio."
+msgstr "Personalitza la teva experiencia a Resilio."
+
+msgid "Apariencia"
+msgstr "Aparencia"
+
+msgid "Tema de color"
+msgstr "Tema de color"
+
+msgid "Elige entre modo oscuro o claro"
+msgstr "Tria entre mode fosc o clar"
+
+msgid "Oscuro"
+msgstr "Fosc"
+
+msgid "Claro"
+msgstr "Clar"
+
+msgid "Cuenta"
+msgstr "Compte"
+
+msgid "Nombre"
+msgstr "Nom"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Tipo de cuenta"
+msgstr "Tipus de compte"
+
+msgid "Administrador"
+msgstr "Administrador"
+
+msgid "Recursos Humanos"
+msgstr "Recursos Humans"
+
+msgid "Usuario Personal"
+msgstr "Usuari Personal"
+
+msgid "Empleado"
+msgstr "Empleat"
+
+msgid "Notificaciones"
+msgstr "Notificacions"
+
+msgid "Recordatorios de evaluacion"
+msgstr "Recordatoris d'avaluacio"
+
+msgid "Recibe recordatorios para evaluar tu bienestar"
+msgstr "Rep recordatoris per avaluar el teu benestar"
+
+msgid "No recordarme"
+msgstr "No recordar-m'ho"
+
+#, python-format
+msgid "Cada %(n)s semanas"
+msgstr "Cada %(n)s setmanes"
+
+msgid "Guardar"
+msgstr "Desar"
+
+msgid "Mis datos"
+msgstr "Les meves dades"
+
+msgid "Exportar mis datos"
+msgstr "Exportar les meves dades"
+
+msgid "Descarga tus respuestas, puntuaciones y consejos en JSON"
+msgstr "Descarrega les teves respostes, puntuacions i consells en JSON"
+
+msgid "Descargar"
+msgstr "Descarregar"
+
+msgid "Zona Peligrosa"
+msgstr "Zona Perillosa"
+
+msgid "¿Seguro? Se borrarán tu cuenta y todos tus datos y no se puede deshacer."
+msgstr "Segur? S'esborraran el teu compte i totes les teves dades i no es pot desfer."
+
+msgid "Eliminar cuenta"
+msgstr "Eliminar compte"
+
+msgid "Elimina permanentemente tu cuenta y todos tus datos"
+msgstr "Elimina permanentment el teu compte i totes les teves dades"
+
+msgid "Eliminar Cuenta"
+msgstr "Eliminar Compte"
+
+msgid "Antes de empezar"
+msgstr "Abans de començar"
+
+msgid "Para hacer el test necesitamos tu consentimiento para tratar tus respuestas."
+msgstr "Per fer el test necessitem el teu consentiment per tractar les teves respostes."
+
+msgid "Guardamos tus respuestas al test BAT-12, tus puntuaciones y los consejos generados."
+msgstr "Guardem les teves respostes al test BAT-12, les teves puntuacions i els consells generats."
+
+msgid ""
+"Para generar los consejos pueden enviarse a Google Gemini tu puntuación y las medias por "
+"dimensión, sin tu nombre."
+msgstr ""
+"Per generar els consells es poden enviar a Google Gemini la teva puntuació i les mitjanes per "
+"dimensió, sense el teu nom."
+
+msgid ""
+"Si te registraste con un código de empresa, su equipo de RR. HH. solo ve datos agregados, no tus "
+"respuestas con tu nombre. Los administradores de la plataforma sí pueden ver tus datos para "
+"mantener el servicio."
+msgstr ""
+"Si t'has registrat amb un codi d'empresa, el seu equip de RR. HH. només veu dades agregades, no "
+"les teves respostes amb el teu nom. Els administradors de la plataforma sí que poden veure les "
+"teves dades per mantenir el servei."
+
+msgid "Resilio es una herramienta de cribado, no un diagnóstico médico."
+msgstr "Resilio és una eina de cribratge, no un diagnòstic mèdic."
+
+msgid "Puedes exportar tus datos o eliminar tu cuenta cuando quieras desde Configuración."
+msgstr "Pots exportar les teves dades o eliminar el teu compte quan vulguis des de Configuració."
+
+msgid "Acepto el tratamiento de mis datos tal y como se describe arriba."
+msgstr "Accepto el tractament de les meves dades tal com es descriu a dalt."
+
+msgid "Aceptar y continuar"
+msgstr "Acceptar i continuar"
+
+msgid "Resilio | Recuperar Contraseña"
+msgstr "Resilio | Recuperar contrasenya"
+
+msgid "BAT-12 · Burnout Assessment Tool"
+msgstr "BAT-12 · Burnout Assessment Tool"
+
+msgid "Recuperar Contraseña"
+msgstr "Recuperar Contrasenya"
+
+msgid "Ingresa tu email para recibir un enlace de recuperación"
+msgstr "Introdueix el teu correu per rebre un enllaç de recuperació"
+
+msgid "usuario@resilio.com"
+msgstr "usuari@resilio.com"
+
+msgid "Enviar Enlace"
+msgstr "Enviar Enllaç"
+
+msgid "Volver al inicio de sesión"
+msgstr "Tornar a l'inici de sessió"
+
+msgid "Historial de Evaluaciones"
+msgstr "Historial d'Avaluacions"
+
+msgid "Revisa tus evaluaciones anteriores y su evolucion."
+msgstr "Revisa les teves avaluacions anteriors i la seva evolució."
+
+msgid "Puntuacion Global"
+msgstr "Puntuació Global"
+
+msgid "Distanciamiento"
+msgstr "Distanciament"
+
+msgid "Deterioro Cognitivo"
+msgstr "Deteriorament Cognitiu"
+
+msgid "Deterioro Emocional"
+msgstr "Deteriorament Emocional"
+
+msgid "Bajo Riesgo"
+msgstr "Baix Risc"
+
+msgid "Riesgo Medio"
+msgstr "Risc Mitjà"
+
+msgid "Riesgo Alto"
+msgstr "Alt Risc"
+
+msgid "Consejos"
+msgstr "Consells"
+
+msgid "Ver detalle"
+msgstr "Veure detall"
+
+msgid "Consejos Personalizados"
+msgstr "Consells personalitzats"
+
+msgid "No tienes evaluaciones anteriores"
+msgstr "No tens avaluacions anteriors"
+
+msgid "Realiza tu primera evaluacion para comenzar a hacer seguimiento de tu bienestar laboral."
+msgstr "Fes la teva primera avaluació per començar a fer seguiment del teu benestar laboral."
+
+msgid "Realizar Primera Evaluacion"
+msgstr "Fer Primera Avaluació"
+
+msgid "Saltar al contenido"
+msgstr "Saltar al contingut"
+
+msgid "Principal"
+msgstr "Principal"
+
+msgid "Inicio"
+msgstr "Inici"
+
+msgid "Realizar Test"
+msgstr "Fer Test"
+
+msgid "Historial"
+msgstr "Historial"
+
+msgid "Cerrar Sesion"
+msgstr "Tancar Sessio"
+
+msgid "Hola"
+msgstr "Hola"
+
+msgid "Resilio | Login"
+msgstr "Resilio | Inici de sessió"
+
+msgid "Equilibrio entre mente y código"
+msgstr "Equilibri entre ment i codi"
+
+msgid "Email Corporativo o Personal"
+msgstr "Email Corporatiu o Personal"
+
+msgid "Contraseña"
+msgstr "Contrasenya"
+
+msgid "Recordarme"
+msgstr "Recorda'm"
+
+msgid "¿Olvidaste tu contraseña?"
+msgstr "Has oblidat la contrasenya?"
+
+msgid "Iniciar Sesión"
+msgstr "Iniciar Sessió"
+
+msgid "¿Aún no tienes cuenta?"
+msgstr "Encara no tens compte?"
+
+msgid "Regístrate"
+msgstr "Registra't"
+
+msgid "Resilio | Registro"
+msgstr "Resilio | Registre"
+
+msgid "Únete a Resilio y mide tu bienestar mental"
+msgstr "Uneix-te a Resilio i mesura el teu benestar mental"
+
+msgid "Ej. Piero"
+msgstr "Ex. Piero"
+
+msgid "Apellidos"
+msgstr "Cognoms"
+
+msgid "Ej. Funes Larios"
+msgstr "Ex. Funes Larios"
+
+msgid "Mínimo 8 caracteres"
+msgstr "Mínim 8 caràcters"
+
+msgid "Código de Empresa (Opcional)"
+msgstr "Codi d'Empresa (Opcional)"
+
+msgid "Ej. ACME-HR-2026"
+msgstr "Ex. ACME-HR-2026"
+
+msgid "Déjalo en blanco si eres usuario personal"
+msgstr "Deixa-ho en blanc si ets usuari personal"
+
+msgid ""
+"Acepto que Resilio guarde mis respuestas del test BAT-12 y mis puntuaciones (podrás exportarlos o"
+" borrarlos desde Configuración). Si no lo marcas ahora, te lo preguntaremos antes de tu primer "
+"test."
+msgstr ""
+"Accepto que Resilio guardi les meves respostes del test BAT-12 i les meves puntuacions (podràs "
+"exportar-les o esborrar-les des de Configuració). Si no ho marques ara, t'ho preguntarem abans "
+"del teu primer test."
+
+msgid "Crear Cuenta"
+msgstr "Crear Compte"
+
+msgid "¿Ya tienes cuenta? Inicia sesión aquí"
+msgstr "Ja tens compte? Inicia sessió aquí"
+
+msgid "Resilio | Restablecer Contraseña"
+msgstr "Resilio | Restablir contrasenya"
+
+msgid "Restablecer Contraseña"
+msgstr "Restablir Contrasenya"
+
+msgid "Nueva Contraseña"
+msgstr "Nova Contrasenya"
+
+msgid "Confirmar Nueva Contraseña"
+msgstr "Confirmar Nova Contrasenya"
+
+msgid "Guardar Contraseña"
+msgstr "Desar Contrasenya"
+
+msgid "Tu resultado"
+msgstr "El teu resultat"
+
+msgid "Es tu primera evaluación: servirá de referencia."
+msgstr "És la teva primera avaluació: servirà de referència."
+
+msgid "Has bajado respecto a tu evaluación anterior."
+msgstr "Has baixat respecte a la teva avaluació anterior."
+
+msgid "Has subido respecto a tu evaluación anterior."
+msgstr "Has pujat respecte a la teva avaluació anterior."
+
+msgid "Igual que tu evaluación anterior."
+msgstr "Igual que la teva avaluació anterior."
+
+msgid ""
+"Resilio es una herramienta de cribado, no un diagnóstico. Si te sientes mal, habla con un "
+"profesional de la salud."
+msgstr ""
+"Resilio és una eina de cribratge, no un diagnòstic. Si et sents malament, parla amb un "
+"professional de la salut."
+
+msgid "Por dimensión"
+msgstr "Per dimensió"
+
+msgid "· la más alta"
+msgstr "· la més alta"
+
+msgid "El BAT-12 no define puntos de corte por dimensión: las barras solo comparan tus propias áreas."
+msgstr ""
+"El BAT-12 no defineix punts de tall per dimensió: les barres només comparen les teves pròpies "
+"àrees."
+
+msgid "Tu plan de 3 pasos"
+msgstr "El teu pla de 3 passos"
+
+msgid "Tu evolución"
+msgstr "La teva evolució"
+
+msgid "Ver historial"
+msgstr "Veure historial"
+
+msgid "Resilio - Test BAT-12"
+msgstr "Resilio - Test BAT-12"
+
+msgid "Test BAT-12"
+msgstr "Test BAT-12"
+
+msgid "Evaluación de Agotamiento Laboral"
+msgstr "Avaluació d'Esgotament Laboral"
+
+msgid "Instrucciones"
+msgstr "Instruccions"
+
+msgid ""
+"Las siguientes frases están relacionadas con su situación laboral y cómo experimenta esta "
+"situación. Indique con qué frecuencia cada frase se aplica a usted."
+msgstr ""
+"Les frases següents estan relacionades amb la seva situació laboral i com viu aquesta situació. "
+"Indiqui amb quina freqüència se li aplica cada frase."
+
+msgid "Estas preguntas son una traducción no oficial y no validada del BAT-12."
+msgstr ""
+"Aquestes preguntes són una traducció no oficial i no validada del BAT-12 (el qüestionari oficial "
+"no té versió en català)."
+
+msgid ""
+"Cuestionario: Burnout Assessment Tool (BAT-12) de Schaufeli, Desart y De Witte (2020). Uso libre,"
+" más información en burnoutassessmenttool.be."
+msgstr ""
+"Qüestionari: Burnout Assessment Tool (BAT-12) de Schaufeli, Desart i De Witte (2020). Ús lliure, "
+"més informació a burnoutassessmenttool.be."
+
+msgid "Panel de Administración"
+msgstr "Tauler d'administració"
+
+msgid "Vista General del Sistema"
+msgstr "Vista general del sistema"
+
+msgid "Gestión completa de usuarios, empresas y evaluaciones de Resilio."
+msgstr "Gestió completa d'usuaris, empreses i avaluacions de Resilio."
+
+msgid "Usuarios Registrados"
+msgstr "Usuaris registrats"
+
+msgid "Empresas Activas"
+msgstr "Empreses actives"
+
+msgid "Evaluaciones Realizadas"
+msgstr "Avaluacions realitzades"
+
+msgid "Usuarios en Riesgo Alto"
+msgstr "Usuaris en risc alt"
+
+msgid "Últimos Usuarios Registrados"
+msgstr "Últims usuaris registrats"
+
+msgid "Ver todos →"
+msgstr "Veure'ls tots →"
+
+msgid "Usuario"
+msgstr "Usuari"
+
+msgid "Rol"
+msgstr "Rol"
+
+msgid "Empresa"
+msgstr "Empresa"
+
+msgid "Evaluaciones"
+msgstr "Avaluacions"
+
+msgid "Registro"
+msgstr "Registre"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "RRHH"
+msgstr "RR. HH."
+
+msgid "Personal"
+msgstr "Personal"
+
+msgid "No hay usuarios registrados todavía."
+msgstr "Encara no hi ha usuaris registrats."
+
+msgid "Acciones Rápidas"
+msgstr "Accions ràpides"
+
+msgid "Nueva Empresa"
+msgstr "Nova empresa"
+
+msgid "Crear y configurar"
+msgstr "Crear i configurar"
+
+msgid "Añadir Usuario"
+msgstr "Afegir usuari"
+
+msgid "Registrar manualmente"
+msgstr "Registrar manualment"
+
+msgid "Exportar CSV"
+msgstr "Exportar CSV"
+
+msgid "Datos evaluaciones"
+msgstr "Dades d'avaluacions"
+
+msgid "Informe Global"
+msgstr "Informe global"
+
+msgid "Ver estadísticas"
+msgstr "Veure estadístiques"
+
+msgid "Actividad Reciente"
+msgstr "Activitat recent"
+
+msgid "Sin actividad reciente"
+msgstr "Sense activitat recent"
+
+msgid "Empresas Registradas"
+msgstr "Empreses registrades"
+
+msgid "+ Nueva →"
+msgstr "+ Nova →"
+
+msgid "Sin sector"
+msgstr "Sense sector"
+
+msgid "empleados"
+msgstr "empleats"
+
+msgid "Copiar código"
+msgstr "Copiar codi"
+
+msgid "No hay empresas registradas todavía."
+msgstr "Encara no hi ha empreses registrades."
+
+msgid "Usuarios en Riesgo"
+msgstr "Usuaris en risc"
+
+msgid "Ver informe →"
+msgstr "Veure l'informe →"
+
+msgid "Puntuación:"
+msgstr "Puntuació:"
+
+msgid "Alto"
+msgstr "Alt"
+
+msgid "Medio"
+msgstr "Mitjà"
+
+msgid "Bajo"
+msgstr "Baix"
+
+msgid "¡Ningún usuario en riesgo alto ahora mismo!"
+msgstr "Cap usuari en risc alt ara mateix!"
+
+msgid "Tendencia de Evaluaciones (Últimos 6 meses)"
+msgstr "Tendència d'avaluacions (últims 6 mesos)"
+
+msgid "Información de la empresa"
+msgstr "Informació de l'empresa"
+
+msgid "Nombre de la empresa *"
+msgstr "Nom de l'empresa *"
+
+msgid "Ej. TechCorp Innovations"
+msgstr "Ex. TechCorp Innovations"
+
+msgid "Sector"
+msgstr "Sector"
+
+msgid "— Seleccionar sector —"
+msgstr "— Selecciona un sector —"
+
+msgid "Tecnología"
+msgstr "Tecnologia"
+
+msgid "Salud"
+msgstr "Salut"
+
+msgid "Educación"
+msgstr "Educació"
+
+msgid "Finanzas"
+msgstr "Finances"
+
+msgid "Manufactura"
+msgstr "Manufactura"
+
+msgid "Retail"
+msgstr "Comerç minorista"
+
+msgid "Consultoría"
+msgstr "Consultoria"
+
+msgid "Otro"
+msgstr "Altres"
+
+msgid "Código de acceso para empleados"
+msgstr "Codi d'accés per als empleats"
+
+msgid "Código de registro *"
+msgstr "Codi de registre *"
+
+msgid "Ej. TECH-2026-VIP"
+msgstr "Ex. TECH-2026-VIP"
+
+msgid "Generar"
+msgstr "Generar"
+
+msgid "Los empleados usarán este código al registrarse para vincularse a la empresa."
+msgstr "Els empleats faran servir aquest codi en registrar-se per vincular-se a l'empresa."
+
+msgid "Cancelar"
+msgstr "Cancel·lar"
+
+msgid "Crear Empresa"
+msgstr "Crear empresa"
+
+msgid "Datos personales"
+msgstr "Dades personals"
+
+msgid "Nombre *"
+msgstr "Nom *"
+
+msgid "Ej. María"
+msgstr "Ex. Maria"
+
+msgid "Ej. García López"
+msgstr "Ex. Garcia López"
+
+msgid "Email *"
+msgstr "Correu *"
+
+msgid "usuario@empresa.com"
+msgstr "usuari@empresa.com"
+
+msgid "Contraseña *"
+msgstr "Contrasenya *"
+
+msgid "Rol y empresa"
+msgstr "Rol i empresa"
+
+msgid "Rol *"
+msgstr "Rol *"
+
+msgid "Empleado Empresa"
+msgstr "Empleat d'empresa"
+
+msgid "Empresa (opcional)"
+msgstr "Empresa (opcional)"
+
+msgid "— Sin empresa —"
+msgstr "— Sense empresa —"
+
+msgid "Crear Usuario"
+msgstr "Crear usuari"
+
+msgid "Evaluaciones totales"
+msgstr "Avaluacions totals"
+
+msgid "Riesgo alto"
+msgstr "Risc alt"
+
+msgid "Tu Panel de Empleado"
+msgstr "El teu tauler d'empleat"
+
+msgid "Consulta tu estado de burnout y bienestar laboral."
+msgstr "Consulta el teu estat de burnout i benestar laboral."
+
+msgid "Puntuación Global"
+msgstr "Puntuació global"
+
+msgid "sobre 5"
+msgstr "sobre 5"
+
+msgid "Resumen de Dimensiones"
+msgstr "Resum de dimensions"
+
+msgid "Última evaluación:"
+msgstr "Última avaluació:"
+
+msgid "Visualización"
+msgstr "Visualització"
+
+msgid "Repetir Evaluación"
+msgstr "Repetir avaluació"
+
+msgid "¿Listo para evaluar tu bienestar?"
+msgstr "A punt per avaluar el teu benestar?"
+
+msgid ""
+"El test BAT-12 evaluará tu nivel de agotamiento laboral. Tus resultados son confidenciales y solo"
+" tú puedes verlos."
+msgstr ""
+"El test BAT-12 avaluarà el teu nivell d'esgotament laboral. Els teus resultats són confidencials "
+"i només tu els pots veure."
+
+msgid "Comenzar Evaluación"
+msgstr "Començar avaluació"
+
+msgid "Nivel de burnout"
+msgstr "Nivell de burnout"
+
+msgid "Dashboard HR"
+msgstr "Tauler de RR. HH."
+
+msgid "Panel de Recursos Humanos"
+msgstr "Tauler de Recursos Humans"
+
+msgid "Vista agregada y anónima de la empresa"
+msgstr "Vista agregada i anònima de l'empresa"
+
+msgid "Periodo"
+msgstr "Període"
+
+#, python-format
+msgid "%(n)s meses"
+msgstr "%(n)s mesos"
+
+msgid "Todo"
+msgstr "Tot"
+
+msgid "Imprimir / PDF"
+msgstr "Imprimir / PDF"
+
+#, python-format
+msgid ""
+"<strong>%(pct)s%%</strong> de los empleados evaluados está en riesgo alto, por encima de vuestro "
+"umbral de alerta (%(umbral)s%%)."
+msgstr ""
+"El <strong>%(pct)s%%</strong> dels empleats avaluats està en risc alt, per sobre del vostre "
+"llindar d'alerta (%(umbral)s%%)."
+
+msgid "Aún no hay datos suficientes para mostrar resultados agregados."
+msgstr "Encara no hi ha dades suficients per mostrar resultats agregats."
+
+#, python-format
+msgid ""
+"Para proteger el anonimato solo se muestran datos cuando al menos %(k)s empleados han hecho el "
+"test en el periodo elegido. Ahora hay %(n)s de %(total)s empleados registrados."
+msgstr ""
+"Per protegir l'anonimat només es mostren dades quan almenys %(k)s empleats han fet el test en el "
+"període triat. Ara n'hi ha %(n)s de %(total)s empleats registrats."
+
+msgid "Empleados evaluados"
+msgstr "Empleats avaluats"
+
+#, python-format
+msgid "%% riesgo alto"
+msgstr "%% risc alt"
+
+msgid "Dimensión más afectada"
+msgstr "Dimensió més afectada"
+
+msgid "Tendencia mensual"
+msgstr "Tendència mensual"
+
+#, python-format
+msgid "Aún no hay meses con %(k)s o más empleados evaluados."
+msgstr "Encara no hi ha mesos amb %(k)s o més empleats avaluats."
+
+msgid "Distribución de riesgo"
+msgstr "Distribució del risc"
+
+msgid "Promedios BAT-12"
+msgstr "Mitjanes BAT-12"
+
+msgid "Media global"
+msgstr "Mitjana global"
+
+msgid "Departamentos"
+msgstr "Departaments"
+
+msgid "Departamento"
+msgstr "Departament"
+
+msgid "Empleados"
+msgstr "Empleats"
+
+msgid "No hay datos disponibles."
+msgstr "No hi ha dades disponibles."
+
+#, python-format
+msgid ""
+"Los grupos con menos de %(k)s empleados evaluados se agrupan en «Otros grupos» para proteger el "
+"anonimato."
+msgstr "Els grups amb menys de %(k)s empleats avaluats s'agrupen a «Altres grups» per protegir l'anonimat."
+
+msgid "Acceso y avisos"
+msgstr "Accés i avisos"
+
+msgid "Códigos de registro"
+msgstr "Codis de registre"
+
+msgid ""
+"Quien se registra con un código entra en su empresa (y en el departamento del código, si lo "
+"tiene)."
+msgstr "Qui es registra amb un codi entra a la seva empresa (i al departament del codi, si en té)."
+
+msgid "Código general de la empresa:"
+msgstr "Codi general de l'empresa:"
+
+#, python-format
+msgid "· caduca el %(fecha)s"
+msgstr "· caduca el %(fecha)s"
+
+msgid "(caducado)"
+msgstr "(caducat)"
+
+msgid "· no caduca"
+msgstr "· no caduca"
+
+msgid "Caduca en (días, 0 = nunca)"
+msgstr "Caduca en (dies, 0 = mai)"
+
+msgid "sin código"
+msgstr "sense codi"
+
+msgid "Nuevo código"
+msgstr "Codi nou"
+
+msgid "Generar código"
+msgstr "Generar codi"
+
+msgid "Revocar"
+msgstr "Revocar"
+
+msgid "Nuevo departamento"
+msgstr "Nou departament"
+
+msgid "Crear"
+msgstr "Crear"
+
+msgid "Alerta de riesgo alto"
+msgstr "Alerta de risc alt"
+
+#, python-format
+msgid "Avisar cuando el %% en riesgo alto llegue a"
+msgstr "Avisa'm quan el %% en risc alt arribi a"
+
+msgid "Riesgo bajo"
+msgstr "Risc baix"
+
+msgid "Riesgo medio"
+msgstr "Risc mitjà"
+
+msgid "Volver al panel"
+msgstr "Tornar al tauler"
+
+msgid "Análisis completo del estado de burnout en toda la plataforma."
+msgstr "Anàlisi completa de l'estat de burnout a tota la plataforma."
+
+msgid "evaluaciones de"
+msgstr "avaluacions de"
+
+msgid "usuarios · Última actualización: hoy"
+msgstr "usuaris · Última actualització: avui"
+
+msgid "Exportar CSV Completo"
+msgstr "Exportar CSV complet"
+
+msgid "Distribución por Riesgo"
+msgstr "Distribució per risc"
+
+msgid "Bajo riesgo"
+msgstr "Risc baix"
+
+msgid "Sin datos aún"
+msgstr "Encara sense dades"
+
+msgid "Media por Dimensión"
+msgstr "Mitjana per dimensió"
+
+msgid "Media Global"
+msgstr "Mitjana global"
+
+msgid "Radar Global"
+msgstr "Radar global"
+
+msgid "Rendimiento por Empresa"
+msgstr "Rendiment per empresa"
+
+msgid "Nivel"
+msgstr "Nivell"
+
+msgid "No hay datos de empresas aún."
+msgstr "Encara no hi ha dades d'empreses."
+
+msgid "Top Usuarios en Riesgo"
+msgstr "Usuaris amb més risc"
+
+msgid "Sin datos"
+msgstr "Sense dades"
+
+msgid "Evolución de la Media Global"
+msgstr "Evolució de la mitjana global"
+
+msgid "Cognitivo"
+msgstr "Cognitiu"
+
+msgid "Emocional"
+msgstr "Emocional"
+
+msgid "Tu Espacio de Bienestar"
+msgstr "El teu espai de benestar"
+
+msgid "Monitoriza tus niveles de energia y estres laboral."
+msgstr "Monitoritza els teus nivells d'energia i estrès laboral."
+
+msgid "Puntuacion Global · sobre 5"
+msgstr "Puntuació global · sobre 5"
+
+msgid "Ultima evaluacion:"
+msgstr "Última avaluació:"
+
+msgid "Visualizacion"
+msgstr "Visualització"
+
+msgid "Repetir Evaluacion"
+msgstr "Repetir avaluació"
+
+msgid "Listo para evaluar tu bienestar?"
+msgstr "A punt per avaluar el teu benestar?"
+
+msgid ""
+"El test BAT-12 consta de 12 preguntas que evaluaran tu nivel de agotamiento laboral en 4 "
+"dimensiones. Solo te tomara unos minutos."
+msgstr ""
+"El test BAT-12 consta de 12 preguntes que avaluen el teu nivell d'esgotament laboral en 4 "
+"dimensions. Només et prendrà uns minuts."
+
+msgid "Comenzar Evaluacion"
+msgstr "Començar avaluació"
+

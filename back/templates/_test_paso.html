@@ -1,0 +1,67 @@
+{# Pantalla del test (se sirve entera y por HTMX): progreso + una pregunta, o el envío final. #}
+<div class="progress-bar">
+    <div class="progress-label">
+        <span>{{ _("Progreso") }}</span>
+        <span>{{ respondidas }} / {{ total }}</span>
+    </div>
+    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="{{ total }}" aria-valuenow="{{ respondidas }}">
+        <div class="progress-fill neutral" style="width: {{ (respondidas / total * 100)|round|int }}%;"></div>
+    </div>
+</div>
+
+{% if listo %}
+<form action="/procesar_test" method="POST" id="test-form" onsubmit="var b=this.querySelector('button[type=submit]'); b.disabled=true;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="question-card">
+        <p class="question-text">
+            {% if respondidas == total %}{{ _("Has respondido todas las preguntas.") }}{% else %}{{ _("Aún te quedan preguntas por responder.") }}{% endif %}
+        </p>
+        <div class="paso-acciones">
+            <button type="button" class="btn-back" hx-get="/test/pregunta/{{ total }}" hx-target="#paso">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> <span>{{ _("Atrás") }}</span>
+            </button>
+            {% if respondidas == total %}
+            <button type="submit" class="btn-test">
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
+                <span>{{ _("Enviar Respuestas") }}</span>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</form>
+{% else %}
+<form hx-post="/test/responder" hx-trigger="change" hx-target="#paso" hx-swap="innerHTML" class="question-card">
+    <input type="hidden" name="n" value="{{ n }}">
+    <span class="question-number">
+        <span>{{ _("Pregunta") }}</span> {{ n }} <span>{{ _("de") }}</span> {{ total }}
+    </span>
+    <p class="question-text">{{ texto }}</p>
+
+    <div class="options-grid">
+        {% for i in range(1, 6) %}
+        <label class="option-label">
+            <input type="radio" name="valor" value="{{ i }}" {% if valor_actual == i %}checked{% endif %} required>
+            <span class="option-circle">{{ i }}</span>
+            <span class="option-text">{{ [_("Nunca"), _("Raramente"), _("Algunas veces"), _("A menudo"), _("Siempre")][i - 1] }}</span>
+        </label>
+        {% endfor %}
+    </div>
+
+    <div class="scale-legend">
+        <span>{{ _("Nunca") }}</span>
+        <span>{{ _("Siempre") }}</span>
+    </div>
+    <div class="paso-acciones">
+        {% if n > 1 %}
+        <button type="button" class="btn-back" hx-get="/test/pregunta/{{ n - 1 }}" hx-target="#paso">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> <span>{{ _("Atrás") }}</span>
+        </button>
+        {% endif %}
+        {% if valor_actual %}
+        <button type="button" class="btn-back" hx-get="/test/pregunta/{{ n + 1 }}" hx-target="#paso">
+            <span>{{ _("Siguiente") }}</span> <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </button>
+        {% endif %}
+    </div>
+</form>
+{% endif %}

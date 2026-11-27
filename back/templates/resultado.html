@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% from "_consejos.html" import consejos %}
+{% from "_tendencia.html" import tendencia as grafico_tendencia %}
+{% block head_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/paginas/resultado.css') }}">{% endblock %}
+{% block head_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1>{{ _("Tu resultado") }}</h1>
+    <p>{{ ev.fecha.strftime('%d/%m/%Y') }}</p>
+</div>
+
+<div class="result-card" style="margin-bottom: 24px;">
+    <div class="res-score">{{ ev.puntuacion_total }} <small>/ 5</small></div>
+    <p>
+        <span class="risk-badge {{ {'Bajo': 'low', 'Medio': 'medium', 'Alto': 'high'}[nivel] }}">{{ {'Bajo': _("Bajo Riesgo"), 'Medio': _("Riesgo Medio"), 'Alto': _("Riesgo Alto")}[nivel] }}</span>
+    </p>
+    <p>
+        {% if delta is none %}{{ _("Es tu primera evaluación: servirá de referencia.") }}
+        {% elif delta < 0 %}{{ _("Has bajado respecto a tu evaluación anterior.") }}
+        {% elif delta > 0 %}{{ _("Has subido respecto a tu evaluación anterior.") }}
+        {% else %}{{ _("Igual que tu evaluación anterior.") }}{% endif %}
+        {% if delta is not none %}({{ '%+.2f'|format(delta) }}){% endif %}
+    </p>
+    <p style="color: var(--muted); font-size: 0.85rem;">{{ _("Resilio es una herramienta de cribado, no un diagnóstico. Si te sientes mal, habla con un profesional de la salud.") }}</p>
+</div>
+
+<div class="result-card" style="margin-bottom: 24px;">
+    <h2>{{ _("Por dimensión") }}</h2>
+    {% for d in dims %}
+    <div class="progress-item" style="margin-bottom: 14px;">
+        <div class="progress-label">
+            <span>{{ {'agotamiento': _("Agotamiento"), 'distanciamiento': _("Distanciamiento mental"), 'cognitivo': _("Deterioro cognitivo"), 'emocional': _("Deterioro emocional")}[d.clave] }}</span>
+            <span>{{ '%.2f'|format(d.valor) }}/5
+                {% if d.delta is not none %}<small>({{ '%+.2f'|format(d.delta) }})</small>{% endif %}
+                {% if d.clave == mayor %}<small>{{ _("· la más alta") }}</small>{% endif %}</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill neutral" style="width: {{ (d.valor / 5 * 100)|round|int }}%;"></div></div>
+    </div>
+    {% endfor %}
+    <p style="color: var(--muted); font-size: 0.8rem;">{{ _("El BAT-12 no define puntos de corte por dimensión: las barras solo comparan tus propias áreas.") }}</p>
+</div>
+
+{% if ev.consejos_data %}
+<div class="consejos-panel" style="margin-bottom: 24px;">
+    <h2><i class="fas fa-lightbulb" style="margin-right: 10px; color: var(--accent-ink);"></i><span>{{ _("Tu plan de 3 pasos") }}</span></h2>
+    {{ consejos(ev.consejos_data) }}
+</div>
+{% endif %}
+
+{% if tendencia|length > 1 %}
+<div class="result-card" style="margin-bottom: 24px;">
+    <h2>{{ _("Tu evolución") }}</h2>
+    {{ grafico_tendencia(tendencia) }}
+</div>
+{% endif %}
+
+<div class="btn-action">
+    <a href="/historial" class="btn-sec">{{ _("Ver historial") }}</a>
+</div>
+
+
+{% endblock %}

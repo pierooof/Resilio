@@ -1,15 +1,17 @@
 back/
-├── app.py                    ← Núcleo: rutas y lógica principal
-├── conexion/
-│   └── conexion_bbdd.py      ← Capa de acceso a base de datos
-├── servicios/
-│   ├── test_service.py       ← Lógica del test BAT-12
-│   └── ia_service.py         ← Integración con Google Gemini
+├── app.py                    ← Entrypoint (gunicorn app:app)
+├── resilio/
+│   ├── __init__.py           ← create_app
+│   ├── models.py             ← Modelos SQLAlchemy (PostgreSQL)
+│   ├── blueprints/           ← auth, dashboard, admin, test
+│   ├── services/
+│   │   ├── scoring.py        ← Cálculo y guardado del BAT-12
+│   │   └── ia_service.py     ← Integración con Google Gemini
+│   └── cli.py                ← flask seed / flask crear-admin
+├── migrations/               ← Alembic
+├── tests/                    ← pytest
+├── static/
 └── templates/
-    ├── dashboards/
-    │   ├── admin.html
-    │   ├── hr.html
-    │   ├── empleado.html
-    │   └── personal.html
+    ├── dashboards/           ← admin, hr, empleado, personal, informe_global
     ├── test.html
     └── historial.html

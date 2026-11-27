@@ -1,4 +1,6 @@
 {% extends "layout.html" %}
+{% from "_consejos.html" import consejos %}
+{% from "_tendencia.html" import tendencia as grafico_tendencia %}
 {% block head_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
 {% endblock %}
@@ -7,8 +9,8 @@
 {% block content %}
 <!-- Contenido principal de la página -->
 <div class="welcome-section">
-    <h1>Tu Espacio de Bienestar</h1>
-    <p>Monitoriza tus niveles de energia y estres laboral.</p>
+    <h1>{{ _("Tu Espacio de Bienestar") }}</h1>
+    <p>{{ _("Monitoriza tus niveles de energia y estres laboral.") }}</p>
 </div>
 
 {% if evaluacion %}
@@ -21,7 +23,7 @@
             <i class="fas fa-brain"></i>
         </div>
         <div class="stat-value">{{ evaluacion.puntuacion_total }}</div>
-        <div class="stat-label">Puntuacion Global · sobre 5</div>
+        <div class="stat-label">{{ _("Puntuacion Global · sobre 5") }}</div>
     </div>
 
     <div class="stat-card">
@@ -29,7 +31,7 @@
             <i class="fas fa-fire"></i>
         </div>
         <div class="stat-value">{{ evaluacion.dim_agotamiento }}</div>
-        <div class="stat-label">Agotamiento</div>
+        <div class="stat-label">{{ _("Agotamiento") }}</div>
     </div>
 
     <div class="stat-card">
@@ -37,7 +39,7 @@
             <i class="fas fa-user-slash"></i>
         </div>
         <div class="stat-value">{{ evaluacion.dim_distanciamiento }}</div>
-        <div class="stat-label">Distanciamiento</div>
+        <div class="stat-label">{{ _("Distanciamiento") }}</div>
     </div>
 
     <div class="stat-card">
@@ -45,7 +47,7 @@
             <i class="fas fa-lightbulb"></i>
         </div>
         <div class="stat-value">{{ evaluacion.dim_cognitivo }}</div>
-        <div class="stat-label">Deterioro Cognitivo</div>
+        <div class="stat-label">{{ _("Deterioro Cognitivo") }}</div>
     </div>
 </div>
 
@@ -53,17 +55,17 @@
 
     <!-- Lista de barras de progreso que muestran cada dimensión sobre 5 -->
     <div class="result-card">
-        <h2><i class="fas fa-chart-pie" style="margin-right: 10px; color: var(--accent-ink);"></i>Resumen de Dimensiones
+        <h2><i class="fas fa-chart-pie" style="margin-right: 10px; color: var(--accent-ink);"></i>{{ _("Resumen de Dimensiones") }}
         </h2>
 
         <div class="dimension-bar">
             <!-- Cada barra muestra cuánto de 5 tiene cada dimensión -->
             <div class="label">
-                <span>Agotamiento</span>
+                <span>{{ _("Agotamiento") }}</span>
                 <span>{{ evaluacion.dim_agotamiento }}/5</span>
             </div>
             <div class="progress-bg">
-                <div class="progress-fill {% if evaluacion.dim_agotamiento < 2.5 %}green{% elif evaluacion.dim_agotamiento < 3.5 %}yellow{% else %}red{% endif %}"
+                <div class="progress-fill neutral"
                     style="width: {{ (evaluacion.dim_agotamiento / 5 * 100)|int }}%;">
                 </div>
             </div>
@@ -71,11 +73,11 @@
 
         <div class="dimension-bar">
             <div class="label">
-                <span>Distanciamiento</span>
+                <span>{{ _("Distanciamiento") }}</span>
                 <span>{{ evaluacion.dim_distanciamiento }}/5</span>
             </div>
             <div class="progress-bg">
-                <div class="progress-fill {% if evaluacion.dim_distanciamiento < 2.5 %}green{% elif evaluacion.dim_distanciamiento < 3.5 %}yellow{% else %}red{% endif %}"
+                <div class="progress-fill neutral"
                     style="width: {{ (evaluacion.dim_distanciamiento / 5 * 100)|int }}%;">
                 </div>
             </div>
@@ -83,11 +85,11 @@
 
         <div class="dimension-bar">
             <div class="label">
-                <span>Deterioro Cognitivo</span>
+                <span>{{ _("Deterioro Cognitivo") }}</span>
                 <span>{{ evaluacion.dim_cognitivo }}/5</span>
             </div>
             <div class="progress-bg">
-                <div class="progress-fill {% if evaluacion.dim_cognitivo < 2.5 %}green{% elif evaluacion.dim_cognitivo < 3.5 %}yellow{% else %}red{% endif %}"
+                <div class="progress-fill neutral"
                     style="width: {{ (evaluacion.dim_cognitivo / 5 * 100)|int }}%;">
                 </div>
             </div>
@@ -95,11 +97,11 @@
 
         <div class="dimension-bar">
             <div class="label">
-                <span>Deterioro Emocional</span>
+                <span>{{ _("Deterioro Emocional") }}</span>
                 <span>{{ evaluacion.dim_emocional }}/5</span>
             </div>
             <div class="progress-bg">
-                <div class="progress-fill {% if evaluacion.dim_emocional < 2.5 %}green{% elif evaluacion.dim_emocional < 3.5 %}yellow{% else %}red{% endif %}"
+                <div class="progress-fill neutral"
                     style="width: {{ (evaluacion.dim_emocional / 5 * 100)|int }}%;">
                 </div>
             </div>
@@ -107,27 +109,33 @@
 
         <p style="color: var(--muted); font-size: 0.8rem; margin-top: 20px;">
             <i class="fas fa-calendar-alt" style="margin-right: 6px;"></i>
-            Ultima evaluacion: {{ evaluacion.fecha.strftime('%d/%m/%Y') }}
+            {{ _("Ultima evaluacion:") }} {{ evaluacion.fecha.strftime('%d/%m/%Y') }}
         </p>
     </div>
 
     <div class="result-card">
         <!-- Gráfico radar que compara las 4 dimensiones -->
-        <h2><i class="fas fa-radar" style="margin-right: 10px; color: var(--accent-ink);"></i>Visualizacion</h2>
+        <h2><i class="fas fa-radar" style="margin-right: 10px; color: var(--accent-ink);"></i>{{ _("Visualizacion") }}</h2>
         <canvas id="burnoutChart" style="max-height: 300px;"></canvas>
     </div>
+
+    {% if tendencia|length > 1 %}
+    <div class="result-card">
+        <h2>{{ _("Tu evolución") }}</h2>
+        {{ grafico_tendencia(tendencia) }}
+    </div>
+    {% endif %}
 </div>
 
-{% if evaluacion.consejos %}
+{% if evaluacion.consejos_data %}
 <div class="consejos-panel">
 
     <div class="consejo-header" style="margin-bottom: 10px;">
-        <h2><i class="fas fa-lightbulb" style="margin-right: 10px; color: var(--accent-ink);"></i>Consejos
-            Personalizados</h2>
+        <h2><i class="fas fa-lightbulb" style="margin-right: 10px; color: var(--accent-ink);"></i>{{ _("Consejos Personalizados") }}</h2>
     </div>
 
 
-    {{ evaluacion.consejos | safe }}
+    {{ consejos(evaluacion.consejos_data) }}
 
 </div>
 {% endif %}
@@ -136,7 +144,7 @@
     <!-- Botón para repetir la evaluación desde cero -->
     <a href="/test" class="btn-secondary">
         <i class="fas fa-redo"></i>
-        Repetir Evaluacion
+        {{ _("Repetir Evaluacion") }}
     </a>
 </div>
 
@@ -148,15 +156,14 @@
         style="width: 80px; height: 80px; background: var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
         <i class="fas fa-clipboard-check" style="font-size: 2rem; color: var(--accent-ink);"></i>
     </div>
-    <h2 style="margin-bottom: 15px;">Listo para evaluar tu bienestar?</h2>
+    <h2 style="margin-bottom: 15px;">{{ _("Listo para evaluar tu bienestar?") }}</h2>
     <p
         style="color: var(--muted); margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">
-        El test BAT-12 consta de 12 preguntas que evaluaran tu nivel de agotamiento laboral en 4 dimensiones. Solo te
-        tomara unos minutos.
+        {{ _("El test BAT-12 consta de 12 preguntas que evaluaran tu nivel de agotamiento laboral en 4 dimensiones. Solo te tomara unos minutos.") }}
     </p>
     <a href="/test" class="btn-primary" style="max-width: 280px;">
         <i class="fas fa-play" style="margin-right: 10px;"></i>
-        Comenzar Evaluacion
+        {{ _("Comenzar Evaluacion") }}
     </a>
 </div>
 {% endif %}
@@ -177,9 +184,9 @@
         new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: ['Agotamiento', 'Distanciamiento', 'Deterioro Cognitivo', 'Deterioro Emocional'],
+                labels: [{{ _("Agotamiento")|tojson }}, {{ _("Distanciamiento")|tojson }}, {{ _("Deterioro cognitivo")|tojson }}, {{ _("Deterioro emocional")|tojson }}],
                 datasets: [{
-                    label: 'Nivel de Burnout',
+                    label: {{ _("Nivel de burnout")|tojson }},
                     data: [dataAgotamiento, dataDistanciamiento, dataCognitivo, dataEmocional],
                     backgroundColor: 'rgba(73, 243, 190, 0.2)',
                     borderColor: '#49f3be',

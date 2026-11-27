@@ -1,0 +1,14 @@
+{# Consejos estructurados (resilio/services/consejos.py). Todo se escapa: nada de | safe. #}
+{% macro consejos(c) %}
+{% if c %}
+<div class="consejo-intro"><p>{{ c.intro }}</p></div>
+<div class="consejos-grid">
+    {% for item in c.consejos %}
+    <div class="consejo-card">
+        <h4>{{ ['💡', '⚡', '🧘'][loop.index0 % 3] }} {{ item.titulo }}</h4>
+        <p>{{ item.texto }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endmacro %}
