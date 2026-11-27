@@ -32,8 +32,7 @@ resilio/
 │   ├── conexion/
 │   │   └── conexion_bbdd.py  ← Capa de acceso y pool de conexiones a MySQL
 │   ├── database/             ← Scripts SQL para esquemas y datos iniciales
-│   │   ├── resilio_db_actual.sql
-│   │   └── schema.sql
+│   │   └── resilio_db_actual.sql
 │   ├── servicios/
 │   │   ├── test_service.py   ← Lógica de negocio para calcular el BAT-12
 │   │   └── ia_service.py     ← Interfaz con la API de Google Gemini
