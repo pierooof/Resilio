@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resilio - Test BAT-12</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script>
@@ -17,223 +20,233 @@
     <style>
         body.test-page {
             display: block;
-            background: var(--bg-color, #0d0d0d);
-            background: linear-gradient(-45deg, #0a0a0a, #111111, #0f1a15, #0a0a0a);
-            background-size: 400% 400%;
-            animation: respiracionFondo 15s ease infinite;
-            min-height: 100vh;
-            padding: 40px 20px;
-            color: var(--text-primary);
+            padding: clamp(24px, 5vw, 64px) 20px 80px;
         }
-        
-        html[data-theme="light"] body.test-page {
-            background: linear-gradient(-45deg, #f0f0f2, #e8e8ea, #f5f5f7, #f0f0f2) !important;
+
+        .test-container { max-width: 760px; margin: 0 auto; }
+
+        .test-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: clamp(32px, 6vw, 64px);
         }
-        
-        .test-container {
-            max-width: 700px;
-            margin: 0 auto;
+
+        .test-top .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.04em;
+            color: var(--ink);
+            text-decoration: none;
         }
-        
-        .test-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
+        .test-top .brand::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+
+        .test-header { margin-bottom: 36px; }
+
         .test-header h1 {
-            color: var(--text-primary);
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: var(--t6);
+            letter-spacing: -0.05em;
+            line-height: 0.95;
+            margin-bottom: 14px;
         }
-        
-        .test-header p {
-            color: var(--text-secondary);
+
+        .test-header p { color: var(--muted); font-size: var(--t2); font-family: var(--font-display); letter-spacing: -0.02em; }
+
+        .info-box {
+            background: var(--fill-1);
+            border: 1px solid var(--line);
+            border-radius: var(--r);
+            padding: 20px 22px;
+            margin-bottom: 28px;
+            box-shadow: inset 3px 0 0 var(--accent);
         }
-        
+        .info-box h3 { font-family: var(--font-text); font-size: 0.95rem; margin-bottom: 6px; letter-spacing: 0; }
+        .info-box h3 i { color: var(--accent-ink); margin-right: 8px; }
+        .info-box p { color: var(--muted); font-size: 0.92rem; }
+        .info-box p strong { color: var(--ink); font-weight: 600; }
+
+        /* Progreso fijo arriba mientras se responde */
         .progress-bar {
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            margin: 0 -20px 28px;
+            padding: 14px 20px;
+            background: color-mix(in srgb, var(--ground) 88%, transparent);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--line);
         }
-        
         .progress-bar .progress-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+            margin: 0 auto 8px;
+            max-width: 760px;
+            font-size: 0.82rem;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
         }
-        
-        .progress-bar .progress-track {
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
+        .progress-bar .progress-track { max-width: 760px; margin: 0 auto; }
         .progress-bar .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--neon-green), #3dd9a0);
-            border-radius: 4px;
-            transition: width 0.3s ease;
+            background: var(--accent);
+            border-radius: 999px;
+            transition: width 0.5s var(--ease);
         }
-        
+
         .question-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 24px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r);
+            padding: clamp(22px, 4vw, 34px);
+            margin-bottom: 18px;
+            transition: border-color 0.3s var(--ease);
         }
-        
+        .question-card:focus-within { border-color: var(--fill-3); }
+        .question-card.answered { border-color: var(--accent-dim); }
+
         .question-number {
-            display: inline-block;
-            background: var(--neon-green-dim);
-            color: var(--neon-green);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            display: block;
+            color: var(--muted);
+            font-size: 0.78rem;
             font-weight: 600;
-            margin-bottom: 15px;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+            font-variant-numeric: tabular-nums;
         }
-        
+
         .question-text {
-            color: var(--text-primary);
-            font-size: 1.1rem;
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 1.05rem + 0.8vw, 1.55rem);
             font-weight: 500;
-            margin-bottom: 25px;
-            line-height: 1.5;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+            margin-bottom: 26px;
+            max-width: 36ch;
         }
-        
+
         .options-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
-        
+
         .option-label {
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 8px;
             cursor: pointer;
         }
-        
+
+        /* Radio oculto pero enfocable (teclado y validación nativa siguen funcionando) */
         .option-label input {
-            display: none;
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 52px;
+            width: 100%;
+            opacity: 0;
+            cursor: pointer;
+            margin: 0;
         }
-        
+
         .option-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 64px;
+            aspect-ratio: 1;
+            border-radius: var(--r-sm);
+            background: var(--fill-1);
+            border: 1px solid var(--input-border);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: var(--font-display);
             font-weight: 700;
-            font-size: 1rem;
-            color: var(--text-secondary);
-            transition: all 0.2s ease;
+            font-size: 1.15rem;
+            color: var(--muted);
+            transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease), transform 0.35s var(--ease);
         }
-        
+
+        .option-label:hover .option-circle { border-color: var(--accent-ink); color: var(--ink); transform: scale(1.04); }
+
         .option-label input:checked + .option-circle {
-            background: var(--neon-green);
-            border-color: var(--neon-green);
-            color: #0a0a0a;
-            box-shadow: 0 0 20px rgba(73, 243, 190, 0.4);
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--on-accent);
+            transform: scale(1.04);
         }
-        
-        .option-label:hover .option-circle {
-            border-color: var(--neon-green);
+
+        .option-label input:focus-visible + .option-circle {
+            outline: 2px solid var(--accent-ink);
+            outline-offset: 3px;
         }
-        
+
         .option-text {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
+            font-size: 0.72rem;
+            color: var(--muted);
             text-align: center;
+            line-height: 1.2;
         }
-        
-        .option-label input:checked ~ .option-text {
-            color: var(--neon-green);
-        }
-        
-        .scale-legend {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-        
+        .option-label input:checked ~ .option-text { color: var(--accent-ink); font-weight: 600; }
+
+        .scale-legend { display: none; } /* las etiquetas ya van bajo cada opción */
+
         .btn-test {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             width: 100%;
-            padding: 18px;
-            background: linear-gradient(90deg, var(--neon-green), #3dd9a0);
-            border: none;
-            border-radius: 12px;
-            color: #0a0a0a;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 20px;
-        }
-        
-        .btn-test:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(73, 243, 190, 0.3);
-        }
-        
-        .info-box {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
             padding: 20px;
-            margin-bottom: 30px;
-            border-left: 3px solid var(--neon-green);
+            background: var(--accent);
+            border: 0;
+            border-radius: var(--r);
+            color: var(--on-accent);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -0.01em;
+            margin-top: 28px;
+            transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
         }
-        
-        .info-box h3 {
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-        }
-        
-        .info-box p {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            line-height: 1.5;
+        .btn-test:hover { transform: scale(1.01); box-shadow: 0 0 0 6px var(--accent-dim); }
+        .btn-test:active { transform: scale(0.99); }
+        .btn-test:disabled { opacity: 0.7; cursor: progress; }
+
+        @media (max-width: 520px) {
+            .options-grid { gap: 6px; }
+            .option-text { font-size: 0.66rem; }
         }
     </style>
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
 </head>
 
 <body class="test-page">
     
     <div class="test-container">
         
-        <div class="test-header">
-            <div style="margin-bottom: 20px;">
-                <img src="{{ url_for('static', filename='img/resilio-logo-sinfondo.png') }}" 
-                     alt="Resilio" 
-                     style="width: 120px; filter: drop-shadow(0 0 20px rgba(73, 243, 190, 0.3));">
+        <div class="test-top">
+            <a class="brand" href="/dashboard">Resilio</a>
+            <div class="language-switcher" role="group" aria-label="Idioma">
+                <button type="button" class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
+                <button type="button" class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+                <button type="button" class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
             </div>
+        </div>
+
+        <div class="test-header">
             <h1 data-i18n="testBat12">Test BAT-12</h1>
             <p data-i18n="evaluacionAgotamiento">Evaluación de Agotamiento Laboral</p>
         </div>
-        
+
         <div class="info-box">
-            <h3><i class="fas fa-info-circle" style="color: var(--neon-green); margin-right: 8px;"></i><span data-i18n="comoResponder">Como responder?</span></h3>
+            <h3><i class="fas fa-info-circle" aria-hidden="true"></i><span data-i18n="comoResponder">Como responder?</span></h3>
             <p data-i18n="instruccionesTest">Responde cada pregunta pensando en <strong>como te has sentido en las ultimas semanas</strong>. 
             La escala va de 1 (Nunca) a 5 (Siempre). No hay respuestas correctas o incorrectas.</p>
         </div>
@@ -253,7 +266,7 @@
             {% for pregunta in preguntas %}
             <div class="question-card" data-question="{{ loop.index }}">
                 
-                <span class="question-number" data-i18n="pregunta">Pregunta</span> {{ loop.index }} <span data-i18n="de">de</span> {{ preguntas|length }}
+                <span class="question-number">Pregunta {{ loop.index }} de {{ preguntas|length }}</span>
                 
                 <p class="question-text">{{ pregunta.texto }}</p>
                 
@@ -285,85 +298,62 @@
     </div>
     
     <script>
-        // Sistema de traducciones
-        const translations = {
-            es: {
-                testBat12: "Test BAT-12",
-                evaluacionAgotamiento: "Evaluación de Agotamiento Laboral",
-                comoResponder: "Como responder?",
-                instruccionesTest: "Responde cada pregunta pensando en como te has sentido en las ultimas semanas. La escala va de 1 (Nunca) a 5 (Siempre). No hay respuestas correctas o incorrectas.",
-                progreso: "Progreso",
-                enviarRespuestas: "Enviar Respuestas",
-                pregunta: "Pregunta",
-                de: "de",
-                nunca: "Nunca",
-                raramente: "Raramente",
-                aVeces: "A veces",
-                aMenudo: "A menudo",
-                siempre: "Siempre"
+        // Textos de esta página (el motor está en static/js/i18n.js)
+        Resilio.i18n.add({
+            "es": {
+                "testBat12": "Test BAT-12",
+                "evaluacionAgotamiento": "Evaluación de Agotamiento Laboral",
+                "comoResponder": "Como responder?",
+                "instruccionesTest": "Responde cada pregunta pensando en como te has sentido en las ultimas semanas. La escala va de 1 (Nunca) a 5 (Siempre). No hay respuestas correctas o incorrectas.",
+                "progreso": "Progreso",
+                "enviarRespuestas": "Enviar Respuestas",
+                "pregunta": "Pregunta",
+                "de": "de",
+                "nunca": "Nunca",
+                "raramente": "Raramente",
+                "aVeces": "A veces",
+                "aMenudo": "A menudo",
+                "siempre": "Siempre"
             },
-            en: {
-                testBat12: "BAT-12 Test",
-                evaluacionAgotamiento: "Workplace Burnout Assessment",
-                comoResponder: "How to answer?",
-                instruccionesTest: "Answer each question thinking about how you have felt in the last few weeks. The scale goes from 1 (Never) to 5 (Always). There are no right or wrong answers.",
-                progreso: "Progress",
-                enviarRespuestas: "Submit Answers",
-                pregunta: "Question",
-                de: "of",
-                nunca: "Never",
-                raramente: "Rarely",
-                aVeces: "Sometimes",
-                aMenudo: "Often",
-                siempre: "Always"
+            "en": {
+                "testBat12": "BAT-12 Test",
+                "evaluacionAgotamiento": "Workplace Burnout Assessment",
+                "comoResponder": "How to answer?",
+                "instruccionesTest": "Answer each question thinking about how you have felt in the last few weeks. The scale goes from 1 (Never) to 5 (Always). There are no right or wrong answers.",
+                "progreso": "Progress",
+                "enviarRespuestas": "Submit Answers",
+                "pregunta": "Question",
+                "de": "of",
+                "nunca": "Never",
+                "raramente": "Rarely",
+                "aVeces": "Sometimes",
+                "aMenudo": "Often",
+                "siempre": "Always"
             },
-            ca: {
-                testBat12: "Test BAT-12",
-                evaluacionAgotamiento: "Avaluació d'Esgotament Laboral",
-                comoResponder: "Com respondre?",
-                instruccionesTest: "Respon a cada pregunta pensant com t'has sentit les últimes setmanes. L'escala va de 1 (Mai) a 5 (Sempre). No hi ha respostes correctes o incorrectes.",
-                progreso: "Progrés",
-                enviarRespuestas: "Enviar Respostes",
-                pregunta: "Pregunta",
-                de: "de",
-                nunca: "Mai",
-                raramente: "Rarament",
-                aVeces: "A vegades",
-                aMenudo: "Sovint",
-                siempre: "Sempre"
+            "ca": {
+                "testBat12": "Test BAT-12",
+                "evaluacionAgotamiento": "Avaluació d'Esgotament Laboral",
+                "comoResponder": "Com respondre?",
+                "instruccionesTest": "Respon a cada pregunta pensant com t'has sentit les últimes setmanes. L'escala va de 1 (Mai) a 5 (Sempre). No hi ha respostes correctes o incorrectes.",
+                "progreso": "Progrés",
+                "enviarRespuestas": "Enviar Respostes",
+                "pregunta": "Pregunta",
+                "de": "de",
+                "nunca": "Mai",
+                "raramente": "Rarament",
+                "aVeces": "A vegades",
+                "aMenudo": "Sovint",
+                "siempre": "Sempre"
             }
-        };
-        
-        function setLanguage(lang) {
-            localStorage.setItem('resilio-language', lang);
-            applyTranslations(lang);
-        }
-        
-        function applyTranslations(lang) {
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
+        });
+
+        // Número de pregunta traducido ("Pregunta 3 de 12")
+        Resilio.i18n.onApply(function (lang) {
+            var nums = document.querySelectorAll('.question-number');
+            nums.forEach(function (el, idx) {
+                el.textContent = (Resilio.i18n.t('pregunta', lang) || 'Pregunta') + ' ' + (idx + 1) + ' ' +
+                    (Resilio.i18n.t('de', lang) || 'de') + ' ' + nums.length;
             });
-            document.documentElement.lang = lang;
-            
-            
-            // Traducir numeros de pregunta
-            const questionNumbers = document.querySelectorAll('.question-number');
-            const total = questionNumbers.length;
-            questionNumbers.forEach((el, idx) => {
-                const pregKey = translations[lang]['pregunta'] || 'Pregunta';
-                const deKey = translations[lang]['de'] || 'de';
-                el.textContent = `${pregKey} ${idx + 1} ${deKey} ${total}`;
-            });
-        }
-        
-        // Aplicar idioma al cargar
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('resilio-language') || 'es';
-            applyTranslations(savedLang);
         });
         
         const questionCards = document.querySelectorAll('.question-card');
@@ -375,6 +365,7 @@
             let answered = 0;
             questionCards.forEach(card => {
                 const inputs = card.querySelectorAll('input[type="radio"]:checked');
+                card.classList.toggle('answered', inputs.length > 0);
                 if (inputs.length > 0) answered++;
             });
             

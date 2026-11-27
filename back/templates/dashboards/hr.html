@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+{% block head_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
+{% endblock %}
 
 {% block title %}Dashboard HR{% endblock %}
 
@@ -93,7 +96,7 @@
                 <h2>Departamentos</h2>
             </div>
             <div class="table-wrap">
-                <table class="resilio-table">
+                <div class="table-scroll"><table class="resilio-table">
                     <thead>
                         <tr>
                             <th>Departamento</th>
@@ -118,7 +121,7 @@
                             </tr>
                         {% endif %}
                     </tbody>
-                </table>
+                </table></div>
             </div>
         </article>
     </section>
@@ -129,7 +132,7 @@
                 <h2>Evaluaciones recientes</h2>
             </div>
             <div class="table-wrap">
-                <table class="resilio-table">
+                <div class="table-scroll"><table class="resilio-table">
                     <thead>
                         <tr>
                             <th>Empleado</th>
@@ -152,7 +155,7 @@
                             </tr>
                         {% endif %}
                     </tbody>
-                </table>
+                </table></div>
             </div>
         </article>
     </section>
@@ -172,12 +175,12 @@
 .page-header h1 {
     margin: 0 0 6px;
     font-size: 1.8rem;
-    color: var(--text-primary);
+    color: var(--ink);
 }
 
 .page-subtitle {
     margin: 0;
-    color: var(--text-secondary);
+    color: var(--muted);
     font-size: 0.95rem;
 }
 
@@ -188,23 +191,23 @@
 
 /* Paneles de gráficas y tablas */
 .hr-panel-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     transition: background 0.3s ease;
 }
 
 .hr-panel-header {
     padding: 20px 24px 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--line);
     padding-bottom: 14px;
     margin-bottom: 4px;
 }
 
 .hr-panel-header h2 {
     margin: 0;
-    color: var(--text-primary);
+    color: var(--ink);
     font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -236,9 +239,9 @@
 }
 
 .metric-item {
-    background: var(--card-hover);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
     padding: 14px 16px;
     display: flex;
     justify-content: space-between;
@@ -247,12 +250,12 @@
 }
 
 .metric-item span {
-    color: var(--text-secondary);
+    color: var(--muted);
     font-size: 0.85rem;
 }
 
 .metric-item strong {
-    color: var(--neon-green);
+    color: var(--accent-ink);
     font-size: 1.1rem;
     font-weight: 700;
 }
@@ -271,11 +274,11 @@
 .resilio-table thead th {
     text-align: left;
     font-size: 0.75rem;
-    color: var(--text-secondary);
+    color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: 14px 10px;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--line);
 }
 
 .resilio-table tbody tr {
@@ -283,19 +286,19 @@
 }
 
 .resilio-table tbody tr:hover {
-    background: var(--card-hover);
+    background: var(--surface-2);
 }
 
 .resilio-table tbody td {
     padding: 14px 10px;
-    color: var(--text-primary);
+    color: var(--ink);
     font-size: 0.9rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--line);
 }
 
 .empty-cell {
     text-align: center;
-    color: var(--text-secondary);
+    color: var(--muted);
     padding: 28px 10px;
     font-size: 0.9rem;
 }
@@ -320,11 +323,11 @@
 
     /* Leer variables CSS para que los gráficos respeten el tema activo */
     const styles    = getComputedStyle(document.documentElement);
-    const neonGreen = styles.getPropertyValue('--neon-green').trim()   || '#49f3be';
-    const coralRed  = styles.getPropertyValue('--coral-red').trim()    || '#f34949';
-    const yellow    = styles.getPropertyValue('--yellow').trim()       || '#f3c949';
-    const textSec   = styles.getPropertyValue('--text-secondary').trim() || '#888888';
-    const borderClr = styles.getPropertyValue('--border-color').trim() || 'rgba(255,255,255,0.08)';
+    const neonGreen = styles.getPropertyValue('--accent').trim()   || '#49f3be';
+    const coralRed  = styles.getPropertyValue('--danger').trim()    || '#f34949';
+    const yellow    = styles.getPropertyValue('--warn').trim()       || '#f3c949';
+    const textSec   = styles.getPropertyValue('--muted').trim() || '#888888';
+    const borderClr = styles.getPropertyValue('--line').trim() || 'rgba(128,128,128,0.2)';
 
     const trendCtx = document.getElementById('trendChart');
     if (trendCtx) {

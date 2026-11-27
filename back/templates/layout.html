@@ -4,40 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resilio - Dashboard</title>
+    <title>{% block title %}Resilio{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .language-switcher {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-right: 20px;
-        }
-
-        .language-btn {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-        }
-
-        .language-btn:hover {
-            color: var(--text-primary);
-            border-color: var(--neon-green);
-        }
-
-        .language-btn.active {
-            background: rgba(73, 243, 190, 0.1);
-            color: var(--neon-green);
-            border-color: var(--neon-green);
-        }
-    </style>
+    {% block head_scripts %}{% endblock %}
     <script>
         // Aplicar tema ANTES de que cargue el body para evitar parpadeo
         (function() {
@@ -45,65 +18,68 @@
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
     </script>
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/i18n-app.js') }}"></script>
 </head>
 
 <body class="dashboard-body">
-    <nav class="sidebar">
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <nav class="sidebar" aria-label="Principal">
         <div class="logo">Resilio</div>
         <ul>
     <li>
-        <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">
-            <i class="fas fa-home"></i>
+        <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}" {% if request.path == '/dashboard' %}aria-current="page"{% endif %}>
+            <i class="fas fa-home" aria-hidden="true"></i>
             <span data-i18n="inicio">Inicio</span>
         </a>
     </li>
 
     {% if session.get("rol") not in [1, 2] %}
     <li>
-        <a href="/test" class="{% if request.path == '/test' %}active{% endif %}">
-            <i class="fas fa-clipboard-list"></i>
+        <a href="/test" class="{% if request.path == '/test' %}active{% endif %}" {% if request.path == '/test' %}aria-current="page"{% endif %}>
+            <i class="fas fa-clipboard-list" aria-hidden="true"></i>
             <span data-i18n="realizarTest">Realizar Test</span>
         </a>
     </li>
     <li>
-        <a href="/historial" class="{% if request.path == '/historial' %}active{% endif %}">
-            <i class="fas fa-history"></i>
+        <a href="/historial" class="{% if request.path == '/historial' %}active{% endif %}" {% if request.path == '/historial' %}aria-current="page"{% endif %}>
+            <i class="fas fa-history" aria-hidden="true"></i>
             <span data-i18n="historial">Historial</span>
         </a>
     </li>
     {% endif %}
 
     <li>
-        <a href="/configuracion" class="{% if request.path == '/configuracion' %}active{% endif %}">
-            <i class="fas fa-cog"></i>
+        <a href="/configuracion" class="{% if request.path == '/configuracion' %}active{% endif %}" {% if request.path == '/configuracion' %}aria-current="page"{% endif %}>
+            <i class="fas fa-cog" aria-hidden="true"></i>
             <span data-i18n="configuracion">Configuracion</span>
         </a>
     </li>
 </ul>
-        
-        <div style="margin-top: auto; padding: 0 30px;">
-            <a href="/logout" style="display: flex; align-items: center; gap: 12px; color: var(--coral-red); text-decoration: none; font-size: 0.9rem; font-weight: 500; padding: 14px 0;">
-                <i class="fas fa-sign-out-alt"></i>
+
+        <div class="sidebar-foot">
+            <a href="/logout" class="logout-link">
+                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                 <span data-i18n="cerrarSesion">Cerrar Sesion</span>
             </a>
         </div>
     </nav>
 
-  <main class="content">
+  <main class="content" id="main" tabindex="-1">
         <header class="top-bar">
             <div>
                 <span class="header-title"><span data-i18n="hola">Hola</span>, <strong>{{ session['nombre'] }}</strong></span>
             </div>
 
-            <div style="display: flex; align-items: center;">
-                <div class="language-switcher">
-                    <button class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
-                    <button class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
-                    <button class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
+            <div class="top-bar-right">
+                <div class="language-switcher" role="group" aria-label="Idioma">
+                    <button type="button" class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
+                    <button type="button" class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+                    <button type="button" class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
                 </div>
                 {% if session['nombre_empresa'] %}
                 <span class="badge">
-                    <i class="fas fa-building" style="margin-right: 8px;"></i>
+                    <i class="fas fa-building" aria-hidden="true" style="margin-right: 8px;"></i>
                     {{ session['nombre_empresa'] }} | {{ session['nombre_dept'] }}
                 </span>
                 {% endif %}
@@ -112,7 +88,7 @@
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div style="margin-bottom: 20px;">
+                <div style="margin-bottom: 20px;" role="status" aria-live="polite">
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }}">{{ message }}</div>
                 {% endfor %}
@@ -123,157 +99,6 @@
             {% block content %}{% endblock %}
         </section>
     </main>
-
-    <script>
-        // Sistema de traducciones
-        const translations = {
-            es: {
-                inicio: "Inicio",
-                realizarTest: "Realizar Test",
-                historial: "Historial",
-                configuracion: "Configuracion",
-                cerrarSesion: "Cerrar Sesion",
-                hola: "Hola",
-                historialEvaluaciones: "Historial de Evaluaciones",
-                historialDescripcion: "Revisa tus evaluaciones anteriores y su evolucion.",
-                puntuacionGlobal: "Puntuacion Global",
-                agotamiento: "Agotamiento",
-                distanciamiento: "Distanciamiento",
-                deterioroCognitivo: "Deterioro Cognitivo",
-                deterioroEmocional: "Deterioro Emocional",
-                bajoRiesgo: "Bajo Riesgo",
-                riesgoMedio: "Riesgo Medio",
-                riesgoAlto: "Riesgo Alto",
-                testBat12: "Test BAT-12",
-                evaluacionAgotamiento: "Evaluación de Agotamiento Laboral",
-                comoResponder: "Como responder?",
-                progreso: "Progreso",
-                enviarRespuestas: "Enviar Respuestas",
-                pregunta: "Pregunta",
-                de: "de",
-                nunca: "Nunca",
-                siempre: "Siempre",
-                noEvaluaciones: "No tienes evaluaciones anteriores",
-                realizaPrimeraEvaluacion: "Realiza tu primera evaluacion para comenzar a hacer seguimiento de tu bienestar laboral.",
-                realizarPrimeraEvaluacion: "Realizar Primera Evaluacion",
-                verPreguntas: "Ver preguntas",
-                nuncaRaras: "Raras",
-                aVeces: "A veces"
-            },
-            en: {
-                inicio: "Home",
-                realizarTest: "Take Test",
-                historial: "History",
-                configuracion: "Settings",
-                cerrarSesion: "Logout",
-                hola: "Hello",
-                historialEvaluaciones: "Evaluation History",
-                historialDescripcion: "Review your previous evaluations and their evolution.",
-                puntuacionGlobal: "Global Score",
-                agotamiento: "Exhaustion",
-                distancing: "Distancing",
-                deterioroCognitivo: "Cognitive Impairment",
-                deterioroEmocional: "Emotional Impairment",
-                bajoRiesgo: "Low Risk",
-                riesgoMedio: "Medium Risk",
-                riesgoAlto: "High Risk",
-                testBat12: "BAT-12 Test",
-                evaluacionAgotamiento: "Workplace Burnout Assessment",
-                comoResponder: "How to answer?",
-                progreso: "Progress",
-                enviarRespuestas: "Submit Answers",
-                pregunta: "Question",
-                de: "of",
-                nunca: "Never",
-                siempre: "Always",
-                noEvaluaciones: "You don't have any previous evaluations",
-                realizaPrimeraEvaluacion: "Take your first evaluation to start tracking your workplace wellbeing.",
-                realizarPrimeraEvaluacion: "Take First Evaluation",
-                verQuestions: "See questions",
-                nuncaRaras: "Rarely",
-                aVeces: "Sometimes"
-            },
-            ca: {
-                inicio: "Inici",
-                realizarTest: "Fer Test",
-                historial: "Historial",
-                configuracio: "Configuracio",
-                cerrarSesion: "Tancar Sessio",
-                hola: "Hola",
-                historialEvaluaciones: "Historial d'Avaluacions",
-                historialDescripcion: "Revisa les teves avaluacions anteriors i la seva evolució.",
-                puntuacionGlobal: "Puntuació Global",
-                agotamiento: "Esgotament",
-                distancing: "Distanciament",
-                deterioroCognitivo: "Deteriorament Cognitiu",
-                deterioroEmocional: "Deteriorament Emocional",
-                bajoRiesgo: "Baix Risc",
-                riesgoMedio: "Risc Mitjà",
-                riesgoAlto: "Alt Risc",
-                testBat12: "Test BAT-12",
-                evaluacionAgotamiento: "Avaluació d'Esgotament Laboral",
-                comoResponder: "Com respondre?",
-                progreso: "Progrés",
-                enviarRespuestas: "Enviar Respostes",
-                pregunta: "Pregunta",
-                de: "de",
-                nunca: "Mai",
-                siempre: "Sempre",
-                noEvaluaciones: "No tens avaluacions anteriors",
-                realizaPrimeraEvaluacion: "Fes la teva primera avaluació per començar a fer seguiment del teu benestar laboral.",
-                realizarPrimeraEvaluacion: "Fer Primera Avaluació",
-                veurePreguntes: "Veure preguntes",
-                nuncaRaras: "Rares",
-                aVeces: "A vegades"
-            }
-        };
-        
-        function setLanguage(lang) {
-            localStorage.setItem('resilio-language', lang);
-            applyTranslations(lang);
-        }
-        
-        function applyTranslations(lang) {
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
-            });
-            document.documentElement.lang = lang;
-
-            // Update language switcher buttons
-            document.querySelectorAll('.language-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.lang === lang) {
-                    btn.classList.add('active');
-                }
-            });
-        }
-        
-        // Funcion para cambiar el tema
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('resilio-theme', theme);
-            
-            // Actualizar botones si existen
-            if (document.querySelectorAll('.theme-btn')) {
-                document.querySelectorAll('.theme-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.theme === theme) {
-                        btn.classList.add('active');
-                    }
-                });
-            }
-        }
-        
-        // Aplicar idioma al cargar
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('resilio-language') || 'es';
-            applyTranslations(savedLang);
-        });
-    </script>
 </body>
 
 </html>

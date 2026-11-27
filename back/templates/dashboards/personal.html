@@ -1,11 +1,14 @@
 {% extends "layout.html" %}
+{% block head_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
+{% endblock %}
 <!-- Esta plantilla usa la estructura general de layout.html -->
 
 {% block content %}
 <!-- Contenido principal de la página -->
-<div class="welcome-section" style="margin-bottom: 40px;">
-    <h1 style="color: var(--text-primary); margin-bottom: 10px; font-size: 1.8rem;">Tu Espacio de Bienestar</h1>
-    <p style="color: var(--text-secondary);">Monitoriza tus niveles de energia y estres laboral.</p>
+<div class="welcome-section">
+    <h1>Tu Espacio de Bienestar</h1>
+    <p>Monitoriza tus niveles de energia y estres laboral.</p>
 </div>
 
 {% if evaluacion %}
@@ -17,9 +20,8 @@
         <div class="stat-icon green">
             <i class="fas fa-brain"></i>
         </div>
-        <h3>Puntuacion Global</h3>
         <div class="stat-value">{{ evaluacion.puntuacion_total }}</div>
-        <div class="stat-label">sobre 5</div>
+        <div class="stat-label">Puntuacion Global · sobre 5</div>
     </div>
 
     <div class="stat-card">
@@ -51,7 +53,7 @@
 
     <!-- Lista de barras de progreso que muestran cada dimensión sobre 5 -->
     <div class="result-card">
-        <h2><i class="fas fa-chart-pie" style="margin-right: 10px; color: var(--neon-green);"></i>Resumen de Dimensiones
+        <h2><i class="fas fa-chart-pie" style="margin-right: 10px; color: var(--accent-ink);"></i>Resumen de Dimensiones
         </h2>
 
         <div class="dimension-bar">
@@ -103,7 +105,7 @@
             </div>
         </div>
 
-        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 20px;">
+        <p style="color: var(--muted); font-size: 0.8rem; margin-top: 20px;">
             <i class="fas fa-calendar-alt" style="margin-right: 6px;"></i>
             Ultima evaluacion: {{ evaluacion.fecha.strftime('%d/%m/%Y') }}
         </p>
@@ -111,7 +113,7 @@
 
     <div class="result-card">
         <!-- Gráfico radar que compara las 4 dimensiones -->
-        <h2><i class="fas fa-radar" style="margin-right: 10px; color: var(--neon-green);"></i>Visualizacion</h2>
+        <h2><i class="fas fa-radar" style="margin-right: 10px; color: var(--accent-ink);"></i>Visualizacion</h2>
         <canvas id="burnoutChart" style="max-height: 300px;"></canvas>
     </div>
 </div>
@@ -120,7 +122,7 @@
 <div class="consejos-panel">
 
     <div class="consejo-header" style="margin-bottom: 10px;">
-        <h2><i class="fas fa-lightbulb" style="margin-right: 10px; color: var(--neon-green);"></i>Consejos
+        <h2><i class="fas fa-lightbulb" style="margin-right: 10px; color: var(--accent-ink);"></i>Consejos
             Personalizados</h2>
     </div>
 
@@ -138,108 +140,17 @@
     </a>
 </div>
 
-<style>
-    .results-section {
-        display: flex;
-        gap: 24px;
-        flex-wrap: wrap;
-    }
-
-    .results-section .result-card {
-        flex: 1;
-        min-width: 300px;
-    }
-
-    .consejos-panel {
-        background: var(--card-bg);
-        border: 1px solid var(--border-subtle);
-        border-radius: 16px;
-        padding: 30px;
-        margin-top: 24px;
-    }
-
-    .consejos-panel h2 {
-        color: var(--text-primary);
-        font-size: 1.3rem;
-        margin-bottom: 24px;
-        display: flex;
-        align-items: center;
-    }
-
-    .consejos-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-
-    .consejo-card {
-        background: linear-gradient(135deg, rgba(73, 243, 190, 0.1), rgba(73, 243, 190, 0.05));
-        border: 1px solid rgba(73, 243, 190, 0.3);
-        border-radius: 16px;
-        padding: 24px;
-        position: relative;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .consejo-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 30px rgba(73, 243, 190, 0.2);
-    }
-
-    .consejo-number {
-        position: absolute;
-        top: -12px;
-        left: 20px;
-        width: 32px;
-        height: 32px;
-        background: var(--neon-green);
-        color: #0a0a0a;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 0.9rem;
-    }
-
-    .consejo-card h4 {
-        color: var(--neon-green);
-        font-size: 1.1rem;
-        margin-top: 0;
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .consejo-card p {
-        color: var(--text-primary);
-        line-height: 1.6;
-        font-size: 0.95rem;
-        margin-top: 8px;
-    }
-
-    @media (max-width: 900px) {
-        .consejos-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .results-section {
-            flex-direction: column;
-        }
-    }
-</style>
 
 {% else %}
 <!-- No hay evaluación: mostrar mensaje para empezar el test -->
 <div class="result-card" style="text-align: center; padding: 60px 40px;">
     <div
-        style="width: 80px; height: 80px; background: var(--neon-green-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
-        <i class="fas fa-clipboard-check" style="font-size: 2rem; color: var(--neon-green);"></i>
+        style="width: 80px; height: 80px; background: var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+        <i class="fas fa-clipboard-check" style="font-size: 2rem; color: var(--accent-ink);"></i>
     </div>
     <h2 style="margin-bottom: 15px;">Listo para evaluar tu bienestar?</h2>
     <p
-        style="color: var(--text-secondary); margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">
+        style="color: var(--muted); margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">
         El test BAT-12 consta de 12 preguntas que evaluaran tu nivel de agotamiento laboral en 4 dimensiones. Solo te
         tomara unos minutos.
     </p>
@@ -283,8 +194,8 @@
                         // AQUÍ ESTÁ LA CORRECCIÓN CLAVE: min y max van directamente en "r"
                         min: 0,
                         max: 5,
-                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        angleLines: { color: 'rgba(128,128,128,0.25)' },
+                        grid: { color: 'rgba(128,128,128,0.25)' },
                         pointLabels: { color: '#888', font: { size: 12 } },
                         ticks: {
                             stepSize: 1,

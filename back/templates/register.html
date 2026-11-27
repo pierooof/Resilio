@@ -5,40 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resilio | Registro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .language-switcher {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .language-btn {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-        }
-
-        .language-btn:hover {
-            color: var(--text-primary);
-            border-color: var(--neon-green);
-        }
-
-        .language-btn.active {
-            background: rgba(73, 243, 190, 0.1);
-            color: var(--neon-green);
-            border-color: var(--neon-green);
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script>
         // Aplicar tema antes de cargar
         (function() {
@@ -46,69 +17,74 @@
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
     </script>
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
 </head>
 
 <body class="auth-page">
-    <div class="language-switcher">
-        <button class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
-        <button class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
-        <button class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
-    </div>
+    <aside class="auth-brand" aria-hidden="true">
+        <span class="brand-mark">Resilio</span>
+        <div class="brand-word">Resilio</div>
+        <div class="brand-foot">BAT-12 · Burnout Assessment Tool</div>
+    </aside>
+    <main class="auth-main">
+        <div class="language-switcher" role="group" aria-label="Idioma">
+            <button type="button" class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
+            <button type="button" class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+            <button type="button" class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
+        </div>
     <div class="login-wrapper">
         <div class="register-card">
             <header class="logo-container">
-                <img src="{{ url_for('static', filename='img/resilio-logo-sinfondo.png') }}" alt="Resilio Logo"
-                    class="main-logo">
                 <p class="tagline" data-i18n="tagline">Únete a Resilio y mide tu bienestar mental</p>
             </header>
 
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">{{ message }}</div>
+            <div class="alert alert-{{ category }}" role="{{ 'alert' if category == 'error' else 'status' }}">{{ message }}</div>
             {% endfor %}
             {% endif %}
             {% endwith %}
 
             <form action="/register" method="POST" class="login-form">
                 <div class="input-field">
-                    <label data-i18n="nombre">Nombre</label>
+                    <label for="register-nombre" data-i18n="nombre">Nombre</label>
                     <div class="input-icon-wrapper">
-                        <i class="fas fa-user"></i>
-                        <input type="text" name="nombre" placeholder="Ej. Piero" required>
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                        <input id="register-nombre" autocomplete="given-name" type="text" name="nombre" placeholder="Ej. Piero" required>
                     </div>
                 </div>
 
                 <div class="input-field">
-                    <label data-i18n="apellidos">Apellidos</label>
+                    <label for="register-apellidos" data-i18n="apellidos">Apellidos</label>
                     <div class="input-icon-wrapper">
-                        <i class="fas fa-users"></i>
-                        <input type="text" name="apellidos" placeholder="Ej. Funes Larios">
+                        <i class="fas fa-users" aria-hidden="true"></i>
+                        <input id="register-apellidos" autocomplete="family-name" type="text" name="apellidos" placeholder="Ej. Funes Larios">
                     </div>
                 </div>
 
                 <div class="input-field">
-                    <label data-i18n="email">Email</label>
+                    <label for="register-email" data-i18n="email">Email</label>
                     <div class="input-icon-wrapper">
-                        <i class="fas fa-at"></i>
-                        <input type="email" name="email" placeholder="usuario@resilio.com" required>
+                        <i class="fas fa-at" aria-hidden="true"></i>
+                        <input id="register-email" autocomplete="email" type="email" name="email" placeholder="usuario@resilio.com" required>
                     </div>
                 </div>
 
                 <div class="input-field">
-                    <label data-i18n="contrasena">Contraseña</label>
+                    <label for="register-password" data-i18n="contrasena">Contraseña</label>
                     <div class="input-icon-wrapper">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" name="password" placeholder="Mínimo 8 caracteres" required minlength="8">
+                        <i class="fas fa-lock" aria-hidden="true"></i>
+                        <input id="register-password" autocomplete="new-password" type="password" name="password" placeholder="Mínimo 8 caracteres" required minlength="8">
                     </div>
                 </div>
                 <div class="input-field">
-                    <label data-i18n="codigoEmpresa">Código de Empresa (Opcional)</label>
+                    <label for="register-codigo_empresa" data-i18n="codigoEmpresa">Código de Empresa (Opcional)</label>
                     <div class="input-icon-wrapper">
-                        <i class="fas fa-building"></i>
-                        <input type="text" name="codigo_empresa" placeholder="Ej. ACME-HR-2026">
+                        <i class="fas fa-building" aria-hidden="true"></i>
+                        <input id="register-codigo_empresa" autocomplete="off" type="text" name="codigo_empresa" placeholder="Ej. ACME-HR-2026">
                     </div>
-                    <small style="color: var(--text-secondary); font-size: 0.75rem; display: block; margin-top: 6px;" data-i18n="codigoAyuda">Déjalo en blanco si eres usuario personal</small>
+                    <small style="color: var(--muted); font-size: 0.75rem; display: block; margin-top: 6px;" data-i18n="codigoAyuda">Déjalo en blanco si eres usuario personal</small>
                 </div>
 
                 <button type="submit" class="btn-primary" data-i18n="crearCuenta">Crear Cuenta</button>
@@ -119,72 +95,44 @@
             </form>
         </div>
     </div>
+    </main>
 
     <script>
-        // Sistema de traducciones
-        const translations = {
-            es: {
-                tagline: "Únete a Resilio y mide tu bienestar mental",
-                nombre: "Nombre",
-                apellidos: "Apellidos",
-                email: "Email",
-                contrasena: "Contraseña",
-                codigoEmpresa: "Código de Empresa (Opcional)",
-                codigoAyuda: "Déjalo en blanco si eres usuario personal",
-                crearCuenta: "Crear Cuenta",
-                yaTienesCuenta: "¿Ya tienes cuenta? Inicia sesión aquí"
+        // Textos de esta página (el motor está en static/js/i18n.js)
+        Resilio.i18n.add({
+            "es": {
+                "tagline": "Únete a Resilio y mide tu bienestar mental",
+                "nombre": "Nombre",
+                "apellidos": "Apellidos",
+                "email": "Email",
+                "contrasena": "Contraseña",
+                "codigoEmpresa": "Código de Empresa (Opcional)",
+                "codigoAyuda": "Déjalo en blanco si eres usuario personal",
+                "crearCuenta": "Crear Cuenta",
+                "yaTienesCuenta": "¿Ya tienes cuenta? Inicia sesión aquí"
             },
-            en: {
-                tagline: "Join Resilio and measure your mental wellbeing",
-                nombre: "Name",
-                apellidos: "Surname",
-                email: "Email",
-                contrasena: "Password",
-                codigoEmpresa: "Company Code (Optional)",
-                codigoAyuda: "Leave blank if you are a personal user",
-                crearCuenta: "Create Account",
-                yaTienesCuenta: "Already have an account? Sign in here"
+            "en": {
+                "tagline": "Join Resilio and measure your mental wellbeing",
+                "nombre": "Name",
+                "apellidos": "Surname",
+                "email": "Email",
+                "contrasena": "Password",
+                "codigoEmpresa": "Company Code (Optional)",
+                "codigoAyuda": "Leave blank if you are a personal user",
+                "crearCuenta": "Create Account",
+                "yaTienesCuenta": "Already have an account? Sign in here"
             },
-            ca: {
-                tagline: "Uneix-te a Resilio i mesura el teu benestar mental",
-                nombre: "Nom",
-                apellidos: "Cognoms",
-                email: "Email",
-                contrasena: "Contrasenya",
-                codigoEmpresa: "Codi d'Empresa (Opcional)",
-                codigoAyuda: "Deixa-ho en blanc si ets usuari personal",
-                crearCuenta: "Crear Comptee",
-                yaTienesCuenta: "Ja tens compte? Inicia sessió aquí"
+            "ca": {
+                "tagline": "Uneix-te a Resilio i mesura el teu benestar mental",
+                "nombre": "Nom",
+                "apellidos": "Cognoms",
+                "email": "Email",
+                "contrasena": "Contrasenya",
+                "codigoEmpresa": "Codi d'Empresa (Opcional)",
+                "codigoAyuda": "Deixa-ho en blanc si ets usuari personal",
+                "crearCuenta": "Crear Comptee",
+                "yaTienesCuenta": "Ja tens compte? Inicia sessió aquí"
             }
-        };
-        
-        function setLanguage(lang) {
-            localStorage.setItem('resilio-language', lang);
-            applyTranslations(lang);
-        }
-        
-        function applyTranslations(lang) {
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
-            });
-            document.documentElement.lang = lang;
-
-            // Update language switcher buttons
-            document.querySelectorAll('.language-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.lang === lang) {
-                    btn.classList.add('active');
-                }
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('resilio-language') || 'es';
-            applyTranslations(savedLang);
         });
     </script>
 </body>
