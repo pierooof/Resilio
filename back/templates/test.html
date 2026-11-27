@@ -262,6 +262,7 @@
         </div>
         
         <form action="/procesar_test" method="POST" id="test-form" onsubmit="this.querySelector('button').innerHTML='Enviando...'; this.querySelector('button').disabled=true;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             
             {% for pregunta in preguntas %}
             <div class="question-card" data-question="{{ loop.index }}">

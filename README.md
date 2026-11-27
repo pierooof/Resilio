@@ -17,8 +17,8 @@ La herramienta utiliza el **test BAT-12** (Burnout Assessment Tool) con rigor ci
 
 ## 🛠️ Tecnologías
 
-*   **Backend:** Python, Flask (y Werkzeug)
-*   **Base de Datos:** MySQL (con `mysql-connector-python`)
+*   **Backend:** Python, Flask (blueprints, Flask-WTF, Flask-Limiter)
+*   **Base de Datos:** PostgreSQL (SQLAlchemy 2 + Alembic/Flask-Migrate)
 *   **Inteligencia Artificial:** Google GenAI (Gemini API)
 *   **Frontend:** HTML5, CSS3, JavaScript (Plantillas Jinja2)
 *   **Configuración:** `python-dotenv` para gestión de variables de entorno
@@ -28,14 +28,17 @@ La herramienta utiliza el **test BAT-12** (Burnout Assessment Tool) con rigor ci
 ```text
 resilio/
 ├── back/
-│   ├── app.py                ← Núcleo de la aplicación Flask: rutas y controladores
-│   ├── conexion/
-│   │   └── conexion_bbdd.py  ← Capa de acceso y pool de conexiones a MySQL
-│   ├── database/             ← Scripts SQL para esquemas y datos iniciales
-│   │   └── resilio_db_actual.sql
-│   ├── servicios/
-│   │   ├── test_service.py   ← Lógica de negocio para calcular el BAT-12
-│   │   └── ia_service.py     ← Interfaz con la API de Google Gemini
+│   ├── app.py                ← Entrypoint (gunicorn app:app)
+│   ├── resilio/              ← Paquete de la aplicación
+│   │   ├── __init__.py       ← create_app (configuración y blueprints)
+│   │   ├── models.py         ← Modelos SQLAlchemy
+│   │   ├── blueprints/       ← auth, dashboard, admin, test
+│   │   ├── services/
+│   │   │   ├── scoring.py    ← Cálculo y guardado del BAT-12
+│   │   │   └── ia_service.py ← Interfaz con la API de Google Gemini
+│   │   └── cli.py            ← flask seed / flask crear-admin
+│   ├── migrations/           ← Migraciones Alembic
+│   ├── tests/                ← pytest
 │   ├── static/               ← Archivos estáticos (CSS, JS, Imágenes)
 │   └── templates/            ← Vistas HTML (Jinja2)
 │       ├── dashboards/       ← Paneles específicos por rol (admin, hr, empleado, personal)

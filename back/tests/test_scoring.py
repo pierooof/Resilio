@@ -1,52 +1,14 @@
-"""Test de caracterización de calcular_y_guardar_bat12: fija el contrato BAT-12
-antes del rework (medias por dimensión, global = suma/12, validación de 12 ítems).
-Sin BD ni Gemini: db falso y ia_service stubbeado.
-"""
-import sys
-import types
+"""Contrato BAT-12: medias por dimensión, global = suma/12, validación de 12 ítems."""
+import pytest
 
-# google-genai no hace falta para probar el cálculo
-sys.modules.setdefault(
-    "servicios.ia_service",
-    types.SimpleNamespace(generar_consejos_ia=lambda *a, **k: "<p>consejos</p>"),
+from resilio.extensions import db
+from resilio.models import Evaluacion, RespuestaEvaluacion, Usuario
+from resilio.services.scoring import (
+    calcular_bat12, calcular_y_guardar_bat12, nivel_riesgo, parsear_respuestas,
 )
-
-from servicios.test_service import calcular_y_guardar_bat12  # noqa: E402
 
 # 12 preguntas, 3 por dimensión: ids 1-3 → dim 1, 4-6 → dim 2, ...
 MAPA = {i: (i - 1) // 3 + 1 for i in range(1, 13)}
-
-
-class FakeCursor:
-    def __init__(self):
-        self.inserts, self.many, self.lastrowid = [], [], 42
-
-    def execute(self, query, params=None):
-        if query.lstrip().upper().startswith("INSERT"):
-            self.inserts.append(params)
-
-    def fetchall(self):
-        return [{"id": p, "dimension_id": d} for p, d in MAPA.items()]
-
-    def executemany(self, query, data):
-        self.many.extend(data)
-
-    def close(self):
-        pass
-
-
-class FakeDB:
-    def __init__(self):
-        self.cur, self.committed, self.rolled_back = FakeCursor(), False, False
-
-    def cursor(self, dictionary=False):
-        return self.cur
-
-    def commit(self):
-        self.committed = True
-
-    def rollback(self):
-        self.rolled_back = True
 
 
 def form(valores):
@@ -54,24 +16,46 @@ def form(valores):
 
 
 def test_medias_por_dimension_y_global():
-    db = FakeDB()
     # dim1: 1,2,3 → 2.0 | dim2: 4,4,4 → 4.0 | dim3: 5,5,2 → 4.0 | dim4: 1,1,2 → 1.33
-    ok, media = calcular_y_guardar_bat12(1, form([1, 2, 3, 4, 4, 4, 5, 5, 2, 1, 1, 2]), db)
-    assert ok and media == round(34 / 12, 2) == 2.83
-    # (usuario, total, agot, distanc, cogn, emoc, consejos)
-    assert db.cur.inserts[0][:6] == (1, 2.83, 2.0, 4.0, 4.0, 1.33)
-    assert len(db.cur.many) == 12 and db.committed
+    r = calcular_bat12(parsear_respuestas(form([1, 2, 3, 4, 4, 4, 5, 5, 2, 1, 1, 2])), MAPA)
+    assert r["media_total"] == round(34 / 12, 2) == 2.83
+    assert r["dims"] == {"agotamiento": 2.0, "distanciamiento": 4.0, "cognitivo": 4.0, "emocional": 1.33}
+    assert r["dimension_maxima"] == "distanciamiento"  # empate: gana la primera
 
 
-def test_menos_de_12_respuestas_falla_sin_guardar():
-    db = FakeDB()
-    ok, msg = calcular_y_guardar_bat12(1, form([3] * 11), db)
-    assert not ok and "todas" in msg
-    assert not db.cur.inserts and not db.committed
+def test_menos_de_12_respuestas_falla():
+    with pytest.raises(ValueError, match="todas"):
+        calcular_bat12(parsear_respuestas(form([3] * 11)), MAPA)
+
+
+@pytest.mark.parametrize("malo", ["0", "6", "abc", "", "2.5"])
+def test_valor_fuera_de_escala_o_no_numerico(malo):
+    with pytest.raises(ValueError):
+        parsear_respuestas({"pregunta_1": malo})
 
 
 def test_ignora_campos_ajenos_al_test():
-    db = FakeDB()
-    datos = form([3] * 12) | {"csrf_token": "x"}
-    ok, media = calcular_y_guardar_bat12(1, datos, db)
-    assert ok and media == 3.0
+    assert parsear_respuestas(form([3] * 12) | {"csrf_token": "x"}) == {i: 3 for i in range(1, 13)}
+
+
+def test_umbrales_de_riesgo():
+    assert [nivel_riesgo(x) for x in (1, 2.49, 2.5, 3.49, 3.5, 5)] == ["Bajo", "Bajo", "Medio", "Medio", "Alto", "Alto"]
+
+
+def test_guardar_crea_evaluacion_y_12_respuestas(app, monkeypatch):
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    u = Usuario(rol_id=3, nombre="A", email="a@x.com", password="x")
+    db.session.add(u)
+    db.session.commit()
+
+    ok, media = calcular_y_guardar_bat12(u.id, form([1, 2, 3, 4, 4, 4, 5, 5, 2, 1, 1, 2]))
+
+    ev = Evaluacion.query.one()
+    assert ok and media == 2.83
+    assert (float(ev.puntuacion_total), float(ev.dim_agotamiento), float(ev.dim_emocional)) == (2.83, 2.0, 1.33)
+    assert RespuestaEvaluacion.query.count() == 12 and "Gemini" in ev.consejos
+
+
+def test_guardar_incompleto_no_escribe(app):
+    ok, msg = calcular_y_guardar_bat12(1, form([3] * 11))
+    assert not ok and "todas" in msg and Evaluacion.query.count() == 0

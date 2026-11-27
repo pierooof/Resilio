@@ -487,6 +487,7 @@ body.auth-page {
     transition: background 0.25s var(--ease);
 }
 .logout-link:hover { background: var(--danger-dim); }
+button.logout-link { width: 100%; background: none; border: 0; font-family: inherit; cursor: pointer; text-align: left; }
 .logout-link i { width: 20px; text-align: center; }
 
 .content {

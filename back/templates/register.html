@@ -47,6 +47,7 @@
             {% endwith %}
 
             <form action="/register" method="POST" class="login-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="input-field">
                     <label for="register-nombre" data-i18n="nombre">Nombre</label>
                     <div class="input-icon-wrapper">

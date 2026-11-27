@@ -1,8 +1,8 @@
-import google.genai as genai
-from google.genai import types
-
 def generar_consejos_ia(puntuacion, dimension_maxima, api_key):
     try:
+        import google.genai as genai
+        from google.genai import types
+
         # --- ADVERTENCIA 1: Inicio ---
         print("\n⏳ [1/3] Iniciando cliente de Gemini (Nuevo SDK)...")
         client = genai.Client(api_key=api_key)

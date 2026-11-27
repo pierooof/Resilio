@@ -47,6 +47,7 @@
             {% endwith %}
 
             <form action="/login" method="POST" class="login-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="input-field">
                     <label for="login-email" data-i18n="emailLabel">Email Corporativo o Personal</label>
                     <div class="input-icon-wrapper">

@@ -58,10 +58,13 @@
 </ul>
 
         <div class="sidebar-foot">
-            <a href="/logout" class="logout-link">
-                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-                <span data-i18n="cerrarSesion">Cerrar Sesion</span>
-            </a>
+            <form action="/logout" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="logout-link">
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                    <span data-i18n="cerrarSesion">Cerrar Sesion</span>
+                </button>
+            </form>
         </div>
     </nav>
 

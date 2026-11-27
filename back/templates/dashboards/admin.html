@@ -395,6 +395,7 @@
         </div>
 
         <form action="/admin/nueva_empresa" method="POST" onsubmit="setLoading(this)">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="modal-section-label">Información de la empresa</div>
 
             <div class="modal-field">
@@ -451,6 +452,7 @@
         </div>
 
         <form action="/admin/nuevo_usuario" method="POST" onsubmit="setLoading(this)">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="modal-section-label">Datos personales</div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
