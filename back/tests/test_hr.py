@@ -216,3 +216,18 @@ def test_hr_solo_ve_su_empresa(client):
     login(client, "hr@x.com")
     html = client.get("/dashboard").get_data(as_text=True)
     assert "Ajena" not in html and "0.0%" in html  # solo veo los míos (ninguno en riesgo alto)
+
+
+# ── Arranque en producción ─────────────────────────────────────────────────────
+def test_crear_admin_env_es_idempotente_y_exige_clave_larga(app, monkeypatch):
+    runner = app.test_cli_runner()
+    monkeypatch.delenv("ADMIN_EMAIL", raising=False)
+    assert "no se crea" in runner.invoke(args=["crear-admin-env"]).output
+    monkeypatch.setenv("ADMIN_EMAIL", "a@x.com")
+    monkeypatch.setenv("ADMIN_PASSWORD", "corta")
+    assert runner.invoke(args=["crear-admin-env"]).exit_code != 0 and Usuario.query.count() == 0
+    monkeypatch.setenv("ADMIN_PASSWORD", PASS)
+    assert "creado" in runner.invoke(args=["crear-admin-env"]).output
+    assert "ya existe" in runner.invoke(args=["crear-admin-env"]).output
+    admin = Usuario.query.one()
+    assert admin.rol_id == 1 and admin.consentimiento_fecha and admin.password != PASS

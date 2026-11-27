@@ -1,3 +1,6 @@
+import os
+from datetime import datetime
+
 import click
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash
@@ -99,6 +102,26 @@ def registrar(app):
         from .services.recordatorios import enviar_recordatorios
 
         click.echo(f"{enviar_recordatorios()} recordatorios enviados.")
+
+    @app.cli.command("crear-admin-env")
+    def crear_admin_env():
+        """Crea el primer admin desde ADMIN_EMAIL / ADMIN_PASSWORD si no existe (idempotente, sin prompt).
+
+        Pensado para el arranque en Railway: tras el primer despliegue se puede borrar ADMIN_PASSWORD.
+        """
+        email, password = os.getenv("ADMIN_EMAIL", "").strip(), os.getenv("ADMIN_PASSWORD", "")
+        if not email or not password:
+            click.echo("ADMIN_EMAIL/ADMIN_PASSWORD sin definir: no se crea ningún admin.")
+            return
+        if len(password) < 8:
+            raise click.ClickException("ADMIN_PASSWORD debe tener al menos 8 caracteres.")
+        if Usuario.query.filter_by(email=email).first():
+            click.echo("El admin ya existe.")
+            return
+        db.session.add(Usuario(rol_id=1, nombre="Admin", email=email, password=generate_password_hash(password),
+                               consentimiento_fecha=datetime.now()))
+        db.session.commit()
+        click.echo(f"Admin {email} creado.")
 
     @app.cli.command("crear-admin")
     @click.argument("email")
