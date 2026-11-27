@@ -49,10 +49,10 @@ def test_guardar_crea_evaluacion_y_12_respuestas(app, monkeypatch):
     db.session.add(u)
     db.session.commit()
 
-    ok, media = calcular_y_guardar_bat12(u.id, form([1, 2, 3, 4, 4, 4, 5, 5, 2, 1, 1, 2]))
+    ok, devuelta = calcular_y_guardar_bat12(u.id, form([1, 2, 3, 4, 4, 4, 5, 5, 2, 1, 1, 2]))
 
     ev = Evaluacion.query.one()
-    assert ok and media == 2.83
+    assert ok and devuelta is ev and float(ev.puntuacion_total) == 2.83
     assert (float(ev.puntuacion_total), float(ev.dim_agotamiento), float(ev.dim_emocional)) == (2.83, 2.0, 1.33)
     assert RespuestaEvaluacion.query.count() == 12
     assert ev.consejos_data["ia"] is False and len(ev.consejos_data["consejos"]) == 3

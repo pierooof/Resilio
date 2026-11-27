@@ -30,6 +30,7 @@ def create_app(config=None):
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=_flag("COOKIE_SECURE", "1"),
+        APP_URL=os.getenv("APP_URL"),
         MAIL_SERVER=os.getenv("MAIL_SERVER", "smtp.gmail.com"),
         MAIL_PORT=int(os.getenv("MAIL_PORT", 587)),
         MAIL_USE_TLS=_flag("MAIL_USE_TLS", "1"),
@@ -54,8 +55,8 @@ def create_app(config=None):
     limiter.init_app(app)
     mail.init_app(app)
 
-    from .blueprints import admin, auth, dashboard, test
-    for modulo in (auth, dashboard, admin, test):
+    from .blueprints import admin, auth, cuenta, dashboard, test
+    for modulo in (auth, dashboard, admin, test, cuenta):
         app.register_blueprint(modulo.bp)
 
     from .services.scoring import UMBRAL_ALTO, UMBRAL_MEDIO

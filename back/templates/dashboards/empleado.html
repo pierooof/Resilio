@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% from "_consejos.html" import consejos %}
+{% from "_tendencia.html" import tendencia as grafico_tendencia %}
 {% block head_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
 {% endblock %}
@@ -97,6 +98,13 @@
         <h2><i class="fas fa-radar" style="margin-right: 10px; color: var(--accent-ink);"></i>Visualización</h2>
         <canvas id="burnoutChart" style="max-height: 300px;"></canvas>
     </div>
+
+    {% if tendencia|length > 1 %}
+    <div class="result-card">
+        <h2 data-i18n="resEvolucion">Tu evolución</h2>
+        {{ grafico_tendencia(tendencia) }}
+    </div>
+    {% endif %}
 </div>
 
 {% if evaluacion.consejos_data %}

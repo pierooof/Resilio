@@ -91,6 +91,13 @@ def registrar(app):
         sembrar()
         click.echo("Datos base cargados.")
 
+    @app.cli.command("enviar-recordatorios")
+    def enviar_recordatorios_cmd():
+        """Envía los recordatorios de test pendientes (programar a diario)."""
+        from .services.recordatorios import enviar_recordatorios
+
+        click.echo(f"{enviar_recordatorios()} recordatorios enviados.")
+
     @app.cli.command("crear-admin")
     @click.argument("email")
     @click.option("--nombre", default="Admin")

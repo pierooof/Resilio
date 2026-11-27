@@ -31,9 +31,9 @@ def dashboard():
         return _admin()
     if rol == 2:
         return _hr()
-    ultima = Evaluacion.query.filter_by(usuario_id=session["user_id"]).order_by(Evaluacion.fecha.desc()).first()
+    todas = Evaluacion.query.filter_by(usuario_id=session["user_id"]).order_by(Evaluacion.fecha, Evaluacion.id).all()
     template = "dashboards/personal.html" if rol == 3 else "dashboards/empleado.html"
-    return render_template(template, evaluacion=ultima)
+    return render_template(template, evaluacion=todas[-1] if todas else None, tendencia=todas)
 
 
 def _admin():

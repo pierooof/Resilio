@@ -56,40 +56,45 @@
     
     <div class="settings-section">
         <h2><i class="fas fa-bell" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span data-i18n="notificaciones">Notificaciones</span></h2>
-        
-        <div class="setting-item">
+        <form action="/configuracion/recordatorio" method="POST" class="setting-item">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="setting-info">
-                <span class="setting-title" data-i18n="recordatorios">Recordatorios de evaluacion</span>
+                <label class="setting-title" for="semanas" data-i18n="recordatorios">Recordatorios de evaluacion</label>
                 <span class="setting-desc" data-i18n="recordatoriosDesc">Recibe recordatorios para evaluar tu bienestar</span>
             </div>
-            <label class="toggle">
-                <input type="checkbox" checked>
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-        
+            <select id="semanas" name="semanas">
+                <option value="0" {% if not usuario.recordatorio_semanas %}selected{% endif %} data-i18n="recNunca">No recordarme</option>
+                {% for w in cadencias %}
+                <option value="{{ w }}" {% if usuario.recordatorio_semanas == w %}selected{% endif %} data-i18n="rec{{ w }}">Cada {{ w }} semanas</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn-test" data-i18n="guardar">Guardar</button>
+        </form>
+    </div>
+
+    <div class="settings-section">
+        <h2><i class="fas fa-file-export" aria-hidden="true" style="margin-right: 12px; color: var(--accent-ink);"></i><span data-i18n="misDatos">Mis datos</span></h2>
         <div class="setting-item">
             <div class="setting-info">
-                <span class="setting-title" data-i18n="notifEmail">Notificaciones por email</span>
-                <span class="setting-desc" data-i18n="notifEmailDesc">Recibe actualizaciones sobre tu progreso</span>
+                <span class="setting-title" data-i18n="exportarDatos">Exportar mis datos</span>
+                <span class="setting-desc" data-i18n="exportarDatosDesc">Descarga tus respuestas, puntuaciones y consejos en JSON</span>
             </div>
-            <label class="toggle">
-                <input type="checkbox">
-                <span class="toggle-slider"></span>
-            </label>
+            <a class="btn-test" href="/configuracion/exportar" data-i18n="descargar">Descargar</a>
         </div>
     </div>
-    
+
     <div class="settings-section danger">
         <h2><i class="fas fa-exclamation-triangle" style="margin-right: 12px; color: var(--danger-ink);"></i><span data-i18n="zonaPeligrosa">Zona Peligrosa</span></h2>
-        
-        <div class="setting-item">
+        <form action="/configuracion/eliminar" method="POST" class="setting-item"
+              onsubmit="return confirm(Resilio.i18n.t('eliminarConfirmar') || '¿Seguro? Se borrarán tu cuenta y todos tus datos y no se puede deshacer.');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="setting-info">
-                <span class="setting-title" data-i18n="eliminarCuenta">Eliminar cuenta</span>
+                <label class="setting-title" for="pw-eliminar" data-i18n="eliminarCuenta">Eliminar cuenta</label>
                 <span class="setting-desc" data-i18n="eliminarCuentaDesc">Elimina permanentemente tu cuenta y todos tus datos</span>
             </div>
-            <button class="btn-danger"><span data-i18n="eliminar">Eliminar Cuenta</span></button>
-        </div>
+            <input id="pw-eliminar" type="password" name="password" autocomplete="current-password" required>
+            <button type="submit" class="btn-danger"><span data-i18n="eliminar">Eliminar Cuenta</span></button>
+        </form>
     </div>
 </div>
 
@@ -303,6 +308,10 @@
             "eliminarCuenta": "Eliminar cuenta",
             "eliminarCuentaDesc": "Elimina permanentemente tu cuenta y todos tus datos",
             "eliminar": "Eliminar Cuenta",
+            "recNunca": "No recordarme", "rec2": "Cada 2 semanas", "rec4": "Cada 4 semanas", "rec8": "Cada 8 semanas",
+            "guardar": "Guardar", "misDatos": "Mis datos", "exportarDatos": "Exportar mis datos",
+            "exportarDatosDesc": "Descarga tus respuestas, puntuaciones y consejos en JSON", "descargar": "Descargar",
+            "eliminarConfirmar": "¿Seguro? Se borrarán tu cuenta y todos tus datos y no se puede deshacer.",
             "inicio": "Inicio",
             "realizarTest": "Realizar Test",
             "historial": "Historial",
@@ -336,6 +345,10 @@
             "eliminarCuenta": "Delete account",
             "eliminarCuentaDesc": "Permanently delete your account and all your data",
             "eliminar": "Delete Account",
+            "recNunca": "Don't remind me", "rec2": "Every 2 weeks", "rec4": "Every 4 weeks", "rec8": "Every 8 weeks",
+            "guardar": "Save", "misDatos": "My data", "exportarDatos": "Export my data",
+            "exportarDatosDesc": "Download your answers, scores and advice as JSON", "descargar": "Download",
+            "eliminarConfirmar": "Are you sure? Your account and all your data will be deleted and this cannot be undone.",
             "inicio": "Home",
             "realizarTest": "Take Test",
             "historial": "History",
@@ -369,6 +382,10 @@
             "eliminarCuenta": "Eliminar compte",
             "eliminarCuentaDesc": "Elimina permanentment el teu compte i totes les teves dades",
             "eliminar": "Eliminar Compte",
+            "recNunca": "No recordar-m'ho", "rec2": "Cada 2 setmanes", "rec4": "Cada 4 setmanes", "rec8": "Cada 8 setmanes",
+            "guardar": "Desar", "misDatos": "Les meves dades", "exportarDatos": "Exportar les meves dades",
+            "exportarDatosDesc": "Descarrega les teves respostes, puntuacions i consells en JSON", "descargar": "Descarregar",
+            "eliminarConfirmar": "Segur? S'esborraran el teu compte i totes les teves dades i no es pot desfer.",
             "inicio": "Inici",
             "realizarTest": "Fer Test",
             "historial": "Historial",

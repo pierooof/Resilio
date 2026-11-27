@@ -223,11 +223,16 @@
             .options-grid { gap: 6px; }
             .option-text { font-size: 0.66rem; }
         }
+    .paso-acciones { display: flex; gap: 12px; justify-content: space-between; margin-top: 20px; flex-wrap: wrap; }
+    .btn-back { background: none; border: 1px solid var(--line); color: var(--ink); border-radius: var(--r-sm);
+                padding: 10px 16px; cursor: pointer; font: inherit; }
+    .btn-back:hover { border-color: var(--accent); }
     </style>
     <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/htmx.min.js') }}" defer></script>
 </head>
 
-<body class="test-page">
+<body class="test-page" hx-headers='{"X-CSRFToken": "{{ csrf_token() }}"}'>
     
     <div class="test-container">
         
@@ -251,52 +256,10 @@
             La escala va de 1 (Nunca) a 5 (Siempre). No hay respuestas correctas o incorrectas.</p>
         </div>
         
-        <div class="progress-bar">
-            <div class="progress-label">
-                <span data-i18n="progreso">Progreso</span>
-                <span id="progress-text">0 de {{ preguntas|length }}</span>
-            </div>
-            <div class="progress-track">
-                <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
-            </div>
+        <p id="nota-traduccion" data-i18n="traduccionNoValidada" hidden style="color: var(--muted); font-size: 0.85rem; margin: 12px 0;"></p>
+        <div id="paso" aria-live="polite">
+            {% include "_test_paso.html" %}
         </div>
-        
-        <form action="/procesar_test" method="POST" id="test-form" onsubmit="this.querySelector('button').innerHTML='Enviando...'; this.querySelector('button').disabled=true;">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="lang" id="lang-field" value="es">
-            <p class="question-text" id="nota-traduccion" data-i18n="traduccionNoValidada" hidden></p>
-            
-            {% for pregunta in preguntas %}
-            <div class="question-card" data-question="{{ loop.index }}">
-                
-                <span class="question-number">Pregunta {{ loop.index }} de {{ preguntas|length }}</span>
-                
-                <p class="question-text" data-i18n="q_{{ pregunta.id }}">{{ pregunta.texto }}</p>
-                
-                <div class="options-grid">
-                    {% for i in range(1, 6) %}
-                    <label class="option-label">
-                        <input type="radio" name="pregunta_{{ pregunta.id }}" value="{{ i }}" required>
-                        <span class="option-circle">{{ i }}</span>
-                        <span class="option-text" data-i18n="{% if i == 1 %}nunca{% elif i == 2 %}raramente{% elif i == 3 %}aVeces{% elif i == 4 %}aMenudo{% else %}siempre{% endif %}">
-                            {% if i == 1 %}Nunca{% elif i == 2 %}Raramente{% elif i == 3 %}A veces{% elif i == 4 %}A menudo{% else %}Siempre{% endif %}
-                        </span>
-                    </label>
-                    {% endfor %}
-                </div>
-                
-                <div class="scale-legend">
-                    <span data-i18n="nunca">Nunca</span>
-                    <span data-i18n="siempre">Siempre</span>
-                </div>
-            </div>
-            {% endfor %}
-            
-            <button type="submit" class="btn-test">
-                <i class="fas fa-check-circle"></i>
-                <span data-i18n="enviarRespuestas">Enviar Respuestas</span>
-            </button>
-        </form>
         
     </div>
     
@@ -316,7 +279,11 @@
                 "raramente": "Raramente",
                 "aVeces": "A veces",
                 "aMenudo": "A menudo",
-                "siempre": "Siempre"
+                "siempre": "Siempre",
+                "atras": "Atrás",
+                "siguiente": "Siguiente",
+                "listoEnviar": "Has respondido todas las preguntas.",
+                "faltanRespuestas": "Aún te quedan preguntas por responder."
             },
             "en": {
                 "testBat12": "BAT-12 Test",
@@ -332,6 +299,10 @@
                 "aVeces": "Sometimes",
                 "aMenudo": "Often",
                 "siempre": "Always",
+                "atras": "Back",
+                "siguiente": "Next",
+                "listoEnviar": "You have answered all the questions.",
+                "faltanRespuestas": "You still have unanswered questions.",
                 "traduccionNoValidada": "These questions are an unofficial, non-validated translation of the BAT-12."
             },
             "ca": {
@@ -348,6 +319,10 @@
                 "aVeces": "A vegades",
                 "aMenudo": "Sovint",
                 "siempre": "Sempre",
+                "atras": "Enrere",
+                "siguiente": "Següent",
+                "listoEnviar": "Has respost totes les preguntes.",
+                "faltanRespuestas": "Encara et queden preguntes per respondre.",
                 "traduccionNoValidada": "Aquestes preguntes són una traducció no oficial i no validada del BAT-12."
             }
         });
@@ -356,43 +331,16 @@
         Resilio.i18n.add({{ i18n_preguntas|tojson }});
         // El idioma elegido viaja con el formulario (idioma de los consejos) y las traducciones se avisan
         Resilio.i18n.onApply(function (lang) {
-            document.getElementById('lang-field').value = lang;
+            var campo = document.getElementById('lang-field');
+            if (campo) campo.value = lang;
             document.getElementById('nota-traduccion').hidden = (lang === 'es');
         });
 
-        // Número de pregunta traducido ("Pregunta 3 de 12")
-        Resilio.i18n.onApply(function (lang) {
-            var nums = document.querySelectorAll('.question-number');
-            nums.forEach(function (el, idx) {
-                el.textContent = (Resilio.i18n.t('pregunta', lang) || 'Pregunta') + ' ' + (idx + 1) + ' ' +
-                    (Resilio.i18n.t('de', lang) || 'de') + ' ' + nums.length;
-            });
-        });
-        
-        const questionCards = document.querySelectorAll('.question-card');
-        const progressFill = document.getElementById('progress-fill');
-        const progressText = document.getElementById('progress-text');
-        const totalQuestions = questionCards.length;
-        
-        function updateProgress() {
-            let answered = 0;
-            questionCards.forEach(card => {
-                const inputs = card.querySelectorAll('input[type="radio"]:checked');
-                card.classList.toggle('answered', inputs.length > 0);
-                if (inputs.length > 0) answered++;
-            });
-            
-            const percentage = (answered / totalQuestions) * 100;
-            progressFill.style.width = percentage + '%';
-            progressText.textContent = answered + ' de ' + totalQuestions;
+        // Al cambiar de pantalla (HTMX) se vuelven a aplicar las traducciones y el idioma del formulario
+        function idiomaActual() {
+            try { return localStorage.getItem('resilio-language') || 'es'; } catch (e) { return 'es'; }
         }
-        
-        questionCards.forEach(card => {
-            const inputs = card.querySelectorAll('input[type="radio"]');
-            inputs.forEach(input => {
-                input.addEventListener('change', updateProgress);
-            });
-        });
+        document.addEventListener('htmx:afterSwap', function () { Resilio.i18n.apply(idiomaActual()); });
     </script>
 </body>
 

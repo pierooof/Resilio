@@ -1,6 +1,8 @@
 import json
 import re
+from datetime import datetime, timedelta
 
+import pytest
 from werkzeug.security import generate_password_hash
 
 from resilio.extensions import db, limiter, mail
@@ -13,9 +15,10 @@ PASS = "password123"
 RESPUESTAS = {f"pregunta_{i}": "3" for i in range(1, 13)}
 
 
-def usuario(rol=3, email="u@x.com", empresa_id=None, **kw):
+def usuario(rol=3, email="u@x.com", empresa_id=None, consentimiento=True, **kw):
     u = Usuario(rol_id=rol, nombre=kw.pop("nombre", "Ana"), email=email, empresa_id=empresa_id,
-                password=generate_password_hash(PASS), **kw)
+                password=generate_password_hash(PASS),
+                consentimiento_fecha=datetime.now() if consentimiento else None, **kw)
     db.session.add(u)
     db.session.commit()
     return u
@@ -141,11 +144,140 @@ def test_test_requiere_login(client):
 def test_procesar_test_guarda_y_historial_muestra_preguntas(client):
     usuario()
     login(client)
-    assert b"pregunta_12" in client.get("/test").data
-    client.post("/procesar_test", data=RESPUESTAS)
+    assert b"q_1" in client.get("/test").data
+    r = client.post("/procesar_test", data=RESPUESTAS)
+    assert r.headers["Location"].startswith("/resultado/")
     client.post("/procesar_test", data={"pregunta_1": "3"})  # incompleto: no guarda
     assert Evaluacion.query.count() == 1
     assert "agotado/a en el trabajo" in client.get("/historial").get_data(as_text=True)
+
+
+# ── Consentimiento y test por pasos (HTMX) ─────────────────────────────────────
+def test_sin_consentimiento_no_hay_test_y_el_next_es_interno(client):
+    u = usuario(consentimiento=False)
+    login(client)
+    assert client.get("/test").headers["Location"] == "/consentimiento?next=/test"
+    assert client.post("/test/responder", data={"n": 1, "valor": 3}).status_code == 302
+    client.post("/consentimiento?next=//evil.com", data={})  # sin marcar: nada
+    assert db.session.get(Usuario, u.id).consentimiento_fecha is None
+    r = client.post("/consentimiento?next=//evil.com", data={"acepto": "1"})
+    assert r.headers["Location"] == "/test"  # //evil.com descartado
+    assert db.session.get(Usuario, u.id).consentimiento_fecha is not None
+
+
+def test_test_por_pasos_guarda_borrador_y_reanuda(client):
+    u = usuario()
+    login(client)
+    assert 'data-i18n="q_1"' in client.get("/test/pregunta/1").get_data(as_text=True)
+    sig = client.post("/test/responder", data={"n": 1, "valor": 4}).get_data(as_text=True)
+    assert 'data-i18n="q_2"' in sig and 'name="n" value="2"' in sig
+    for n, valor in ((2, 5), (3, 2), (4, 1), (5, 3)):
+        client.post("/test/responder", data={"n": n, "valor": valor})
+    assert 'name="n" value="6"' in client.get("/test").get_data(as_text=True)  # reanuda en la 6
+    assert 'value="3" checked' in client.get("/test/pregunta/5").get_data(as_text=True)  # recuerda lo marcado
+    assert client.post("/test/responder", data={"n": 1, "valor": 6}).status_code == 400
+    assert client.post("/test/responder", data={"n": 13, "valor": 3}).status_code == 400
+    assert client.post("/test/responder", data={"n": "x", "valor": 3}).status_code == 400
+    assert client.get("/test/pregunta/99").status_code == 404
+    assert Evaluacion.query.count() == 0
+
+
+def test_completar_por_pasos_y_enviar_desde_el_borrador(client):
+    u = usuario()
+    login(client)
+    ultimo = None
+    for n in range(1, 13):
+        ultimo = client.post("/test/responder", data={"n": n, "valor": 3}).get_data(as_text=True)
+    assert "/procesar_test" in ultimo and "enviarRespuestas" in ultimo
+    r = client.post("/procesar_test", data={"lang": "ca"})  # las respuestas vienen del borrador
+    ev = Evaluacion.query.one()
+    assert r.headers["Location"] == f"/resultado/{ev.id}" and float(ev.puntuacion_total) == 3.0
+    assert ev.consejos_data["lang"] == "ca"
+    assert client.get("/test").get_data(as_text=True).count('name="n" value="1"') == 1  # borrador borrado
+
+
+def test_resultado_solo_del_dueno_y_compara_con_la_anterior(client):
+    a, b = usuario(email="a@x.com"), usuario(email="b@x.com")
+    login(client, "a@x.com")
+    client.post("/procesar_test", data={f"pregunta_{i}": "4" for i in range(1, 13)})
+    client.post("/procesar_test", data={f"pregunta_{i}": "2" for i in range(1, 13)})
+    ultima = Evaluacion.query.order_by(Evaluacion.id.desc()).first()
+    html = client.get(f"/resultado/{ultima.id}").get_data(as_text=True)
+    assert "2.00" in html and "-2.00" in html and "resMejor" in html and "tendenciaChart" in html
+    login(client, "b@x.com")
+    assert client.get(f"/resultado/{ultima.id}").status_code == 404
+    assert client.get("/resultado/9999").status_code == 404
+
+
+# ── Cuenta: recordatorios, exportar, eliminar ──────────────────────────────────
+def test_recordatorio_valida_cadencia(client):
+    u = usuario()
+    login(client)
+    client.post("/configuracion/recordatorio", data={"semanas": "4"})
+    assert db.session.get(Usuario, u.id).recordatorio_semanas == 4
+    client.post("/configuracion/recordatorio", data={"semanas": "5"})  # no permitida
+    assert db.session.get(Usuario, u.id).recordatorio_semanas == 4
+    client.post("/configuracion/recordatorio", data={"semanas": "0"})
+    assert db.session.get(Usuario, u.id).recordatorio_semanas is None
+
+
+def test_exportar_mis_datos(client):
+    usuario()
+    login(client)
+    client.post("/procesar_test", data=RESPUESTAS)
+    r = client.get("/configuracion/exportar")
+    datos = json.loads(r.get_data(as_text=True))
+    assert "attachment" in r.headers["Content-Disposition"] and datos["usuario"]["email"] == "u@x.com"
+    assert len(datos["evaluaciones"][0]["respuestas"]) == 12 and "password" not in json.dumps(datos)
+
+
+def test_eliminar_cuenta_pide_contrasena_y_borra_todo(client):
+    u = usuario()
+    login(client)
+    client.post("/procesar_test", data=RESPUESTAS)
+    client.post("/configuracion/eliminar", data={"password": "mala"})
+    assert Usuario.query.count() == 1
+    client.post("/configuracion/eliminar", data={"password": PASS})
+    assert Usuario.query.count() == 0 and Evaluacion.query.count() == 0
+    assert client.get("/dashboard").headers["Location"].endswith("/login")
+
+
+def test_admin_no_se_elimina_desde_configuracion(client):
+    usuario(rol=1, email="admin@x.com")
+    login(client, "admin@x.com")
+    client.post("/configuracion/eliminar", data={"password": PASS})
+    assert Usuario.query.count() == 1
+
+
+def test_recordatorios_se_envian_a_quien_toca_y_una_sola_vez(app):
+    app.config["APP_URL"] = "https://resilio.test"
+    ahora = datetime.now()
+    toca = usuario(email="toca@x.com", recordatorio_semanas=4, idioma="en")
+    reciente = usuario(email="reciente@x.com", recordatorio_semanas=4)
+    sin_optin = usuario(email="no@x.com")
+    for u, hace in ((toca, 5), (reciente, 1), (sin_optin, 10)):
+        db.session.add(Evaluacion(usuario_id=u.id, fecha=ahora - timedelta(weeks=hace), puntuacion_total=3,
+                                  dim_agotamiento=3, dim_distanciamiento=3, dim_cognitivo=3, dim_emocional=3))
+    db.session.commit()
+
+    from resilio.services.recordatorios import enviar_recordatorios
+
+    with mail.record_messages() as enviados:
+        assert enviar_recordatorios(ahora) == 1
+        assert enviar_recordatorios(ahora) == 0  # ya avisado: no se repite hasta pasada otra cadencia
+    assert [m.recipients for m in enviados] == [["toca@x.com"]]
+    assert "https://resilio.test/test" in enviados[0].body and "repeat your BAT-12" in enviados[0].subject
+
+
+def test_recordatorio_fallido_no_se_marca_y_exige_app_url(app, monkeypatch):
+    from resilio.services.recordatorios import enviar_recordatorios
+
+    with pytest.raises(RuntimeError, match="APP_URL"):
+        enviar_recordatorios()
+    app.config["APP_URL"] = "https://resilio.test"
+    u = usuario(recordatorio_semanas=2, fecha_registro=datetime.now() - timedelta(weeks=3))
+    monkeypatch.setattr(mail, "send", lambda m: (_ for _ in ()).throw(RuntimeError("smtp caído")))
+    assert enviar_recordatorios() == 0 and db.session.get(Usuario, u.id).ultimo_recordatorio is None
 
 
 def test_preguntas_en_los_tres_idiomas(client):
@@ -153,7 +285,7 @@ def test_preguntas_en_los_tres_idiomas(client):
     login(client)
     html = client.get("/test").get_data(as_text=True)
     assert "At work, I feel mentally exhausted." in html and "A la feina, em sento mentalment esgotat/ada." in html
-    assert 'name="lang"' in html
+    assert 'htmx.min.js' in html and 'X-CSRFToken' in html
     for i in range(1, 13):
         assert f"q_{i}" in html
     assert "non-validated" in html and "no validada" in html

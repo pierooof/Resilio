@@ -73,7 +73,7 @@ def calcular_bat12(respuestas, mapa_preguntas):
 def calcular_y_guardar_bat12(user_id, form_data, idioma="es"):
     """Procesa el formulario, genera consejos y guarda la evaluación.
 
-    Devuelve (True, media_total) o (False, mensaje_de_error).
+    Devuelve (True, evaluacion) o (False, mensaje_de_error).
     """
     try:
         mapa = {p.id: p.dimension_id for p in Pregunta.query.all()}
@@ -87,20 +87,19 @@ def calcular_y_guardar_bat12(user_id, form_data, idioma="es"):
     )
 
     d = r["dims"]
-    db.session.add(
-        Evaluacion(
-            usuario_id=user_id,
-            puntuacion_total=r["media_total"],
-            dim_agotamiento=d["agotamiento"],
-            dim_distanciamiento=d["distanciamiento"],
-            dim_cognitivo=d["cognitivo"],
-            dim_emocional=d["emocional"],
-            consejos=json.dumps(consejos, ensure_ascii=False),
-            respuestas=[RespuestaEvaluacion(pregunta_id=p, valor=v) for p, v in r["respuestas"].items()],
-        )
+    evaluacion = Evaluacion(
+        usuario_id=user_id,
+        puntuacion_total=r["media_total"],
+        dim_agotamiento=d["agotamiento"],
+        dim_distanciamiento=d["distanciamiento"],
+        dim_cognitivo=d["cognitivo"],
+        dim_emocional=d["emocional"],
+        consejos=json.dumps(consejos, ensure_ascii=False),
+        respuestas=[RespuestaEvaluacion(pregunta_id=p, valor=v) for p, v in r["respuestas"].items()],
     )
+    db.session.add(evaluacion)
     usuario = db.session.get(Usuario, user_id)
     if usuario:
         usuario.idioma = idioma  # para comunicaciones futuras (recordatorios)
     db.session.commit()
-    return True, r["media_total"]
+    return True, evaluacion

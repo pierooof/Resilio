@@ -38,9 +38,13 @@ class Usuario(db.Model):
     password = db.Column(db.String(255), nullable=False)
     fecha_registro = db.Column(db.DateTime, server_default=func.now())
     idioma = db.Column(db.String(2), nullable=False, default="es", server_default="es")
+    consentimiento_fecha = db.Column(db.DateTime)  # NULL = aún no ha aceptado el tratamiento de datos
+    recordatorio_semanas = db.Column(db.Integer)  # NULL = sin recordatorios
+    ultimo_recordatorio = db.Column(db.DateTime)
 
     empresa = db.relationship("Empresa")
     departamento = db.relationship("Departamento")
+    evaluaciones = db.relationship("Evaluacion", cascade="all, delete-orphan")
 
 
 class Dimension(db.Model):
@@ -65,6 +69,15 @@ class PreguntaTraduccion(db.Model):
     pregunta_id = db.Column(db.Integer, db.ForeignKey("preguntas.id", ondelete="CASCADE"), primary_key=True)
     idioma = db.Column(db.String(2), primary_key=True)
     texto = db.Column(db.String(255), nullable=False)
+
+
+class TestBorrador(db.Model):
+    """Respuestas parciales del test en curso (una fila por usuario; se borra al enviar)."""
+
+    __tablename__ = "test_borradores"
+    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id", ondelete="CASCADE"), primary_key=True)
+    respuestas = db.Column(db.JSON, nullable=False, default=dict)  # {"<pregunta_id>": valor}
+    actualizado = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
 
 class Evaluacion(db.Model):

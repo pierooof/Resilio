@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+from datetime import datetime
 
 from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
 from flask_mail import Message
@@ -104,6 +105,8 @@ def register():
                 apellidos=f.get("apellidos", "").strip() or None,
                 email=email,
                 password=generate_password_hash(f["password"]),
+                idioma=f.get("lang") if f.get("lang") in ("es", "en", "ca") else "es",
+                consentimiento_fecha=datetime.now() if f.get("acepto") else None,
             )
         )
         try:

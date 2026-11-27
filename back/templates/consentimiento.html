@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1 data-i18n="consTitulo">Antes de empezar</h1>
+    <p data-i18n="consIntro">Para hacer el test necesitamos tu consentimiento para tratar tus respuestas.</p>
+</div>
+
+<div class="settings-section" style="max-width: 760px;">
+    {# Texto orientativo: revisar con asesoría legal antes de uso en producción. #}
+    <ul style="line-height: 1.7; margin: 0 0 20px 20px;">
+        <li data-i18n="consDatos">Guardamos tus respuestas al test BAT-12, tus puntuaciones y los consejos generados.</li>
+        <li data-i18n="consIA">Para generar los consejos pueden enviarse a Google Gemini tu puntuación y las medias por dimensión, sin tu nombre.</li>
+        <li data-i18n="consEmpresa">Si te registraste con un código de empresa, su equipo de RR. HH. solo ve datos agregados, no tus respuestas con tu nombre. Los administradores de la plataforma sí pueden ver tus datos para mantener el servicio.</li>
+        <li data-i18n="consNoDiag">Resilio es una herramienta de cribado, no un diagnóstico médico.</li>
+        <li data-i18n="consDerechos">Puedes exportar tus datos o eliminar tu cuenta cuando quieras desde Configuración.</li>
+    </ul>
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 20px;">
+            <input type="checkbox" name="acepto" value="1" required style="margin-top: 5px;">
+            <span data-i18n="consAcepto">Acepto el tratamiento de mis datos tal y como se describe arriba.</span>
+        </label>
+        <button type="submit" class="btn-primary" data-i18n="consContinuar">Aceptar y continuar</button>
+    </form>
+</div>
+
+<script>
+    Resilio.i18n.add({
+        es: {
+            consTitulo: "Antes de empezar",
+            consIntro: "Para hacer el test necesitamos tu consentimiento para tratar tus respuestas.",
+            consDatos: "Guardamos tus respuestas al test BAT-12, tus puntuaciones y los consejos generados.",
+            consIA: "Para generar los consejos pueden enviarse a Google Gemini tu puntuación y las medias por dimensión, sin tu nombre.",
+            consEmpresa: "Si te registraste con un código de empresa, su equipo de RR. HH. solo ve datos agregados, no tus respuestas con tu nombre. Los administradores de la plataforma sí pueden ver tus datos para mantener el servicio.",
+            consNoDiag: "Resilio es una herramienta de cribado, no un diagnóstico médico.",
+            consDerechos: "Puedes exportar tus datos o eliminar tu cuenta cuando quieras desde Configuración.",
+            consAcepto: "Acepto el tratamiento de mis datos tal y como se describe arriba.",
+            consContinuar: "Aceptar y continuar"
+        },
+        en: {
+            consTitulo: "Before you start",
+            consIntro: "To take the test we need your consent to process your answers.",
+            consDatos: "We store your BAT-12 answers, your scores and the generated advice.",
+            consIA: "To generate the advice, your score and subscale means (without your name) may be sent to Google Gemini.",
+            consEmpresa: "If you signed up with a company code, its HR team only sees aggregated data, not your answers with your name. Platform administrators can see your data to run the service.",
+            consNoDiag: "Resilio is a screening tool, not a medical diagnosis.",
+            consDerechos: "You can export your data or delete your account at any time from Settings.",
+            consAcepto: "I accept the processing of my data as described above.",
+            consContinuar: "Accept and continue"
+        },
+        ca: {
+            consTitulo: "Abans de començar",
+            consIntro: "Per fer el test necessitem el teu consentiment per tractar les teves respostes.",
+            consDatos: "Guardem les teves respostes al test BAT-12, les teves puntuacions i els consells generats.",
+            consIA: "Per generar els consells es poden enviar a Google Gemini la teva puntuació i les mitjanes per dimensió, sense el teu nom.",
+            consEmpresa: "Si t'has registrat amb un codi d'empresa, el seu equip de RR. HH. només veu dades agregades, no les teves respostes amb el teu nom. Els administradors de la plataforma sí que poden veure les teves dades per mantenir el servei.",
+            consNoDiag: "Resilio és una eina de cribratge, no un diagnòstic mèdic.",
+            consDerechos: "Pots exportar les teves dades o eliminar el teu compte quan vulguis des de Configuració.",
+            consAcepto: "Accepto el tractament de les meves dades tal com es descriu a dalt.",
+            consContinuar: "Acceptar i continuar"
+        }
+    });
+</script>
+{% endblock %}

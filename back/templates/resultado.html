@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% from "_consejos.html" import consejos %}
+{% from "_tendencia.html" import tendencia as grafico_tendencia %}
+{% block head_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1 data-i18n="resTitulo">Tu resultado</h1>
+    <p>{{ ev.fecha.strftime('%d/%m/%Y') }}</p>
+</div>
+
+<div class="result-card" style="margin-bottom: 24px;">
+    <div class="res-score">{{ ev.puntuacion_total }} <small>/ 5</small></div>
+    <p>
+        <span class="risk-badge {{ {'Bajo': 'low', 'Medio': 'medium', 'Alto': 'high'}[nivel] }}"
+              data-i18n="{{ {'Bajo': 'bajoRiesgo', 'Medio': 'riesgoMedio', 'Alto': 'riesgoAlto'}[nivel] }}">{{ nivel }}</span>
+    </p>
+    <p data-i18n="{{ 'resPrimera' if delta is none else ('resMejor' if delta < 0 else ('resPeor' if delta > 0 else 'resIgual')) }}">
+        {% if delta is none %}Es tu primera evaluación: servirá de referencia.
+        {% elif delta < 0 %}Has bajado respecto a tu evaluación anterior.
+        {% elif delta > 0 %}Has subido respecto a tu evaluación anterior.
+        {% else %}Igual que tu evaluación anterior.{% endif %}
+        {% if delta is not none %}({{ '%+.2f'|format(delta) }}){% endif %}
+    </p>
+    <p style="color: var(--muted); font-size: 0.85rem;" data-i18n="resAviso">
+        Resilio es una herramienta de cribado, no un diagnóstico. Si te sientes mal, habla con un profesional de la salud.
+    </p>
+</div>
+
+<div class="result-card" style="margin-bottom: 24px;">
+    <h2 data-i18n="resDimensiones">Por dimensión</h2>
+    {% for d in dims %}
+    <div class="progress-item" style="margin-bottom: 14px;">
+        <div class="progress-label">
+            <span data-i18n="dim_{{ d.clave }}">{{ d.clave|capitalize }}</span>
+            <span>{{ '%.2f'|format(d.valor) }}/5
+                {% if d.delta is not none %}<small>({{ '%+.2f'|format(d.delta) }})</small>{% endif %}
+                {% if d.clave == mayor %}<small data-i18n="resMayor">· la más alta</small>{% endif %}</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill neutral" style="width: {{ (d.valor / 5 * 100)|round|int }}%;"></div></div>
+    </div>
+    {% endfor %}
+    <p style="color: var(--muted); font-size: 0.8rem;" data-i18n="resSinCorte">
+        El BAT-12 no define puntos de corte por dimensión: las barras solo comparan tus propias áreas.
+    </p>
+</div>
+
+{% if ev.consejos_data %}
+<div class="consejos-panel" style="margin-bottom: 24px;">
+    <h2><i class="fas fa-lightbulb" style="margin-right: 10px; color: var(--accent-ink);"></i><span data-i18n="resPlan">Tu plan de 3 pasos</span></h2>
+    {{ consejos(ev.consejos_data) }}
+</div>
+{% endif %}
+
+{% if tendencia|length > 1 %}
+<div class="result-card" style="margin-bottom: 24px;">
+    <h2 data-i18n="resEvolucion">Tu evolución</h2>
+    {{ grafico_tendencia(tendencia) }}
+</div>
+{% endif %}
+
+<div class="btn-action">
+    <a href="/historial" class="btn-test" data-i18n="resHistorial">Ver historial</a>
+</div>
+
+<style>
+    .res-score { font-size: 3rem; font-family: var(--font-display); letter-spacing: -0.03em; line-height: 1.1; }
+    .progress-item .progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .btn-action { margin-top: 8px; }
+</style>
+<script>
+    Resilio.i18n.add({
+        es: {
+            resTitulo: "Tu resultado", resPrimera: "Es tu primera evaluación: servirá de referencia.",
+            resMejor: "Has bajado respecto a tu evaluación anterior.", resPeor: "Has subido respecto a tu evaluación anterior.",
+            resIgual: "Igual que tu evaluación anterior.",
+            resAviso: "Resilio es una herramienta de cribado, no un diagnóstico. Si te sientes mal, habla con un profesional de la salud.",
+            resDimensiones: "Por dimensión", resMayor: "· la más alta",
+            resSinCorte: "El BAT-12 no define puntos de corte por dimensión: las barras solo comparan tus propias áreas.",
+            resPlan: "Tu plan de 3 pasos", resEvolucion: "Tu evolución", resHistorial: "Ver historial",
+            dim_agotamiento: "Agotamiento", dim_distanciamiento: "Distanciamiento mental",
+            dim_cognitivo: "Deterioro cognitivo", dim_emocional: "Deterioro emocional",
+            tendPuntuacion: "Puntuación", tendEnRiesgo: "En riesgo", tendSevero: "Burnout severo"
+        },
+        en: {
+            resTitulo: "Your result", resPrimera: "This is your first assessment: it will be your baseline.",
+            resMejor: "You are lower than in your previous assessment.", resPeor: "You are higher than in your previous assessment.",
+            resIgual: "Same as your previous assessment.",
+            resAviso: "Resilio is a screening tool, not a diagnosis. If you feel unwell, talk to a health professional.",
+            resDimensiones: "By dimension", resMayor: "· highest",
+            resSinCorte: "The BAT-12 defines no cut-offs per dimension: the bars only compare your own areas.",
+            resPlan: "Your 3-step plan", resEvolucion: "Your progress", resHistorial: "View history",
+            dim_agotamiento: "Exhaustion", dim_distanciamiento: "Mental distance",
+            dim_cognitivo: "Cognitive impairment", dim_emocional: "Emotional impairment",
+            tendPuntuacion: "Score", tendEnRiesgo: "At risk", tendSevero: "Severe burnout"
+        },
+        ca: {
+            resTitulo: "El teu resultat", resPrimera: "És la teva primera avaluació: servirà de referència.",
+            resMejor: "Has baixat respecte a la teva avaluació anterior.", resPeor: "Has pujat respecte a la teva avaluació anterior.",
+            resIgual: "Igual que la teva avaluació anterior.",
+            resAviso: "Resilio és una eina de cribratge, no un diagnòstic. Si et sents malament, parla amb un professional de la salut.",
+            resDimensiones: "Per dimensió", resMayor: "· la més alta",
+            resSinCorte: "El BAT-12 no defineix punts de tall per dimensió: les barres només comparen les teves pròpies àrees.",
+            resPlan: "El teu pla de 3 passos", resEvolucion: "La teva evolució", resHistorial: "Veure historial",
+            dim_agotamiento: "Esgotament", dim_distanciamiento: "Distanciament mental",
+            dim_cognitivo: "Deteriorament cognitiu", dim_emocional: "Deteriorament emocional",
+            tendPuntuacion: "Puntuació", tendEnRiesgo: "En risc", tendSevero: "Burnout sever"
+        }
+    });
+</script>
+{% endblock %}
