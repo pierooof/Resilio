@@ -1,3 +1,4 @@
+from flask_babel import gettext as _
 from flask import Blueprint, current_app, flash, redirect, render_template, session, url_for
 
 from ..extensions import db
@@ -5,12 +6,12 @@ from ..models import Evaluacion
 from ..security import login_required
 from . import hr
 from ..services.scoring import RIESGO
-from ..utils import SOLO_EMPLEADOS, ULTIMA, fila, filas, tiempo_relativo, ultimos_meses
+from ..utils import SOLO_EMPLEADOS, ULTIMA, fila, filas, mes_corto, tiempo_relativo, ultimos_meses
 
 bp = Blueprint("dashboard", __name__)
 
 def _tendencia(rows):
-    rows = [{"mes": r["mes"], "total": int(r["total"]), "riesgo_alto": int(r["riesgo_alto"])} for r in rows]
+    rows = [{"mes": mes_corto(r["mes"]), "total": int(r["total"]), "riesgo_alto": int(r["riesgo_alto"])} for r in rows]
     return rows or ultimos_meses(total=0, riesgo_alto=0)
 
 
@@ -83,21 +84,21 @@ def _admin():
         """):
             if item["tipo"] == "registro":
                 actividad.append(dict(
-                    titulo="Nuevo usuario registrado",
+                    titulo=_("Nuevo usuario registrado"),
                     descripcion=f"{item['nombre']} {item['apellidos'] or ''}".strip(),
                     tiempo=tiempo_relativo(item["fecha"]), icon="user-plus", color="green",
                 ))
             else:
                 p = float(item["puntuacion"] or 0)
                 actividad.append(dict(
-                    titulo="Evaluación completada",
+                    titulo=_("Evaluación completada"),
                     descripcion=f"{item['nombre']} — {p:.2f}/5",
                     tiempo=tiempo_relativo(item["fecha"]), icon="clipboard-check",
                     color="red" if p >= RIESGO["alto"] else ("yellow" if p >= RIESGO["medio"] else "green"),
                 ))
         tendencia_mensual = _tendencia(filas(
             """
-            SELECT to_char(date_trunc('month', fecha), 'Mon YYYY') AS mes, COUNT(*) AS total,
+            SELECT CAST(date_trunc('month', fecha) AS date) AS mes, COUNT(*) AS total,
                    SUM(CASE WHEN puntuacion_total >= :alto THEN 1 ELSE 0 END) AS riesgo_alto
             FROM evaluaciones
             WHERE fecha >= now() - interval '6 months'
@@ -108,7 +109,7 @@ def _admin():
     except Exception:
         db.session.rollback()
         current_app.logger.exception("Error al cargar el panel de admin")
-        flash("Error al cargar el panel.", "error")
+        flash(_("Error al cargar el panel."), "error")
         stats = {k: 0 for k in ["total_usuarios", "total_empresas", "total_evaluaciones", "nuevos_usuarios_mes",
                                 "evaluaciones_mes", "usuarios_riesgo_alto", "pct_riesgo_alto"]}
         usuarios = empresas = usuarios_riesgo = actividad = tendencia_mensual = []

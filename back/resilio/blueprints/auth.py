@@ -2,13 +2,16 @@ import hashlib
 import hmac
 from datetime import datetime
 
+from flask_babel import gettext as _
 from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
+from flask_babel import get_locale
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from ..extensions import db, limiter, mail
+from ..i18n import COOKIE, IDIOMAS, poner_cookie
 from ..models import Usuario
 from ..services.codigos import CodigoInvalido, resolver_codigo
 
@@ -57,8 +60,11 @@ def login():
             session["departamento_id"] = usuario.departamento_id
             session["nombre_empresa"] = usuario.empresa.nombre if usuario.empresa else None
             session["nombre_dept"] = usuario.departamento.nombre if usuario.departamento else None
-            return redirect(url_for("dashboard.dashboard"))
-        flash("Email o contraseña incorrectos", "error")
+            respuesta = redirect(url_for("dashboard.dashboard"))
+            if request.cookies.get(COOKIE) not in IDIOMAS:  # sin elección explícita: su idioma guardado
+                poner_cookie(respuesta, usuario.idioma)
+            return respuesta
+        flash(_("Email o contraseña incorrectos"), "error")
         return redirect(url_for("auth.login"))
     return render_template("login.html")
 
@@ -80,13 +86,13 @@ def register():
         email = f.get("email", "").strip()
         nombre = f.get("nombre", "").strip()
         if not nombre or "@" not in email:
-            flash("Nombre y email válidos son obligatorios.", "error")
+            flash(_("Nombre y email válidos son obligatorios."), "error")
             return redirect(url_for("auth.register"))
         if len(f.get("password", "")) < MIN_PASSWORD:
-            flash(f"La contraseña debe tener al menos {MIN_PASSWORD} caracteres.", "error")
+            flash(_("La contraseña debe tener al menos %(n)s caracteres.", n=MIN_PASSWORD), "error")
             return redirect(url_for("auth.register"))
         if Usuario.query.filter_by(email=email).first():
-            flash("Este email ya está registrado. Por favor, inicia sesión.", "error")
+            flash(_("Este email ya está registrado. Por favor, inicia sesión."), "error")
             return redirect(url_for("auth.register"))
 
         rol_id, empresa_id, departamento_id = 3, None, None
@@ -108,7 +114,7 @@ def register():
                 apellidos=f.get("apellidos", "").strip() or None,
                 email=email,
                 password=generate_password_hash(f["password"]),
-                idioma=f.get("lang") if f.get("lang") in ("es", "en", "ca") else "es",
+                idioma=str(get_locale()),
                 consentimiento_fecha=datetime.now() if f.get("acepto") else None,
             )
         )
@@ -116,9 +122,9 @@ def register():
             db.session.commit()
         except IntegrityError:  # carrera con otro registro del mismo email
             db.session.rollback()
-            flash("Este email ya está registrado. Por favor, inicia sesión.", "error")
+            flash(_("Este email ya está registrado. Por favor, inicia sesión."), "error")
             return redirect(url_for("auth.register"))
-        flash("¡Cuenta creada con éxito! Ya puedes iniciar sesión.", "success")
+        flash(_("¡Cuenta creada con éxito! Ya puedes iniciar sesión."), "success")
         return redirect(url_for("auth.login"))
 
     return render_template("register.html")
@@ -145,7 +151,7 @@ def forgot_password():
             except Exception:
                 current_app.logger.exception("No se pudo enviar el correo de recuperación")
         # Misma respuesta exista o no el email (evita enumerar usuarios)
-        flash("Si el correo existe en nuestro sistema, recibirás un enlace de recuperación.", "success")
+        flash(_("Si el correo existe en nuestro sistema, recibirás un enlace de recuperación."), "success")
         return redirect(url_for("auth.login"))
     return render_template("forgot_password.html")
 
@@ -155,18 +161,18 @@ def forgot_password():
 def reset_password(token):
     usuario = _usuario_de_token(token)
     if not usuario:
-        flash("El enlace es inválido o ha expirado.", "error")
+        flash(_("El enlace es inválido o ha expirado."), "error")
         return redirect(url_for("auth.forgot_password"))
 
     if request.method == "POST":
         password = request.form.get("password", "")
         if password != request.form.get("confirm_password"):
-            flash("Las contraseñas no coinciden.", "error")
+            flash(_("Las contraseñas no coinciden."), "error")
         elif len(password) < MIN_PASSWORD:
-            flash(f"La contraseña debe tener al menos {MIN_PASSWORD} caracteres.", "error")
+            flash(_("La contraseña debe tener al menos %(n)s caracteres.", n=MIN_PASSWORD), "error")
         else:
             usuario.password = generate_password_hash(password)
             db.session.commit()
-            flash("Tu contraseña ha sido actualizada exitosamente.", "success")
+            flash(_("Tu contraseña ha sido actualizada exitosamente."), "success")
             return redirect(url_for("auth.login"))
     return render_template("reset_password.html", token=token)

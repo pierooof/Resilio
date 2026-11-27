@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+from . import i18n
 from .extensions import csrf, db, limiter, mail, migrate
 
 
@@ -54,13 +55,15 @@ def create_app(config=None):
     csrf.init_app(app)
     limiter.init_app(app)
     mail.init_app(app)
+    i18n.compilar_traducciones()
+    i18n.babel.init_app(app, locale_selector=i18n.seleccionar_idioma, default_translation_directories=i18n.DIRECTORIO)
 
     from .blueprints import admin, auth, cuenta, dashboard, hr, test
-    for modulo in (auth, dashboard, admin, test, cuenta, hr):
+    for modulo in (auth, dashboard, admin, test, cuenta, hr, i18n):
         app.register_blueprint(modulo.bp)
 
     from .services.scoring import UMBRAL_ALTO, UMBRAL_MEDIO
-    app.jinja_env.globals.update(UMBRAL_ALTO=UMBRAL_ALTO, UMBRAL_MEDIO=UMBRAL_MEDIO)
+    app.jinja_env.globals.update(UMBRAL_ALTO=UMBRAL_ALTO, UMBRAL_MEDIO=UMBRAL_MEDIO, get_locale=i18n.get_locale)
 
     from .cli import registrar
     registrar(app)

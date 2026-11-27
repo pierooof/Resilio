@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="welcome-section">
-    <h1 data-i18n="historialEvaluaciones">Historial de Evaluaciones</h1>
-    <p data-i18n="historialDescripcion">Revisa tus evaluaciones anteriores y su evolucion.</p>
+    <h1>{{ _("Historial de Evaluaciones") }}</h1>
+    <p>{{ _("Revisa tus evaluaciones anteriores y su evolucion.") }}</p>
 </div>
 
 {% if evaluaciones %}
@@ -19,47 +19,47 @@
                 </div>
                 
                 <div class="history-score">
-                    <span class="score-label" data-i18n="puntuacionGlobal">Puntuacion Global</span>
+                    <span class="score-label">{{ _("Puntuacion Global") }}</span>
                     <span class="score-value">{{ eval.puntuacion_total }}/5</span>
                 </div>
                 
                 <div class="history-details">
                     <div class="detail-item">
-                        <span class="detail-label" data-i18n="agotamiento">Agotamiento</span>
+                        <span class="detail-label">{{ _("Agotamiento") }}</span>
                         <span class="detail-value">{{ eval.dim_agotamiento }}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label" data-i18n="distanciamiento">Distanciamiento</span>
+                        <span class="detail-label">{{ _("Distanciamiento") }}</span>
                         <span class="detail-value">{{ eval.dim_distanciamiento }}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label" data-i18n="deterioroCognitivo">Deterioro Cognitivo</span>
+                        <span class="detail-label">{{ _("Deterioro Cognitivo") }}</span>
                         <span class="detail-value">{{ eval.dim_cognitivo }}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label" data-i18n="deterioroEmocional">Deterioro Emocional</span>
+                        <span class="detail-label">{{ _("Deterioro Emocional") }}</span>
                         <span class="detail-value">{{ eval.dim_emocional }}</span>
                     </div>
                 </div>
                 
                 <div class="history-risk">
                     {% if eval.puntuacion_total < UMBRAL_MEDIO %}
-                        <span class="risk-badge low" data-i18n="bajoRiesgo">Bajo Riesgo</span>
+                        <span class="risk-badge low">{{ _("Bajo Riesgo") }}</span>
                     {% elif eval.puntuacion_total < UMBRAL_ALTO %}
-                        <span class="risk-badge medium" data-i18n="riesgoMedio">Riesgo Medio</span>
+                        <span class="risk-badge medium">{{ _("Riesgo Medio") }}</span>
                     {% else %}
-                        <span class="risk-badge high" data-i18n="riesgoAlto">Riesgo Alto</span>
+                        <span class="risk-badge high">{{ _("Riesgo Alto") }}</span>
                     {% endif %}
                 </div>
                 
                 {% if eval.consejos_data %}
                 <div class="history-consejos">
                     <i class="fas fa-lightbulb" aria-hidden="true" style="color: var(--accent-ink);"></i>
-                    <span data-i18n="consejos">Consejos</span>
+                    <span>{{ _("Consejos") }}</span>
                 </div>
                 {% endif %}
                 
-                <button type="button" class="toggle-btn" id="btn-eval-{{ loop.index }}" aria-label="Ver detalle" tabindex="-1">
+                <button type="button" class="toggle-btn" id="btn-eval-{{ loop.index }}" aria-label="{{ _('Ver detalle') }}" tabindex="-1">
                     <i class="fas fa-chevron-down"></i>
                 </button>
             </div>
@@ -69,7 +69,7 @@
                 <div class="consejos-section" style="margin-bottom: 24px;">
                     <h4 style="color: var(--accent-ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-lightbulb"></i>
-                        <span data-i18n="consejosPersonalizados">Consejos Personalizados</span>
+                        <span>{{ _("Consejos Personalizados") }}</span>
                     </h4>
                     <div class="consejos-historial-wrapper">
                         {{ consejos(eval.consejos_data) }}
@@ -81,19 +81,9 @@
                     <div class="question-item">
                         <div class="question-number">{{ loop.index }}</div>
                         <div class="question-content">
-                            <p class="question-text" data-i18n="q_{{ detalle.pregunta_id }}">{{ detalle.texto }}</p>
+                            <p class="question-text" >{{ detalle.texto }}</p>
                             <div class="answer-value">
-                                {% if detalle.valor == 1 %}
-                                    <span class="answer-badge answer-1">Nunca</span>
-                                {% elif detalle.valor == 2 %}
-                                    <span class="answer-badge answer-2">Raras</span>
-                                {% elif detalle.valor == 3 %}
-                                    <span class="answer-badge answer-3">A veces</span>
-                                {% elif detalle.valor == 4 %}
-                                    <span class="answer-badge answer-4">A veces</span>
-                                {% else %}
-                                    <span class="answer-badge answer-5">Siempre</span>
-                                {% endif %}
+                                <span class="answer-badge answer-{{ detalle.valor }}">{{ [_("Nunca"), _("Raramente"), _("Algunas veces"), _("A menudo"), _("Siempre")][detalle.valor - 1] }}</span>
                             </div>
                         </div>
                     </div>
@@ -108,19 +98,17 @@
     <div style="width: 80px; height: 80px; background: var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
         <i class="fas fa-history" style="font-size: 2rem; color: var(--accent-ink);"></i>
     </div>
-    <h2 data-i18n="noEvaluaciones">No tienes evaluaciones anteriores</h2>
-    <p style="color: var(--muted); margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;" data-i18n="realizaPrimeraEvaluacion">
-        Realiza tu primera evaluacion para comenzar a hacer seguimiento de tu bienestar laboral.
-    </p>
+    <h2>{{ _("No tienes evaluaciones anteriores") }}</h2>
+    <p style="color: var(--muted); margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">{{ _("Realiza tu primera evaluacion para comenzar a hacer seguimiento de tu bienestar laboral.") }}</p>
     <a href="/test" class="btn-primary" style="max-width: 280px;">
         <i class="fas fa-play" style="margin-right: 10px;"></i>
-        <span data-i18n="realizarPrimeraEvaluacion">Realizar Primera Evaluacion</span>
+        <span>{{ _("Realizar Primera Evaluacion") }}</span>
     </a>
 </div>
 {% endif %}
 
 <script>
-    Resilio.i18n.add({{ i18n_preguntas|tojson }});
+
     function toggleDetails(id) {
         const details = document.getElementById(id);
         const btn = document.getElementById('btn-' + id);

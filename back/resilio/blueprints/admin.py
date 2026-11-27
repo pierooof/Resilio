@@ -2,6 +2,7 @@ import csv
 import io
 from datetime import datetime
 
+from flask_babel import gettext as _
 from flask import Blueprint, Response, current_app, flash, redirect, render_template, request, url_for
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
@@ -10,7 +11,7 @@ from ..extensions import db
 from ..models import Departamento, Empresa, Rol, Usuario
 from ..security import solo_admin
 from ..services.scoring import RIESGO
-from ..utils import ULTIMA, fila, filas, ultimos_meses
+from ..utils import ULTIMA, fila, filas, mes_corto, ultimos_meses
 from .auth import MIN_PASSWORD
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
@@ -27,10 +28,10 @@ def nueva_empresa():
     sector = request.form.get("sector", "").strip()
     codigo = request.form.get("codigo_registro", "").strip()
     if not nombre or not codigo:
-        flash("El nombre y el código de registro son obligatorios.", "error")
+        flash(_("El nombre y el código de registro son obligatorios."), "error")
         return _volver()
     if Empresa.query.filter_by(codigo_registro=codigo).first():
-        flash(f"El código '{codigo}' ya está en uso. Elige otro.", "error")
+        flash(_("El código '%(codigo)s' ya está en uso. Elige otro.", codigo=codigo), "error")
         return _volver()
 
     db.session.add(Empresa(nombre=nombre, sector=sector or None, codigo_registro=codigo))
@@ -38,9 +39,9 @@ def nueva_empresa():
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
-        flash(f"El código '{codigo}' ya está en uso. Elige otro.", "error")
+        flash(_("El código '%(codigo)s' ya está en uso. Elige otro.", codigo=codigo), "error")
     else:
-        flash(f"✓ Empresa '{nombre}' creada con código {codigo}.", "success")
+        flash(_("✓ Empresa '%(nombre)s' creada con código %(codigo)s.", nombre=nombre, codigo=codigo), "success")
     return _volver()
 
 
@@ -54,28 +55,28 @@ def nuevo_usuario():
         empresa_id = int(f["empresa_id"]) if f.get("empresa_id") else None
         departamento_id = int(f["departamento_id"]) if f.get("departamento_id") else None
     except ValueError:
-        flash("Datos no válidos.", "error")
+        flash(_("Datos no válidos."), "error")
         return _volver()
 
     if not nombre or "@" not in email or len(password) < MIN_PASSWORD:
-        flash(f"Nombre, email válido y contraseña de al menos {MIN_PASSWORD} caracteres son obligatorios.", "error")
+        flash(_("Nombre, email válido y contraseña de al menos %(n)s caracteres son obligatorios.", n=MIN_PASSWORD), "error")
         return _volver()
     if not db.session.get(Rol, rol_id):
-        flash("Rol no válido.", "error")
+        flash(_("Rol no válido."), "error")
         return _volver()
     if empresa_id and not db.session.get(Empresa, empresa_id):
-        flash("Empresa no válida.", "error")
+        flash(_("Empresa no válida."), "error")
         return _volver()
     if rol_id in (2, 4) and not empresa_id:
-        flash("HR y empleados necesitan una empresa.", "error")
+        flash(_("HR y empleados necesitan una empresa."), "error")
         return _volver()
     if departamento_id:
         dep = db.session.get(Departamento, departamento_id)
         if not dep or dep.empresa_id != empresa_id:
-            flash("El departamento no pertenece a esa empresa.", "error")
+            flash(_("El departamento no pertenece a esa empresa."), "error")
             return _volver()
     if Usuario.query.filter_by(email=email).first():
-        flash(f"El email '{email}' ya está registrado.", "error")
+        flash(_("El email '%(email)s' ya está registrado.", email=email), "error")
         return _volver()
 
     db.session.add(
@@ -89,9 +90,9 @@ def nuevo_usuario():
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
-        flash(f"El email '{email}' ya está registrado.", "error")
+        flash(_("El email '%(email)s' ya está registrado.", email=email), "error")
     else:
-        flash(f"✓ Usuario '{nombre}' creado correctamente.", "success")
+        flash(_("✓ Usuario '%(nombre)s' creado correctamente.", nombre=nombre), "success")
     return _volver()
 
 
@@ -120,7 +121,7 @@ def exportar_csv():
     except Exception:
         db.session.rollback()
         current_app.logger.exception("Error al generar el CSV")
-        flash("Error al generar el CSV.", "error")
+        flash(_("Error al generar el CSV."), "error")
         return _volver()
 
     output = io.StringIO()
@@ -194,9 +195,9 @@ def informe_global():
         """
         )
         evolucion_mensual = [
-            {"mes": r["mes"], "media": float(r["media"])}
+            {"mes": mes_corto(r["mes"]), "media": float(r["media"])}
             for r in filas("""
-                SELECT to_char(date_trunc('month', fecha), 'Mon YYYY') AS mes, ROUND(AVG(puntuacion_total), 2) AS media
+                SELECT CAST(date_trunc('month', fecha) AS date) AS mes, ROUND(AVG(puntuacion_total), 2) AS media
                 FROM evaluaciones WHERE fecha >= now() - interval '6 months'
                 GROUP BY date_trunc('month', fecha) ORDER BY date_trunc('month', fecha)
             """)
@@ -204,7 +205,7 @@ def informe_global():
     except Exception:
         db.session.rollback()
         current_app.logger.exception("Error al generar el informe global")
-        flash("Error al generar el informe.", "error")
+        flash(_("Error al generar el informe."), "error")
         stats = medias = None
         riesgo = dict(bajo=0, medio=0, alto=0)
         empresas_stats = top_riesgo = evolucion_mensual = []

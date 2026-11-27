@@ -1,9 +1,11 @@
+from flask_babel import get_locale
+from flask_babel import gettext as _
 from flask import (Blueprint, abort, current_app, flash, redirect, render_template, request, session, url_for)
 
 from ..extensions import db, limiter
 from ..models import Evaluacion, Pregunta, TestBorrador
 from ..security import consentimiento_requerido, login_required
-from ..services.preguntas import i18n_preguntas
+from ..services.preguntas import textos_preguntas
 from ..services.scoring import calcular_y_guardar_bat12, nivel_riesgo
 
 bp = Blueprint("test", __name__)
@@ -28,14 +30,15 @@ def _paso(n=None):
         abort(404)
     ctx = dict(n=n, total=total, respondidas=respondidas, listo=n > total)
     if n <= total:
-        ctx.update(pregunta=preguntas[n - 1], valor_actual=borrador.get(preguntas[n - 1].id))
+        pregunta = preguntas[n - 1]
+        ctx.update(pregunta=pregunta, texto=textos_preguntas()[pregunta.id], valor_actual=borrador.get(pregunta.id))
     return ctx
 
 
 @bp.route("/test")
 @consentimiento_requerido
 def realizar_test():
-    return render_template("test.html", i18n_preguntas=i18n_preguntas(), **_paso())
+    return render_template("test.html", **_paso())
 
 
 @bp.route("/test/pregunta/<int:n>")
@@ -75,15 +78,15 @@ def responder():
 def procesar_test():
     datos = {f"pregunta_{k}": v for k, v in _borrador().items()} | request.form.to_dict()
     try:
-        exito, resultado = calcular_y_guardar_bat12(session["user_id"], datos, request.form.get("lang"))
+        exito, resultado = calcular_y_guardar_bat12(session["user_id"], datos, str(get_locale()))
     except Exception:
         db.session.rollback()
         current_app.logger.exception("Error al guardar el test")
-        flash("Error inesperado al procesar tu test. Inténtalo de nuevo.", "error")
+        flash(_("Error inesperado al procesar tu test. Inténtalo de nuevo."), "error")
         return redirect(url_for("test.realizar_test"))
 
     if not exito:
-        flash(f"Error al procesar: {resultado}", "error")
+        flash(_("Error al procesar: %(e)s", e=resultado), "error")
         return redirect(url_for("test.realizar_test"))
     TestBorrador.query.filter_by(usuario_id=session["user_id"]).delete()
     db.session.commit()
@@ -113,7 +116,7 @@ def resultado(evaluacion_id):
 @bp.route("/historial")
 @login_required
 def historial():
-    textos = {p.id: p.texto for p in Pregunta.query.filter_by(es_activo=True)}  # es; en/ca vía i18n_preguntas
+    textos = textos_preguntas()
     evaluaciones = (
         Evaluacion.query.filter_by(usuario_id=session["user_id"]).order_by(Evaluacion.fecha.desc()).all()
     )
@@ -122,4 +125,4 @@ def historial():
             {"pregunta_id": r.pregunta_id, "texto": textos.get(r.pregunta_id, f"Pregunta {r.pregunta_id}"), "valor": r.valor}
             for r in sorted(ev.respuestas, key=lambda r: r.pregunta_id)
         ]
-    return render_template("historial.html", evaluaciones=evaluaciones, i18n_preguntas=i18n_preguntas())
+    return render_template("historial.html", evaluaciones=evaluaciones)

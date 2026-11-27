@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+from flask_babel import gettext as _
 from flask import Blueprint, Response, flash, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
 
@@ -28,7 +29,7 @@ def consentimiento():
             _usuario().consentimiento_fecha = datetime.now()
             db.session.commit()
             return redirect(destino)
-        flash("Para hacer el test tienes que aceptar el tratamiento de tus datos.", "error")
+        flash(_("Para hacer el test tienes que aceptar el tratamiento de tus datos."), "error")
     return render_template("consentimiento.html", destino=destino)
 
 
@@ -46,12 +47,12 @@ def recordatorio():
     except ValueError:
         semanas = -1
     if semanas and semanas not in CADENCIAS:
-        flash("Frecuencia no válida.", "error")
+        flash(_("Frecuencia no válida."), "error")
         return redirect(url_for("cuenta.configuracion"))
     u = _usuario()
     u.recordatorio_semanas = semanas or None
     db.session.commit()
-    flash("Preferencia de recordatorios guardada.", "success")
+    flash(_("Preferencia de recordatorios guardada."), "success")
     return redirect(url_for("cuenta.configuracion"))
 
 
@@ -86,14 +87,14 @@ def exportar():
 def eliminar():
     u = _usuario()
     if u.rol_id == 1:
-        flash("Una cuenta de administrador no se puede eliminar desde aquí.", "error")
+        flash(_("Una cuenta de administrador no se puede eliminar desde aquí."), "error")
         return redirect(url_for("cuenta.configuracion"))
     if not check_password_hash(u.password, request.form.get("password", "")):
-        flash("Contraseña incorrecta: no se ha eliminado nada.", "error")
+        flash(_("Contraseña incorrecta: no se ha eliminado nada."), "error")
         return redirect(url_for("cuenta.configuracion"))
     TestBorrador.query.filter_by(usuario_id=u.id).delete()
     db.session.delete(u)  # las evaluaciones y respuestas caen en cascada
     db.session.commit()
     session.clear()
-    flash("Tu cuenta y todos tus datos se han eliminado.", "success")
+    flash(_("Tu cuenta y todos tus datos se han eliminado."), "success")
     return redirect(url_for("auth.login"))

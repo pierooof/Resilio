@@ -10,9 +10,9 @@
 
 <!-- ─── HEADER ─── -->
 <div class="admin-header">
-    <div class="admin-badge"><i class="fas fa-shield-alt"></i> Panel de Administración</div>
-    <h1>Vista General del Sistema</h1>
-    <p>Gestión completa de usuarios, empresas y evaluaciones de Resilio.</p>
+    <div class="admin-badge"><i class="fas fa-shield-alt"></i> {{ _("Panel de Administración") }}</div>
+    <h1>{{ _("Vista General del Sistema") }}</h1>
+    <p>{{ _("Gestión completa de usuarios, empresas y evaluaciones de Resilio.") }}</p>
 </div>
 
 <!-- ─── KPIs ─── -->
@@ -23,7 +23,7 @@
             <span class="kpi-trend up"><i class="fas fa-arrow-up" style="font-size:0.6rem;margin-right:2px;"></i>{{ stats.nuevos_usuarios_mes }}</span>
         </div>
         <div class="kpi-value">{{ stats.total_usuarios }}</div>
-        <div class="kpi-label">Usuarios Registrados</div>
+        <div class="kpi-label">{{ _("Usuarios Registrados") }}</div>
     </div>
     <div class="kpi-card blue">
         <div class="kpi-top">
@@ -31,7 +31,7 @@
             <span class="kpi-trend neutral">–</span>
         </div>
         <div class="kpi-value">{{ stats.total_empresas }}</div>
-        <div class="kpi-label">Empresas Activas</div>
+        <div class="kpi-label">{{ _("Empresas Activas") }}</div>
     </div>
     <div class="kpi-card yellow">
         <div class="kpi-top">
@@ -39,7 +39,7 @@
             <span class="kpi-trend up"><i class="fas fa-arrow-up" style="font-size:0.6rem;margin-right:2px;"></i>{{ stats.evaluaciones_mes }}</span>
         </div>
         <div class="kpi-value">{{ stats.total_evaluaciones }}</div>
-        <div class="kpi-label">Evaluaciones Realizadas</div>
+        <div class="kpi-label">{{ _("Evaluaciones Realizadas") }}</div>
     </div>
     <div class="kpi-card red">
         <div class="kpi-top">
@@ -47,7 +47,7 @@
             <span class="kpi-trend {% if stats.pct_riesgo_alto > 20 %}down{% else %}neutral{% endif %}">{{ stats.pct_riesgo_alto }}%</span>
         </div>
         <div class="kpi-value">{{ stats.usuarios_riesgo_alto }}</div>
-        <div class="kpi-label">Usuarios en Riesgo Alto</div>
+        <div class="kpi-label">{{ _("Usuarios en Riesgo Alto") }}</div>
     </div>
 </div>
 
@@ -55,14 +55,14 @@
 <div class="admin-main-grid">
     <div class="admin-card">
         <div class="admin-card-title">
-            <h2><i class="fas fa-users"></i> Últimos Usuarios Registrados</h2>
-            <a href="/admin/usuarios" class="view-all-link">Ver todos →</a>
+            <h2><i class="fas fa-users"></i> {{ _("Últimos Usuarios Registrados") }}</h2>
+            <a href="/admin/usuarios" class="view-all-link">{{ _("Ver todos →") }}</a>
         </div>
         {% if usuarios %}
         <div class="table-scroll"><table class="user-table">
             <thead>
                 <tr>
-                    <th>Usuario</th><th>Rol</th><th>Empresa</th><th>Evaluaciones</th><th>Registro</th>
+                    <th>{{ _("Usuario") }}</th><th>{{ _("Rol") }}</th><th>{{ _("Empresa") }}</th><th>{{ _("Evaluaciones") }}</th><th>{{ _("Registro") }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,10 +78,10 @@
                         </div>
                     </td>
                     <td>
-                        {% if u.rol_id == 1 %}<span class="role-tag admin">Admin</span>
-                        {% elif u.rol_id == 2 %}<span class="role-tag hr">RRHH</span>
-                        {% elif u.rol_id == 3 %}<span class="role-tag personal">Personal</span>
-                        {% else %}<span class="role-tag empresa">Empresa</span>{% endif %}
+                        {% if u.rol_id == 1 %}<span class="role-tag admin">{{ _("Admin") }}</span>
+                        {% elif u.rol_id == 2 %}<span class="role-tag hr">{{ _("RRHH") }}</span>
+                        {% elif u.rol_id == 3 %}<span class="role-tag personal">{{ _("Personal") }}</span>
+                        {% else %}<span class="role-tag empresa">{{ _("Empresa") }}</span>{% endif %}
                     </td>
                     <td style="color:var(--muted);font-size:0.82rem;">{{ u.empresa_nombre or '—' }}</td>
                     <td><span class="eval-count {% if u.total_evaluaciones == 0 %}zero{% endif %}">{{ u.total_evaluaciones }}</span></td>
@@ -91,7 +91,7 @@
             </tbody>
         </table></div>
         {% else %}
-        <div class="empty-state"><i class="fas fa-users-slash"></i><p>No hay usuarios registrados todavía.</p></div>
+        <div class="empty-state"><i class="fas fa-users-slash"></i><p>{{ _("No hay usuarios registrados todavía.") }}</p></div>
         {% endif %}
     </div>
 
@@ -99,24 +99,24 @@
         <!-- Acciones Rápidas -->
         <div class="admin-card" style="padding:24px;">
             <div class="admin-card-title">
-                <h2><i class="fas fa-bolt"></i> Acciones Rápidas</h2>
+                <h2><i class="fas fa-bolt"></i> {{ _("Acciones Rápidas") }}</h2>
             </div>
             <div class="quick-actions">
                 <button class="quick-action-btn" onclick="openModal('modal-empresa')">
                     <div class="qa-icon" style="background:var(--accent-dim);color:var(--accent-ink);"><i class="fas fa-plus"></i></div>
-                    <div><div class="qa-label">Nueva Empresa</div><div class="qa-desc">Crear y configurar</div></div>
+                    <div><div class="qa-label">{{ _("Nueva Empresa") }}</div><div class="qa-desc">{{ _("Crear y configurar") }}</div></div>
                 </button>
                 <button class="quick-action-btn" onclick="openModal('modal-usuario')">
                     <div class="qa-icon" style="background:rgba(79,172,254,0.15);color:#4facfe;"><i class="fas fa-user-plus"></i></div>
-                    <div><div class="qa-label">Añadir Usuario</div><div class="qa-desc">Registrar manualmente</div></div>
+                    <div><div class="qa-label">{{ _("Añadir Usuario") }}</div><div class="qa-desc">{{ _("Registrar manualmente") }}</div></div>
                 </button>
                 <a href="/admin/exportar_csv" class="quick-action-btn">
                     <div class="qa-icon" style="background:var(--warn-dim);color:var(--warn-ink);"><i class="fas fa-file-export"></i></div>
-                    <div><div class="qa-label">Exportar CSV</div><div class="qa-desc">Datos evaluaciones</div></div>
+                    <div><div class="qa-label">{{ _("Exportar CSV") }}</div><div class="qa-desc">{{ _("Datos evaluaciones") }}</div></div>
                 </a>
                 <a href="/admin/informe_global" class="quick-action-btn">
                     <div class="qa-icon" style="background:var(--danger-dim);color:var(--danger-ink);"><i class="fas fa-chart-bar"></i></div>
-                    <div><div class="qa-label">Informe Global</div><div class="qa-desc">Ver estadísticas</div></div>
+                    <div><div class="qa-label">{{ _("Informe Global") }}</div><div class="qa-desc">{{ _("Ver estadísticas") }}</div></div>
                 </a>
             </div>
         </div>
@@ -124,7 +124,7 @@
         <!-- Actividad reciente -->
         <div class="admin-card" style="padding:24px;flex:1;">
             <div class="admin-card-title">
-                <h2><i class="fas fa-history"></i> Actividad Reciente</h2>
+                <h2><i class="fas fa-history"></i> {{ _("Actividad Reciente") }}</h2>
             </div>
             <div class="activity-feed">
                 {% if actividad %}
@@ -138,7 +138,7 @@
                     </div>
                     {% endfor %}
                 {% else %}
-                <div class="empty-state"><i class="fas fa-clock"></i><p>Sin actividad reciente</p></div>
+                <div class="empty-state"><i class="fas fa-clock"></i><p>{{ _("Sin actividad reciente") }}</p></div>
                 {% endif %}
             </div>
         </div>
@@ -149,8 +149,8 @@
 <div class="admin-bottom-grid">
     <div class="admin-card">
         <div class="admin-card-title">
-            <h2><i class="fas fa-building"></i> Empresas Registradas</h2>
-            <a href="#" class="view-all-link" onclick="openModal('modal-empresa'); return false;">+ Nueva →</a>
+            <h2><i class="fas fa-building"></i> {{ _("Empresas Registradas") }}</h2>
+            <a href="#" class="view-all-link" onclick="openModal('modal-empresa'); return false;">{{ _("+ Nueva →") }}</a>
         </div>
         {% if empresas %}
             {% for e in empresas %}
@@ -158,13 +158,13 @@
                 <div class="empresa-logo"><i class="fas fa-building"></i></div>
                 <div class="empresa-info">
                     <div class="empresa-name">{{ e.nombre }}</div>
-                    <div class="empresa-meta">{{ e.sector or 'Sin sector' }} · {{ e.total_empleados }} empleados</div>
+                    <div class="empresa-meta">{{ e.sector or _('Sin sector') }} · {{ e.total_empleados }} {{ _("empleados") }}</div>
                 </div>
                 <div class="empresa-code-wrap">
                     <span class="empresa-code" id="code-{{ loop.index }}">{{ e.codigo_registro }}</span>
                     <button
                         class="btn-copy-code"
-                        title="Copiar código"
+                        title="{{ _('Copiar código') }}"
                         onclick="copyCode('code-{{ loop.index }}', this)"
                         aria-label="Copiar código {{ e.codigo_registro }}">
                         <i class="fas fa-copy"></i>
@@ -173,14 +173,14 @@
             </div>
             {% endfor %}
         {% else %}
-        <div class="empty-state"><i class="fas fa-building"></i><p>No hay empresas registradas todavía.</p></div>
+        <div class="empty-state"><i class="fas fa-building"></i><p>{{ _("No hay empresas registradas todavía.") }}</p></div>
         {% endif %}
     </div>
 
     <div class="admin-card">
         <div class="admin-card-title">
-            <h2><i class="fas fa-exclamation-triangle" style="color:var(--danger-ink)!important;"></i> Usuarios en Riesgo</h2>
-            <a href="/admin/informe_global" class="view-all-link">Ver informe →</a>
+            <h2><i class="fas fa-exclamation-triangle" style="color:var(--danger-ink)!important;"></i> {{ _("Usuarios en Riesgo") }}</h2>
+            <a href="/admin/informe_global" class="view-all-link">{{ _("Ver informe →") }}</a>
         </div>
         {% if usuarios_riesgo %}
             {% for u in usuarios_riesgo %}
@@ -188,15 +188,15 @@
                 <div class="riesgo-avatar" style="background:var(--danger);">{{ u.nombre[0].upper() }}</div>
                 <div class="riesgo-info">
                     <div class="riesgo-name">{{ u.nombre }} {{ u.apellidos or '' }}</div>
-                    <div class="riesgo-score">Puntuación: {{ u.ultima_puntuacion }}/5 · {{ u.empresa_nombre or 'Personal' }}</div>
+                    <div class="riesgo-score">{{ _("Puntuación:") }} {{ u.ultima_puntuacion }}/5 · {{ u.empresa_nombre or _('Personal') }}</div>
                 </div>
                 <span class="riesgo-badge {% if u.ultima_puntuacion >= UMBRAL_ALTO %}alto{% elif u.ultima_puntuacion >= UMBRAL_MEDIO %}medio{% else %}bajo{% endif %}">
-                    {% if u.ultima_puntuacion >= UMBRAL_ALTO %}Alto{% elif u.ultima_puntuacion >= UMBRAL_MEDIO %}Medio{% else %}Bajo{% endif %}
+                    {% if u.ultima_puntuacion >= UMBRAL_ALTO %}{{ _("Alto") }}{% elif u.ultima_puntuacion >= UMBRAL_MEDIO %}{{ _("Medio") }}{% else %}{{ _("Bajo") }}{% endif %}
                 </span>
             </div>
             {% endfor %}
         {% else %}
-        <div class="empty-state"><i class="fas fa-smile"></i><p>¡Ningún usuario en riesgo alto ahora mismo!</p></div>
+        <div class="empty-state"><i class="fas fa-smile"></i><p>{{ _("¡Ningún usuario en riesgo alto ahora mismo!") }}</p></div>
         {% endif %}
     </div>
 </div>
@@ -204,8 +204,8 @@
 <!-- ─── CHART ─── -->
 <div class="admin-card" style="margin-top:24px;">
     <div class="admin-card-title">
-        <h2><i class="fas fa-chart-line"></i> Tendencia de Evaluaciones (Últimos 6 meses)</h2>
-        <a href="/admin/exportar_csv" class="view-all-link" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-download"></i> Exportar CSV</a>
+        <h2><i class="fas fa-chart-line"></i> {{ _("Tendencia de Evaluaciones (Últimos 6 meses)") }}</h2>
+        <a href="/admin/exportar_csv" class="view-all-link" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-download"></i> {{ _("Exportar CSV") }}</a>
     </div>
     <div class="chart-wrapper"><canvas id="adminTrendChart"></canvas></div>
 </div>
@@ -217,51 +217,51 @@
 <div class="modal-backdrop" id="modal-empresa" onclick="handleBackdropClick(event, 'modal-empresa')">
     <div class="modal-box">
         <div class="modal-header">
-            <h3><i class="fas fa-building"></i> Nueva Empresa</h3>
+            <h3><i class="fas fa-building"></i> {{ _("Nueva Empresa") }}</h3>
             <button class="modal-close" onclick="closeModal('modal-empresa')"><i class="fas fa-times"></i></button>
         </div>
 
         <form action="/admin/nueva_empresa" method="POST" onsubmit="setLoading(this)">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="modal-section-label">Información de la empresa</div>
+            <div class="modal-section-label">{{ _("Información de la empresa") }}</div>
 
             <div class="modal-field">
-                <label>Nombre de la empresa *</label>
-                <input type="text" name="nombre" placeholder="Ej. TechCorp Innovations" required>
+                <label>{{ _("Nombre de la empresa *") }}</label>
+                <input type="text" name="nombre" placeholder="{{ _('Ej. TechCorp Innovations') }}" required>
             </div>
 
             <div class="modal-field">
-                <label>Sector</label>
+                <label>{{ _("Sector") }}</label>
                 <select name="sector">
-                    <option value="">— Seleccionar sector —</option>
-                    <option>Tecnología</option>
-                    <option>Salud</option>
-                    <option>Educación</option>
-                    <option>Finanzas</option>
-                    <option>Manufactura</option>
-                    <option>Retail</option>
-                    <option>Consultoría</option>
-                    <option>Otro</option>
+                    <option value="">{{ _("— Seleccionar sector —") }}</option>
+                    <option>{{ _("Tecnología") }}</option>
+                    <option>{{ _("Salud") }}</option>
+                    <option>{{ _("Educación") }}</option>
+                    <option>{{ _("Finanzas") }}</option>
+                    <option>{{ _("Manufactura") }}</option>
+                    <option>{{ _("Retail") }}</option>
+                    <option>{{ _("Consultoría") }}</option>
+                    <option>{{ _("Otro") }}</option>
                 </select>
             </div>
 
             <div class="modal-divider"></div>
-            <div class="modal-section-label">Código de acceso para empleados</div>
+            <div class="modal-section-label">{{ _("Código de acceso para empleados") }}</div>
 
             <div class="modal-field">
-                <label>Código de registro *</label>
+                <label>{{ _("Código de registro *") }}</label>
                 <div class="code-preview">
-                    <input type="text" name="codigo_registro" id="codigo-input" placeholder="Ej. TECH-2026-VIP" required>
+                    <input type="text" name="codigo_registro" id="codigo-input" placeholder="{{ _('Ej. TECH-2026-VIP') }}" required>
                     <button type="button" class="code-gen-btn" onclick="generarCodigo()">
-                        <i class="fas fa-dice"></i> Generar
+                        <i class="fas fa-dice"></i> {{ _("Generar") }}
                     </button>
                 </div>
-                <small>Los empleados usarán este código al registrarse para vincularse a la empresa.</small>
+                <small>{{ _("Los empleados usarán este código al registrarse para vincularse a la empresa.") }}</small>
             </div>
 
             <div class="modal-actions">
-                <button type="button" class="modal-btn-cancel" onclick="closeModal('modal-empresa')">Cancelar</button>
-                <button type="submit" class="modal-btn-submit"><i class="fas fa-plus" style="margin-right:6px;"></i>Crear Empresa</button>
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('modal-empresa')">{{ _("Cancelar") }}</button>
+                <button type="submit" class="modal-btn-submit"><i class="fas fa-plus" style="margin-right:6px;"></i>{{ _("Crear Empresa") }}</button>
             </div>
         </form>
     </div>
@@ -274,52 +274,52 @@
 <div class="modal-backdrop" id="modal-usuario" onclick="handleBackdropClick(event, 'modal-usuario')">
     <div class="modal-box">
         <div class="modal-header">
-            <h3><i class="fas fa-user-plus"></i> Añadir Usuario</h3>
+            <h3><i class="fas fa-user-plus"></i> {{ _("Añadir Usuario") }}</h3>
             <button class="modal-close" onclick="closeModal('modal-usuario')"><i class="fas fa-times"></i></button>
         </div>
 
         <form action="/admin/nuevo_usuario" method="POST" onsubmit="setLoading(this)">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="modal-section-label">Datos personales</div>
+            <div class="modal-section-label">{{ _("Datos personales") }}</div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div class="modal-field">
-                    <label>Nombre *</label>
-                    <input type="text" name="nombre" placeholder="Ej. María" required>
+                    <label>{{ _("Nombre *") }}</label>
+                    <input type="text" name="nombre" placeholder="{{ _('Ej. María') }}" required>
                 </div>
                 <div class="modal-field">
-                    <label>Apellidos</label>
-                    <input type="text" name="apellidos" placeholder="Ej. García López">
+                    <label>{{ _("Apellidos") }}</label>
+                    <input type="text" name="apellidos" placeholder="{{ _('Ej. García López') }}">
                 </div>
             </div>
 
             <div class="modal-field">
-                <label>Email *</label>
-                <input type="email" name="email" placeholder="usuario@empresa.com" required>
+                <label>{{ _("Email *") }}</label>
+                <input type="email" name="email" placeholder="{{ _('usuario@empresa.com') }}" required>
             </div>
 
             <div class="modal-field">
-                <label>Contraseña *</label>
-                <input type="password" name="password" placeholder="Mínimo 8 caracteres" minlength="8" required>
+                <label>{{ _("Contraseña *") }}</label>
+                <input type="password" name="password" placeholder="{{ _('Mínimo 8 caracteres') }}" minlength="8" required>
             </div>
 
             <div class="modal-divider"></div>
-            <div class="modal-section-label">Rol y empresa</div>
+            <div class="modal-section-label">{{ _("Rol y empresa") }}</div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div class="modal-field">
-                    <label>Rol *</label>
+                    <label>{{ _("Rol *") }}</label>
                     <select name="rol_id" required>
-                        <option value="3">Usuario Personal</option>
-                        <option value="4">Empleado Empresa</option>
-                        <option value="2">RRHH</option>
-                        <option value="1">Administrador</option>
+                        <option value="3">{{ _("Usuario Personal") }}</option>
+                        <option value="4">{{ _("Empleado Empresa") }}</option>
+                        <option value="2">{{ _("RRHH") }}</option>
+                        <option value="1">{{ _("Administrador") }}</option>
                     </select>
                 </div>
                 <div class="modal-field">
-                    <label>Empresa (opcional)</label>
+                    <label>{{ _("Empresa (opcional)") }}</label>
                     <select name="empresa_id">
-                        <option value="">— Sin empresa —</option>
+                        <option value="">{{ _("— Sin empresa —") }}</option>
                         {% for e in empresas %}
                         <option value="{{ e.id }}">{{ e.nombre }}</option>
                         {% endfor %}
@@ -328,8 +328,8 @@
             </div>
 
             <div class="modal-actions">
-                <button type="button" class="modal-btn-cancel" onclick="closeModal('modal-usuario')">Cancelar</button>
-                <button type="submit" class="modal-btn-submit"><i class="fas fa-user-plus" style="margin-right:6px;"></i>Crear Usuario</button>
+                <button type="button" class="modal-btn-cancel" onclick="closeModal('modal-usuario')">{{ _("Cancelar") }}</button>
+                <button type="submit" class="modal-btn-submit"><i class="fas fa-user-plus" style="margin-right:6px;"></i>{{ _("Crear Usuario") }}</button>
             </div>
         </form>
     </div>
@@ -414,13 +414,13 @@ document.addEventListener('DOMContentLoaded', function () {
             labels: trendData.map(d => d.mes),
             datasets: [
                 {
-                    label: 'Evaluaciones totales',
+                    label: {{ _("Evaluaciones totales")|tojson }},
                     data: trendData.map(d => d.total),
                     backgroundColor: 'rgba(73,243,190,0.2)',
                     borderColor: '#49f3be', borderWidth: 2, borderRadius: 6, type: 'bar'
                 },
                 {
-                    label: 'Riesgo alto',
+                    label: {{ _("Riesgo alto")|tojson }},
                     data: trendData.map(d => d.riesgo_alto),
                     borderColor: '#f34949', backgroundColor: 'rgba(243,73,73,0.1)',
                     borderWidth: 2, tension: 0.4, fill: false, type: 'line',

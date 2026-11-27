@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from flask import g
 
 from resilio import create_app
 from resilio.cli import sembrar
@@ -24,6 +25,13 @@ BASE = {
 
 def crear(**config):
     app = create_app({**BASE, **config})
+
+    @app.before_request
+    def _olvidar_idioma():
+        # Flask-Babel cachea el idioma en `g`; en producción cada petición tiene su contexto, pero
+        # aquí el fixture mantiene uno abierto y las peticiones del test lo comparten.
+        g.pop("_flask_babel", None)
+
     with app.app_context():
         db.drop_all()
         db.create_all()

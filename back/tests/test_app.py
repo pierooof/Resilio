@@ -144,12 +144,12 @@ def test_test_requiere_login(client):
 def test_procesar_test_guarda_y_historial_muestra_preguntas(client):
     usuario()
     login(client)
-    assert b"q_1" in client.get("/test").data
+    assert "agotado/a mentalmente" in client.get("/test").get_data(as_text=True)
     r = client.post("/procesar_test", data=RESPUESTAS)
     assert r.headers["Location"].startswith("/resultado/")
     client.post("/procesar_test", data={"pregunta_1": "3"})  # incompleto: no guarda
     assert Evaluacion.query.count() == 1
-    assert "agotado/a en el trabajo" in client.get("/historial").get_data(as_text=True)
+    assert "agotado/a en mi trabajo" in client.get("/historial").get_data(as_text=True)
 
 
 # ── Consentimiento y test por pasos (HTMX) ─────────────────────────────────────
@@ -168,9 +168,9 @@ def test_sin_consentimiento_no_hay_test_y_el_next_es_interno(client):
 def test_test_por_pasos_guarda_borrador_y_reanuda(client):
     u = usuario()
     login(client)
-    assert 'data-i18n="q_1"' in client.get("/test/pregunta/1").get_data(as_text=True)
+    assert "agotado/a mentalmente" in client.get("/test/pregunta/1").get_data(as_text=True)
     sig = client.post("/test/responder", data={"n": 1, "valor": 4}).get_data(as_text=True)
-    assert 'data-i18n="q_2"' in sig and 'name="n" value="2"' in sig
+    assert "recuperar mi energía" in sig and 'name="n" value="2"' in sig
     for n, valor in ((2, 5), (3, 2), (4, 1), (5, 3)):
         client.post("/test/responder", data={"n": n, "valor": valor})
     assert 'name="n" value="6"' in client.get("/test").get_data(as_text=True)  # reanuda en la 6
@@ -188,8 +188,9 @@ def test_completar_por_pasos_y_enviar_desde_el_borrador(client):
     ultimo = None
     for n in range(1, 13):
         ultimo = client.post("/test/responder", data={"n": n, "valor": 3}).get_data(as_text=True)
-    assert "/procesar_test" in ultimo and "enviarRespuestas" in ultimo
-    r = client.post("/procesar_test", data={"lang": "ca"})  # las respuestas vienen del borrador
+    assert "/procesar_test" in ultimo and "Enviar Respuestas" in ultimo
+    client.set_cookie("lang", "ca")
+    r = client.post("/procesar_test")  # las respuestas vienen del borrador
     ev = Evaluacion.query.one()
     assert r.headers["Location"] == f"/resultado/{ev.id}" and float(ev.puntuacion_total) == 3.0
     assert ev.consejos_data["lang"] == "ca"
@@ -203,7 +204,7 @@ def test_resultado_solo_del_dueno_y_compara_con_la_anterior(client):
     client.post("/procesar_test", data={f"pregunta_{i}": "2" for i in range(1, 13)})
     ultima = Evaluacion.query.order_by(Evaluacion.id.desc()).first()
     html = client.get(f"/resultado/{ultima.id}").get_data(as_text=True)
-    assert "2.00" in html and "-2.00" in html and "resMejor" in html and "tendenciaChart" in html
+    assert "2.00" in html and "-2.00" in html and "Has bajado respecto" in html and "tendenciaChart" in html
     login(client, "b@x.com")
     assert client.get(f"/resultado/{ultima.id}").status_code == 404
     assert client.get("/resultado/9999").status_code == 404
@@ -283,18 +284,26 @@ def test_recordatorio_fallido_no_se_marca_y_exige_app_url(app, monkeypatch):
 def test_preguntas_en_los_tres_idiomas(client):
     usuario()
     login(client)
-    html = client.get("/test").get_data(as_text=True)
-    assert "At work, I feel mentally exhausted." in html and "A la feina, em sento mentalment esgotat/ada." in html
-    assert 'htmx.min.js' in html and 'X-CSRFToken' in html
-    for i in range(1, 13):
-        assert f"q_{i}" in html
-    assert "non-validated" in html and "no validada" in html
+    es = client.get("/test").get_data(as_text=True)
+    assert "agotado/a mentalmente" in es and "traducción no oficial" not in es
+    assert "Indique con qué frecuencia cada frase se aplica a usted." in es and "burnoutassessmenttool.be" in es
+    client.set_cookie("lang", "en")
+    en = client.get("/test").get_data(as_text=True)
+    assert "At work, I feel mentally exhausted" in en and "agotado/a mentalmente" not in en
+    assert "unofficial" not in en  # el inglés es el texto oficial: sin aviso
+    assert "Please state how often each statement applies to you." in en
+    assert 'htmx.min.js' in en and 'X-CSRFToken' in en
+    client.set_cookie("lang", "ca")
+    ca = client.get("/test").get_data(as_text=True)
+    assert "A la feina, em sento esgotat/ada mentalment" in ca and "traducció no oficial i no validada" in ca
+    assert "Atrás" not in client.get("/test/pregunta/2").get_data(as_text=True)  # el botón también se traduce
 
 
 def test_test_envia_idioma_y_consejos_estructurados(client):
     u = usuario()
     login(client)
-    client.post("/procesar_test", data={**RESPUESTAS, "lang": "en"})
+    client.set_cookie("lang", "en")
+    client.post("/procesar_test", data=RESPUESTAS)
     assert Evaluacion.query.one().consejos_data["lang"] == "en" and db.session.get(Usuario, u.id).idioma == "en"
 
 

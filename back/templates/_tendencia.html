@@ -1,12 +1,11 @@
-{# Evolución de la puntuación total con los puntos de corte BAT-12. Requiere Chart.js y Resilio.i18n. #}
+{# Evolución de la puntuación total con los puntos de corte BAT-12. Requiere Chart.js. #}
 {% macro tendencia(evals, canvas_id="tendenciaChart") %}
 {% if evals|length > 1 %}
 {% set etiquetas = [] %}
 {% for e in evals %}{% set _ = etiquetas.append(e.fecha.strftime('%d/%m/%Y')) %}{% endfor %}
-<canvas id="{{ canvas_id }}" style="max-height: 260px;" role="img" aria-label="Evolución"></canvas>
+<canvas id="{{ canvas_id }}" style="max-height: 260px;" role="img" aria-label="{{ _('Evolución') }}"></canvas>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    var t = function (k, d) { return (Resilio.i18n.t(k) || d); };
     var etiquetas = {{ etiquetas|tojson }};
     var puntos = {{ evals|map(attribute='puntuacion_total')|map('float')|list|tojson }};
     var linea = function (valor, color, label) {
@@ -16,10 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
     new Chart(document.getElementById({{ canvas_id|tojson }}).getContext('2d'), {
         type: 'line',
         data: { labels: etiquetas, datasets: [
-            { label: t('tendPuntuacion', 'Puntuación'), data: puntos, borderColor: '#49f3be',
+            { label: {{ _("Puntuación")|tojson }}, data: puntos, borderColor: '#49f3be',
               backgroundColor: 'rgba(73, 243, 190, 0.2)', borderWidth: 2, tension: 0.25 },
-            linea({{ UMBRAL_MEDIO }}, '#f0b429', t('tendEnRiesgo', 'En riesgo')),
-            linea({{ UMBRAL_ALTO }}, '#ff4757', t('tendSevero', 'Burnout severo'))
+            linea({{ UMBRAL_MEDIO }}, '#f0b429', {{ _("En riesgo")|tojson }}),
+            linea({{ UMBRAL_ALTO }}, '#ff4757', {{ _("Burnout severo")|tojson }})
         ] },
         options: { scales: { y: { min: 1, max: 5, ticks: { color: '#888' }, grid: { color: 'rgba(128,128,128,0.25)' } },
                              x: { ticks: { color: '#888' }, grid: { display: false } } },

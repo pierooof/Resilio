@@ -9,3 +9,4 @@ psycopg[binary]==3.3.9
 python-dotenv==1.2.4
 google-genai==1.66.0
 gunicorn==27.0.1
+Flask-Babel==4.0.0

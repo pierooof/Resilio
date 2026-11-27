@@ -1,0 +1,1123 @@
+# English translations for Resilio.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the Resilio project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Resilio \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-27 16:46+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.19.0\n"
+
+msgid "Acceso restringido a administradores."
+msgstr "Access restricted to administrators."
+
+msgid "Acceso restringido a usuarios HR."
+msgstr "Access restricted to HR users."
+
+msgid "Tu usuario HR no tiene una empresa asignada."
+msgstr "Your HR user has no company assigned."
+
+msgid "ahora mismo"
+msgstr "just now"
+
+msgid "El nombre y el código de registro son obligatorios."
+msgstr "The name and registration code are required."
+
+#, python-format
+msgid "El código '%(codigo)s' ya está en uso. Elige otro."
+msgstr "The code '%(codigo)s' is already in use. Choose another."
+
+#, python-format
+msgid "✓ Empresa '%(nombre)s' creada con código %(codigo)s."
+msgstr "✓ Company '%(nombre)s' created with code %(codigo)s."
+
+msgid "Datos no válidos."
+msgstr "Invalid data."
+
+#, python-format
+msgid "Nombre, email válido y contraseña de al menos %(n)s caracteres son obligatorios."
+msgstr "Name, a valid email and a password of at least %(n)s characters are required."
+
+msgid "Rol no válido."
+msgstr "Invalid role."
+
+msgid "Empresa no válida."
+msgstr "Invalid company."
+
+msgid "HR y empleados necesitan una empresa."
+msgstr "HR users and employees need a company."
+
+msgid "El departamento no pertenece a esa empresa."
+msgstr "The department does not belong to that company."
+
+#, python-format
+msgid "El email '%(email)s' ya está registrado."
+msgstr "The email '%(email)s' is already registered."
+
+#, python-format
+msgid "✓ Usuario '%(nombre)s' creado correctamente."
+msgstr "✓ User '%(nombre)s' created successfully."
+
+msgid "Error al generar el CSV."
+msgstr "Error generating the CSV."
+
+msgid "Error al generar el informe."
+msgstr "Error generating the report."
+
+msgid "Email o contraseña incorrectos"
+msgstr "Incorrect email or password"
+
+msgid "Nombre y email válidos son obligatorios."
+msgstr "A name and a valid email are required."
+
+#, python-format
+msgid "La contraseña debe tener al menos %(n)s caracteres."
+msgstr "The password must be at least %(n)s characters long."
+
+msgid "Este email ya está registrado. Por favor, inicia sesión."
+msgstr "This email is already registered. Please log in."
+
+msgid "¡Cuenta creada con éxito! Ya puedes iniciar sesión."
+msgstr "Account created! You can now log in."
+
+msgid "Si el correo existe en nuestro sistema, recibirás un enlace de recuperación."
+msgstr "If the email exists in our system, you will receive a recovery link."
+
+msgid "El enlace es inválido o ha expirado."
+msgstr "The link is invalid or has expired."
+
+msgid "Las contraseñas no coinciden."
+msgstr "The passwords do not match."
+
+msgid "Tu contraseña ha sido actualizada exitosamente."
+msgstr "Your password has been updated."
+
+msgid "Para hacer el test tienes que aceptar el tratamiento de tus datos."
+msgstr "To take the test you must accept the processing of your data."
+
+msgid "Frecuencia no válida."
+msgstr "Invalid frequency."
+
+msgid "Preferencia de recordatorios guardada."
+msgstr "Reminder preference saved."
+
+msgid "Una cuenta de administrador no se puede eliminar desde aquí."
+msgstr "An administrator account cannot be deleted from here."
+
+msgid "Contraseña incorrecta: no se ha eliminado nada."
+msgstr "Incorrect password: nothing was deleted."
+
+msgid "Tu cuenta y todos tus datos se han eliminado."
+msgstr "Your account and all your data have been deleted."
+
+msgid "Nuevo usuario registrado"
+msgstr "New user registered"
+
+msgid "Evaluación completada"
+msgstr "Assessment completed"
+
+msgid "Error al cargar el panel."
+msgstr "Error loading the dashboard."
+
+msgid "Agotamiento"
+msgstr "Exhaustion"
+
+msgid "Distanciamiento mental"
+msgstr "Mental distance"
+
+msgid "Deterioro cognitivo"
+msgstr "Cognitive impairment"
+
+msgid "Deterioro emocional"
+msgstr "Emotional impairment"
+
+msgid "Error al cargar el panel HR."
+msgstr "Error loading the HR dashboard."
+
+msgid "El departamento necesita un nombre."
+msgstr "The department needs a name."
+
+msgid "Ya existe un departamento con ese nombre."
+msgstr "A department with that name already exists."
+
+#, python-format
+msgid "Departamento '%(nombre)s' creado con su código de registro."
+msgstr "Department '%(nombre)s' created with its registration code."
+
+msgid "La caducidad debe estar entre 0 y 365 días."
+msgstr "The expiry must be between 0 and 365 days."
+
+msgid "No se pudo generar el código; inténtalo de nuevo."
+msgstr "The code could not be generated; please try again."
+
+#, python-format
+msgid "Nuevo código para '%(nombre)s'. El anterior ya no sirve."
+msgstr "New code for '%(nombre)s'. The previous one no longer works."
+
+#, python-format
+msgid "Código de '%(nombre)s' revocado."
+msgstr "Code for '%(nombre)s' revoked."
+
+msgid "Caducidad del código general actualizada."
+msgstr "General code expiry updated."
+
+msgid "El umbral debe ser un porcentaje entre 1 y 100."
+msgstr "The threshold must be a percentage between 1 and 100."
+
+msgid "Umbral de alerta actualizado."
+msgstr "Alert threshold updated."
+
+msgid "Error inesperado al procesar tu test. Inténtalo de nuevo."
+msgstr "Unexpected error processing your test. Please try again."
+
+#, python-format
+msgid "Error al procesar: %(e)s"
+msgstr "Error processing: %(e)s"
+
+msgid "El código de empresa no es válido."
+msgstr "The company code is not valid."
+
+msgid "El código ha caducado. Pide uno nuevo a tu equipo de RR. HH."
+msgstr "The code has expired. Ask your HR team for a new one."
+
+msgid "Respuesta no válida."
+msgstr "Invalid answer."
+
+msgid "Debes responder a todas las preguntas."
+msgstr "You must answer all the questions."
+
+msgid "Idioma"
+msgstr "Language"
+
+msgid "Evolución"
+msgstr "Progress over time"
+
+msgid "Puntuación"
+msgstr "Score"
+
+msgid "En riesgo"
+msgstr "At risk"
+
+msgid "Burnout severo"
+msgstr "Severe burnout"
+
+msgid "Progreso"
+msgstr "Progress"
+
+msgid "Has respondido todas las preguntas."
+msgstr "You have answered all the questions."
+
+msgid "Aún te quedan preguntas por responder."
+msgstr "You still have unanswered questions."
+
+msgid "Atrás"
+msgstr "Back"
+
+msgid "Enviar Respuestas"
+msgstr "Submit Answers"
+
+msgid "Pregunta"
+msgstr "Question"
+
+msgid "de"
+msgstr "of"
+
+msgid "Nunca"
+msgstr "Never"
+
+msgid "Raramente"
+msgstr "Rarely"
+
+msgid "Algunas veces"
+msgstr "Sometimes"
+
+msgid "A menudo"
+msgstr "Often"
+
+msgid "Siempre"
+msgstr "Always"
+
+msgid "Siguiente"
+msgstr "Next"
+
+msgid "Configuracion"
+msgstr "Settings"
+
+msgid "Personaliza tu experiencia en Resilio."
+msgstr "Customize your Resilio experience."
+
+msgid "Apariencia"
+msgstr "Appearance"
+
+msgid "Tema de color"
+msgstr "Color theme"
+
+msgid "Elige entre modo oscuro o claro"
+msgstr "Choose between dark or light mode"
+
+msgid "Oscuro"
+msgstr "Dark"
+
+msgid "Claro"
+msgstr "Light"
+
+msgid "Cuenta"
+msgstr "Account"
+
+msgid "Nombre"
+msgstr "Name"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Tipo de cuenta"
+msgstr "Account type"
+
+msgid "Administrador"
+msgstr "Administrator"
+
+msgid "Recursos Humanos"
+msgstr "Human Resources"
+
+msgid "Usuario Personal"
+msgstr "Personal User"
+
+msgid "Empleado"
+msgstr "Employee"
+
+msgid "Notificaciones"
+msgstr "Notifications"
+
+msgid "Recordatorios de evaluacion"
+msgstr "Evaluation reminders"
+
+msgid "Recibe recordatorios para evaluar tu bienestar"
+msgstr "Receive reminders to evaluate your well-being"
+
+msgid "No recordarme"
+msgstr "Don't remind me"
+
+#, python-format
+msgid "Cada %(n)s semanas"
+msgstr "Every %(n)s weeks"
+
+msgid "Guardar"
+msgstr "Save"
+
+msgid "Mis datos"
+msgstr "My data"
+
+msgid "Exportar mis datos"
+msgstr "Export my data"
+
+msgid "Descarga tus respuestas, puntuaciones y consejos en JSON"
+msgstr "Download your answers, scores and advice as JSON"
+
+msgid "Descargar"
+msgstr "Download"
+
+msgid "Zona Peligrosa"
+msgstr "Danger Zone"
+
+msgid "¿Seguro? Se borrarán tu cuenta y todos tus datos y no se puede deshacer."
+msgstr "Are you sure? Your account and all your data will be deleted and this cannot be undone."
+
+msgid "Eliminar cuenta"
+msgstr "Delete account"
+
+msgid "Elimina permanentemente tu cuenta y todos tus datos"
+msgstr "Permanently delete your account and all your data"
+
+msgid "Eliminar Cuenta"
+msgstr "Delete Account"
+
+msgid "Antes de empezar"
+msgstr "Before you start"
+
+msgid "Para hacer el test necesitamos tu consentimiento para tratar tus respuestas."
+msgstr "To take the test we need your consent to process your answers."
+
+msgid "Guardamos tus respuestas al test BAT-12, tus puntuaciones y los consejos generados."
+msgstr "We store your BAT-12 answers, your scores and the generated advice."
+
+msgid ""
+"Para generar los consejos pueden enviarse a Google Gemini tu puntuación y las medias por "
+"dimensión, sin tu nombre."
+msgstr ""
+"To generate the advice, your score and subscale means (without your name) may be sent to Google "
+"Gemini."
+
+msgid ""
+"Si te registraste con un código de empresa, su equipo de RR. HH. solo ve datos agregados, no tus "
+"respuestas con tu nombre. Los administradores de la plataforma sí pueden ver tus datos para "
+"mantener el servicio."
+msgstr ""
+"If you signed up with a company code, its HR team only sees aggregated data, not your answers "
+"with your name. Platform administrators can see your data to run the service."
+
+msgid "Resilio es una herramienta de cribado, no un diagnóstico médico."
+msgstr "Resilio is a screening tool, not a medical diagnosis."
+
+msgid "Puedes exportar tus datos o eliminar tu cuenta cuando quieras desde Configuración."
+msgstr "You can export your data or delete your account at any time from Settings."
+
+msgid "Acepto el tratamiento de mis datos tal y como se describe arriba."
+msgstr "I accept the processing of my data as described above."
+
+msgid "Aceptar y continuar"
+msgstr "Accept and continue"
+
+msgid "Resilio | Recuperar Contraseña"
+msgstr "Resilio | Recover Password"
+
+msgid "BAT-12 · Burnout Assessment Tool"
+msgstr "BAT-12 · Burnout Assessment Tool"
+
+msgid "Recuperar Contraseña"
+msgstr "Recover Password"
+
+msgid "Ingresa tu email para recibir un enlace de recuperación"
+msgstr "Enter your email to receive a recovery link"
+
+msgid "usuario@resilio.com"
+msgstr "user@resilio.com"
+
+msgid "Enviar Enlace"
+msgstr "Send Link"
+
+msgid "Volver al inicio de sesión"
+msgstr "Back to login"
+
+msgid "Historial de Evaluaciones"
+msgstr "Evaluation History"
+
+msgid "Revisa tus evaluaciones anteriores y su evolucion."
+msgstr "Review your previous evaluations and their evolution."
+
+msgid "Puntuacion Global"
+msgstr "Global Score"
+
+msgid "Distanciamiento"
+msgstr "Distancing"
+
+msgid "Deterioro Cognitivo"
+msgstr "Cognitive Impairment"
+
+msgid "Deterioro Emocional"
+msgstr "Emotional Impairment"
+
+msgid "Bajo Riesgo"
+msgstr "Low Risk"
+
+msgid "Riesgo Medio"
+msgstr "Medium Risk"
+
+msgid "Riesgo Alto"
+msgstr "High Risk"
+
+msgid "Consejos"
+msgstr "Advice"
+
+msgid "Ver detalle"
+msgstr "View details"
+
+msgid "Consejos Personalizados"
+msgstr "Personalized Advice"
+
+msgid "No tienes evaluaciones anteriores"
+msgstr "You don't have any previous evaluations"
+
+msgid "Realiza tu primera evaluacion para comenzar a hacer seguimiento de tu bienestar laboral."
+msgstr "Take your first evaluation to start tracking your workplace wellbeing."
+
+msgid "Realizar Primera Evaluacion"
+msgstr "Take First Evaluation"
+
+msgid "Saltar al contenido"
+msgstr "Skip to content"
+
+msgid "Principal"
+msgstr "Main"
+
+msgid "Inicio"
+msgstr "Home"
+
+msgid "Realizar Test"
+msgstr "Take Test"
+
+msgid "Historial"
+msgstr "History"
+
+msgid "Cerrar Sesion"
+msgstr "Logout"
+
+msgid "Hola"
+msgstr "Hello"
+
+msgid "Resilio | Login"
+msgstr "Resilio | Login"
+
+msgid "Equilibrio entre mente y código"
+msgstr "Balance between mind and code"
+
+msgid "Email Corporativo o Personal"
+msgstr "Corporate or Personal Email"
+
+msgid "Contraseña"
+msgstr "Password"
+
+msgid "Recordarme"
+msgstr "Remember me"
+
+msgid "¿Olvidaste tu contraseña?"
+msgstr "Forgot your password?"
+
+msgid "Iniciar Sesión"
+msgstr "Sign In"
+
+msgid "¿Aún no tienes cuenta?"
+msgstr "Don't have an account?"
+
+msgid "Regístrate"
+msgstr "Sign up"
+
+msgid "Resilio | Registro"
+msgstr "Resilio | Sign up"
+
+msgid "Únete a Resilio y mide tu bienestar mental"
+msgstr "Join Resilio and measure your mental wellbeing"
+
+msgid "Ej. Piero"
+msgstr "e.g. Piero"
+
+msgid "Apellidos"
+msgstr "Surname"
+
+msgid "Ej. Funes Larios"
+msgstr "e.g. Funes Larios"
+
+msgid "Mínimo 8 caracteres"
+msgstr "At least 8 characters"
+
+msgid "Código de Empresa (Opcional)"
+msgstr "Company Code (Optional)"
+
+msgid "Ej. ACME-HR-2026"
+msgstr "e.g. ACME-HR-2026"
+
+msgid "Déjalo en blanco si eres usuario personal"
+msgstr "Leave blank if you are a personal user"
+
+msgid ""
+"Acepto que Resilio guarde mis respuestas del test BAT-12 y mis puntuaciones (podrás exportarlos o"
+" borrarlos desde Configuración). Si no lo marcas ahora, te lo preguntaremos antes de tu primer "
+"test."
+msgstr ""
+"I accept that Resilio stores my BAT-12 answers and scores (you can export or delete them from "
+"Settings). If you do not tick this now, we will ask you before your first test."
+
+msgid "Crear Cuenta"
+msgstr "Create Account"
+
+msgid "¿Ya tienes cuenta? Inicia sesión aquí"
+msgstr "Already have an account? Sign in here"
+
+msgid "Resilio | Restablecer Contraseña"
+msgstr "Resilio | Reset Password"
+
+msgid "Restablecer Contraseña"
+msgstr "Reset Password"
+
+msgid "Nueva Contraseña"
+msgstr "New Password"
+
+msgid "Confirmar Nueva Contraseña"
+msgstr "Confirm New Password"
+
+msgid "Guardar Contraseña"
+msgstr "Save Password"
+
+msgid "Tu resultado"
+msgstr "Your result"
+
+msgid "Es tu primera evaluación: servirá de referencia."
+msgstr "This is your first assessment: it will be your baseline."
+
+msgid "Has bajado respecto a tu evaluación anterior."
+msgstr "You are lower than in your previous assessment."
+
+msgid "Has subido respecto a tu evaluación anterior."
+msgstr "You are higher than in your previous assessment."
+
+msgid "Igual que tu evaluación anterior."
+msgstr "Same as your previous assessment."
+
+msgid ""
+"Resilio es una herramienta de cribado, no un diagnóstico. Si te sientes mal, habla con un "
+"profesional de la salud."
+msgstr "Resilio is a screening tool, not a diagnosis. If you feel unwell, talk to a health professional."
+
+msgid "Por dimensión"
+msgstr "By dimension"
+
+msgid "· la más alta"
+msgstr "· highest"
+
+msgid "El BAT-12 no define puntos de corte por dimensión: las barras solo comparan tus propias áreas."
+msgstr "The BAT-12 defines no cut-offs per dimension: the bars only compare your own areas."
+
+msgid "Tu plan de 3 pasos"
+msgstr "Your 3-step plan"
+
+msgid "Tu evolución"
+msgstr "Your progress"
+
+msgid "Ver historial"
+msgstr "View history"
+
+msgid "Resilio - Test BAT-12"
+msgstr "Resilio - BAT-12 Test"
+
+msgid "Test BAT-12"
+msgstr "BAT-12 Test"
+
+msgid "Evaluación de Agotamiento Laboral"
+msgstr "Workplace Burnout Assessment"
+
+msgid "Instrucciones"
+msgstr "Instruction"
+
+msgid ""
+"Las siguientes frases están relacionadas con su situación laboral y cómo experimenta esta "
+"situación. Indique con qué frecuencia cada frase se aplica a usted."
+msgstr ""
+"The following statements are related to your work situation and how you experience this "
+"situation. Please state how often each statement applies to you."
+
+msgid "Estas preguntas son una traducción no oficial y no validada del BAT-12."
+msgstr "These questions are an unofficial, non-validated translation of the BAT-12."
+
+msgid ""
+"Cuestionario: Burnout Assessment Tool (BAT-12) de Schaufeli, Desart y De Witte (2020). Uso libre,"
+" más información en burnoutassessmenttool.be."
+msgstr ""
+"Questionnaire: Burnout Assessment Tool (BAT-12) by Schaufeli, Desart & De Witte (2020). Free to "
+"use, more information at burnoutassessmenttool.be."
+
+msgid "Panel de Administración"
+msgstr "Administration Panel"
+
+msgid "Vista General del Sistema"
+msgstr "System Overview"
+
+msgid "Gestión completa de usuarios, empresas y evaluaciones de Resilio."
+msgstr "Full management of Resilio users, companies and assessments."
+
+msgid "Usuarios Registrados"
+msgstr "Registered Users"
+
+msgid "Empresas Activas"
+msgstr "Active Companies"
+
+msgid "Evaluaciones Realizadas"
+msgstr "Assessments Completed"
+
+msgid "Usuarios en Riesgo Alto"
+msgstr "High-Risk Users"
+
+msgid "Últimos Usuarios Registrados"
+msgstr "Latest Registered Users"
+
+msgid "Ver todos →"
+msgstr "View all →"
+
+msgid "Usuario"
+msgstr "User"
+
+msgid "Rol"
+msgstr "Role"
+
+msgid "Empresa"
+msgstr "Company"
+
+msgid "Evaluaciones"
+msgstr "Assessments"
+
+msgid "Registro"
+msgstr "Registered"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "RRHH"
+msgstr "HR"
+
+msgid "Personal"
+msgstr "Personal"
+
+msgid "No hay usuarios registrados todavía."
+msgstr "There are no registered users yet."
+
+msgid "Acciones Rápidas"
+msgstr "Quick Actions"
+
+msgid "Nueva Empresa"
+msgstr "New Company"
+
+msgid "Crear y configurar"
+msgstr "Create and configure"
+
+msgid "Añadir Usuario"
+msgstr "Add User"
+
+msgid "Registrar manualmente"
+msgstr "Register manually"
+
+msgid "Exportar CSV"
+msgstr "Export CSV"
+
+msgid "Datos evaluaciones"
+msgstr "Assessment data"
+
+msgid "Informe Global"
+msgstr "Global Report"
+
+msgid "Ver estadísticas"
+msgstr "View statistics"
+
+msgid "Actividad Reciente"
+msgstr "Recent Activity"
+
+msgid "Sin actividad reciente"
+msgstr "No recent activity"
+
+msgid "Empresas Registradas"
+msgstr "Registered Companies"
+
+msgid "+ Nueva →"
+msgstr "+ New →"
+
+msgid "Sin sector"
+msgstr "No sector"
+
+msgid "empleados"
+msgstr "employees"
+
+msgid "Copiar código"
+msgstr "Copy code"
+
+msgid "No hay empresas registradas todavía."
+msgstr "There are no registered companies yet."
+
+msgid "Usuarios en Riesgo"
+msgstr "Users at Risk"
+
+msgid "Ver informe →"
+msgstr "View report →"
+
+msgid "Puntuación:"
+msgstr "Score:"
+
+msgid "Alto"
+msgstr "High"
+
+msgid "Medio"
+msgstr "Medium"
+
+msgid "Bajo"
+msgstr "Low"
+
+msgid "¡Ningún usuario en riesgo alto ahora mismo!"
+msgstr "No users at high risk right now!"
+
+msgid "Tendencia de Evaluaciones (Últimos 6 meses)"
+msgstr "Assessment Trend (Last 6 months)"
+
+msgid "Información de la empresa"
+msgstr "Company information"
+
+msgid "Nombre de la empresa *"
+msgstr "Company name *"
+
+msgid "Ej. TechCorp Innovations"
+msgstr "e.g. TechCorp Innovations"
+
+msgid "Sector"
+msgstr "Sector"
+
+msgid "— Seleccionar sector —"
+msgstr "— Select sector —"
+
+msgid "Tecnología"
+msgstr "Technology"
+
+msgid "Salud"
+msgstr "Health"
+
+msgid "Educación"
+msgstr "Education"
+
+msgid "Finanzas"
+msgstr "Finance"
+
+msgid "Manufactura"
+msgstr "Manufacturing"
+
+msgid "Retail"
+msgstr "Retail"
+
+msgid "Consultoría"
+msgstr "Consulting"
+
+msgid "Otro"
+msgstr "Other"
+
+msgid "Código de acceso para empleados"
+msgstr "Access code for employees"
+
+msgid "Código de registro *"
+msgstr "Registration code *"
+
+msgid "Ej. TECH-2026-VIP"
+msgstr "e.g. TECH-2026-VIP"
+
+msgid "Generar"
+msgstr "Generate"
+
+msgid "Los empleados usarán este código al registrarse para vincularse a la empresa."
+msgstr "Employees will use this code when signing up to join the company."
+
+msgid "Cancelar"
+msgstr "Cancel"
+
+msgid "Crear Empresa"
+msgstr "Create Company"
+
+msgid "Datos personales"
+msgstr "Personal details"
+
+msgid "Nombre *"
+msgstr "Name *"
+
+msgid "Ej. María"
+msgstr "e.g. María"
+
+msgid "Ej. García López"
+msgstr "e.g. García López"
+
+msgid "Email *"
+msgstr "Email *"
+
+msgid "usuario@empresa.com"
+msgstr "user@company.com"
+
+msgid "Contraseña *"
+msgstr "Password *"
+
+msgid "Rol y empresa"
+msgstr "Role and company"
+
+msgid "Rol *"
+msgstr "Role *"
+
+msgid "Empleado Empresa"
+msgstr "Company Employee"
+
+msgid "Empresa (opcional)"
+msgstr "Company (optional)"
+
+msgid "— Sin empresa —"
+msgstr "— No company —"
+
+msgid "Crear Usuario"
+msgstr "Create User"
+
+msgid "Evaluaciones totales"
+msgstr "Total assessments"
+
+msgid "Riesgo alto"
+msgstr "High risk"
+
+msgid "Tu Panel de Empleado"
+msgstr "Your Employee Dashboard"
+
+msgid "Consulta tu estado de burnout y bienestar laboral."
+msgstr "Check your burnout status and workplace wellbeing."
+
+msgid "Puntuación Global"
+msgstr "Overall Score"
+
+msgid "sobre 5"
+msgstr "out of 5"
+
+msgid "Resumen de Dimensiones"
+msgstr "Dimensions Summary"
+
+msgid "Última evaluación:"
+msgstr "Last assessment:"
+
+msgid "Visualización"
+msgstr "Visualization"
+
+msgid "Repetir Evaluación"
+msgstr "Repeat Assessment"
+
+msgid "¿Listo para evaluar tu bienestar?"
+msgstr "Ready to assess your wellbeing?"
+
+msgid ""
+"El test BAT-12 evaluará tu nivel de agotamiento laboral. Tus resultados son confidenciales y solo"
+" tú puedes verlos."
+msgstr ""
+"The BAT-12 test will assess your level of work burnout. Your results are confidential and only "
+"you can see them."
+
+msgid "Comenzar Evaluación"
+msgstr "Start Assessment"
+
+msgid "Nivel de burnout"
+msgstr "Burnout level"
+
+msgid "Dashboard HR"
+msgstr "HR Dashboard"
+
+msgid "Panel de Recursos Humanos"
+msgstr "Human Resources Dashboard"
+
+msgid "Vista agregada y anónima de la empresa"
+msgstr "Aggregated, anonymous view of the company"
+
+msgid "Periodo"
+msgstr "Period"
+
+#, python-format
+msgid "%(n)s meses"
+msgstr "%(n)s months"
+
+msgid "Todo"
+msgstr "All"
+
+msgid "Imprimir / PDF"
+msgstr "Print / PDF"
+
+#, python-format
+msgid ""
+"<strong>%(pct)s%%</strong> de los empleados evaluados está en riesgo alto, por encima de vuestro "
+"umbral de alerta (%(umbral)s%%)."
+msgstr ""
+"<strong>%(pct)s%%</strong> of assessed employees are at high risk, above your alert threshold "
+"(%(umbral)s%%)."
+
+msgid "Aún no hay datos suficientes para mostrar resultados agregados."
+msgstr "There is not enough data yet to show aggregated results."
+
+#, python-format
+msgid ""
+"Para proteger el anonimato solo se muestran datos cuando al menos %(k)s empleados han hecho el "
+"test en el periodo elegido. Ahora hay %(n)s de %(total)s empleados registrados."
+msgstr ""
+"To protect anonymity, data is only shown when at least %(k)s employees have taken the test in the"
+" selected period. Right now there are %(n)s of %(total)s registered employees."
+
+msgid "Empleados evaluados"
+msgstr "Assessed employees"
+
+#, python-format
+msgid "%% riesgo alto"
+msgstr "%% high risk"
+
+msgid "Dimensión más afectada"
+msgstr "Most affected dimension"
+
+msgid "Tendencia mensual"
+msgstr "Monthly trend"
+
+#, python-format
+msgid "Aún no hay meses con %(k)s o más empleados evaluados."
+msgstr "There are no months yet with %(k)s or more assessed employees."
+
+msgid "Distribución de riesgo"
+msgstr "Risk distribution"
+
+msgid "Promedios BAT-12"
+msgstr "BAT-12 averages"
+
+msgid "Media global"
+msgstr "Overall mean"
+
+msgid "Departamentos"
+msgstr "Departments"
+
+msgid "Departamento"
+msgstr "Department"
+
+msgid "Empleados"
+msgstr "Employees"
+
+msgid "No hay datos disponibles."
+msgstr "No data available."
+
+#, python-format
+msgid ""
+"Los grupos con menos de %(k)s empleados evaluados se agrupan en «Otros grupos» para proteger el "
+"anonimato."
+msgstr ""
+"Groups with fewer than %(k)s assessed employees are merged into “Other groups” to protect "
+"anonymity."
+
+msgid "Acceso y avisos"
+msgstr "Access and alerts"
+
+msgid "Códigos de registro"
+msgstr "Registration codes"
+
+msgid ""
+"Quien se registra con un código entra en su empresa (y en el departamento del código, si lo "
+"tiene)."
+msgstr "Anyone who signs up with a code joins your company (and the code's department, if it has one)."
+
+msgid "Código general de la empresa:"
+msgstr "Company-wide code:"
+
+#, python-format
+msgid "· caduca el %(fecha)s"
+msgstr "· expires on %(fecha)s"
+
+msgid "(caducado)"
+msgstr "(expired)"
+
+msgid "· no caduca"
+msgstr "· does not expire"
+
+msgid "Caduca en (días, 0 = nunca)"
+msgstr "Expires in (days, 0 = never)"
+
+msgid "sin código"
+msgstr "no code"
+
+msgid "Nuevo código"
+msgstr "New code"
+
+msgid "Generar código"
+msgstr "Generate code"
+
+msgid "Revocar"
+msgstr "Revoke"
+
+msgid "Nuevo departamento"
+msgstr "New department"
+
+msgid "Crear"
+msgstr "Create"
+
+msgid "Alerta de riesgo alto"
+msgstr "High-risk alert"
+
+#, python-format
+msgid "Avisar cuando el %% en riesgo alto llegue a"
+msgstr "Alert me when the %% at high risk reaches"
+
+msgid "Riesgo bajo"
+msgstr "Low risk"
+
+msgid "Riesgo medio"
+msgstr "Medium risk"
+
+msgid "Volver al panel"
+msgstr "Back to dashboard"
+
+msgid "Análisis completo del estado de burnout en toda la plataforma."
+msgstr "Full analysis of burnout across the whole platform."
+
+msgid "evaluaciones de"
+msgstr "assessments from"
+
+msgid "usuarios · Última actualización: hoy"
+msgstr "users · Last updated: today"
+
+msgid "Exportar CSV Completo"
+msgstr "Export Full CSV"
+
+msgid "Distribución por Riesgo"
+msgstr "Distribution by Risk"
+
+msgid "Bajo riesgo"
+msgstr "Low risk"
+
+msgid "Sin datos aún"
+msgstr "No data yet"
+
+msgid "Media por Dimensión"
+msgstr "Mean by Dimension"
+
+msgid "Media Global"
+msgstr "Overall Mean"
+
+msgid "Radar Global"
+msgstr "Global Radar"
+
+msgid "Rendimiento por Empresa"
+msgstr "Performance by Company"
+
+msgid "Nivel"
+msgstr "Level"
+
+msgid "No hay datos de empresas aún."
+msgstr "There is no company data yet."
+
+msgid "Top Usuarios en Riesgo"
+msgstr "Top Users at Risk"
+
+msgid "Sin datos"
+msgstr "No data"
+
+msgid "Evolución de la Media Global"
+msgstr "Overall Mean Over Time"
+
+msgid "Cognitivo"
+msgstr "Cognitive"
+
+msgid "Emocional"
+msgstr "Emotional"
+
+msgid "Tu Espacio de Bienestar"
+msgstr "Your Wellbeing Space"
+
+msgid "Monitoriza tus niveles de energia y estres laboral."
+msgstr "Monitor your energy and work stress levels."
+
+msgid "Puntuacion Global · sobre 5"
+msgstr "Overall Score · out of 5"
+
+msgid "Ultima evaluacion:"
+msgstr "Last assessment:"
+
+msgid "Visualizacion"
+msgstr "Visualization"
+
+msgid "Repetir Evaluacion"
+msgstr "Repeat Assessment"
+
+msgid "Listo para evaluar tu bienestar?"
+msgstr "Ready to assess your wellbeing?"
+
+msgid ""
+"El test BAT-12 consta de 12 preguntas que evaluaran tu nivel de agotamiento laboral en 4 "
+"dimensiones. Solo te tomara unos minutos."
+msgstr ""
+"The BAT-12 test has 12 questions that assess your level of work burnout across 4 dimensions. It "
+"only takes a few minutes."
+
+msgid "Comenzar Evaluacion"
+msgstr "Start Assessment"
+

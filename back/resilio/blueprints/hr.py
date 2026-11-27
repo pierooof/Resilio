@@ -3,6 +3,8 @@ import csv
 import io
 from datetime import date, datetime, timedelta
 
+from flask_babel import gettext as _
+from flask_babel import lazy_gettext as _l
 from flask import (Blueprint, Response, abort, current_app, flash, g, redirect, render_template, request, session,
                    url_for)
 from sqlalchemy.exc import IntegrityError
@@ -13,13 +15,13 @@ from ..security import solo_hr
 from ..services.anonimato import K_ANONIMATO, agrupar_k
 from ..services.codigos import generar_codigo
 from ..services.scoring import RIESGO
-from ..utils import SOLO_EMPLEADOS, ULTIMA, fila, filas
+from ..utils import SOLO_EMPLEADOS, ULTIMA, fila, filas, mes_corto
 
 bp = Blueprint("hr", __name__, url_prefix="/hr")
 
 PERIODOS = (3, 6, 12, 0)  # meses; 0 = todo el histórico
-DIMENSIONES = (("agotamiento", "Agotamiento"), ("distanciamiento", "Distanciamiento mental"),
-               ("cognitivo", "Deterioro cognitivo"), ("emocional", "Deterioro emocional"))
+DIMENSIONES = (("agotamiento", _l("Agotamiento")), ("distanciamiento", _l("Distanciamiento mental")),
+               ("cognitivo", _l("Deterioro cognitivo")), ("emocional", _l("Deterioro emocional")))
 
 
 def _periodo():
@@ -76,7 +78,7 @@ def _datos(empresa_id, meses):
     )
     meses_pts = filas(
         """
-        SELECT to_char(date_trunc('month', ev.fecha), 'Mon YYYY') AS mes, COUNT(*) AS total,
+        SELECT CAST(date_trunc('month', ev.fecha) AS date) AS mes, COUNT(*) AS total,
                COUNT(DISTINCT ev.usuario_id) AS personas,
                SUM(CASE WHEN ev.puntuacion_total >= :alto THEN 1 ELSE 0 END) AS riesgo_alto
         FROM evaluaciones ev JOIN usuarios u ON u.id = ev.usuario_id
@@ -92,11 +94,11 @@ def _datos(empresa_id, meses):
         empleados_riesgo_alto=riesgo["alto"],
         pct_riesgo_alto=round(riesgo["alto"] / n["n"] * 100, 1),
         medias=medias,
-        dim_max={"nombre": dim_max[1], "valor": medias[dim_max[0]]},
+        dim_max={"nombre": str(dim_max[1]), "valor": medias[dim_max[0]]},
         total_evaluaciones=n["evals"],
         departamentos=agrupar_k(grupos),
         # los meses con menos de K personas se omiten: un punto de 1-2 personas las identificaría
-        tendencia_mensual=[{"mes": m["mes"], "total": int(m["total"]), "riesgo_alto": int(m["riesgo_alto"])}
+        tendencia_mensual=[{"mes": mes_corto(m["mes"]), "total": int(m["total"]), "riesgo_alto": int(m["riesgo_alto"])}
                            for m in meses_pts if m["personas"] >= K_ANONIMATO],
     )
     return datos
@@ -106,7 +108,7 @@ def panel():
     """Pantalla de /dashboard para el rol HR (la ruta y el control de rol viven en dashboard)."""
     u = db.session.get(Usuario, session["user_id"])
     if not u.empresa_id:
-        flash("Tu usuario HR no tiene una empresa asignada.", "error")
+        flash(_("Tu usuario HR no tiene una empresa asignada."), "error")
         session.clear()
         return redirect(url_for("auth.login"))
     empresa = db.session.get(Empresa, u.empresa_id)
@@ -116,7 +118,7 @@ def panel():
     except Exception:
         db.session.rollback()
         current_app.logger.exception("Error al cargar el panel HR")
-        flash("Error al cargar el panel HR.", "error")
+        flash(_("Error al cargar el panel HR."), "error")
         datos = {"total_empleados": 0, "n_evaluados": 0, "suficiente": False}
 
     alerta = datos["suficiente"] and datos["pct_riesgo_alto"] >= empresa.umbral_alerta_pct
@@ -145,14 +147,14 @@ def _caducidad(valor):
 def nuevo_departamento():
     nombre = request.form.get("nombre", "").strip()[:100]
     if not nombre:
-        flash("El departamento necesita un nombre.", "error")
+        flash(_("El departamento necesita un nombre."), "error")
         return _volver()
     if Departamento.query.filter_by(empresa_id=g.hr.empresa_id, nombre=nombre).first():
-        flash("Ya existe un departamento con ese nombre.", "error")
+        flash(_("Ya existe un departamento con ese nombre."), "error")
         return _volver()
     db.session.add(Departamento(empresa_id=g.hr.empresa_id, nombre=nombre, codigo_registro=generar_codigo()))
     db.session.commit()
-    flash(f"Departamento '{nombre}' creado con su código de registro.", "success")
+    flash(_("Departamento '%(nombre)s' creado con su código de registro.", nombre=nombre), "success")
     return _volver()
 
 
@@ -170,16 +172,16 @@ def regenerar_codigo(dep_id):
     try:
         caduca = _caducidad(request.form.get("dias"))
     except ValueError:
-        flash("La caducidad debe estar entre 0 y 365 días.", "error")
+        flash(_("La caducidad debe estar entre 0 y 365 días."), "error")
         return _volver()
     dep.codigo_registro, dep.codigo_expira = generar_codigo(), caduca
     try:
         db.session.commit()
     except IntegrityError:  # colisión de código (muy improbable)
         db.session.rollback()
-        flash("No se pudo generar el código; inténtalo de nuevo.", "error")
+        flash(_("No se pudo generar el código; inténtalo de nuevo."), "error")
     else:
-        flash(f"Nuevo código para '{dep.nombre}'. El anterior ya no sirve.", "success")
+        flash(_("Nuevo código para '%(nombre)s'. El anterior ya no sirve.", nombre=dep.nombre), "success")
     return _volver()
 
 
@@ -189,7 +191,7 @@ def revocar_codigo(dep_id):
     dep = _departamento(dep_id)
     dep.codigo_registro = dep.codigo_expira = None
     db.session.commit()
-    flash(f"Código de '{dep.nombre}' revocado.", "success")
+    flash(_("Código de '%(nombre)s' revocado.", nombre=dep.nombre), "success")
     return _volver()
 
 
@@ -199,11 +201,11 @@ def caducidad_codigo_empresa():
     try:
         caduca = _caducidad(request.form.get("dias"))
     except ValueError:
-        flash("La caducidad debe estar entre 0 y 365 días.", "error")
+        flash(_("La caducidad debe estar entre 0 y 365 días."), "error")
         return _volver()
     db.session.get(Empresa, g.hr.empresa_id).codigo_expira = caduca
     db.session.commit()
-    flash("Caducidad del código general actualizada.", "success")
+    flash(_("Caducidad del código general actualizada."), "success")
     return _volver()
 
 
@@ -215,11 +217,11 @@ def umbral_alerta():
         if not 1 <= pct <= 100:
             raise ValueError
     except ValueError:
-        flash("El umbral debe ser un porcentaje entre 1 y 100.", "error")
+        flash(_("El umbral debe ser un porcentaje entre 1 y 100."), "error")
         return _volver()
     db.session.get(Empresa, g.hr.empresa_id).umbral_alerta_pct = pct
     db.session.commit()
-    flash("Umbral de alerta actualizado.", "success")
+    flash(_("Umbral de alerta actualizado."), "success")
     return _volver()
 
 

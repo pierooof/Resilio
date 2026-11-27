@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Resilio - Test BAT-12{% endblock %}
+{% block title %}{{ _("Resilio - Test BAT-12") }}{% endblock %}
 {% block head_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/paginas/test.css') }}">{% endblock %}
 {% block head_scripts %}<script src="{{ url_for('static', filename='js/htmx.min.js') }}" defer></script>{% endblock %}
 {% block body_class %}test-page{% endblock %}
@@ -12,108 +12,26 @@
         
         <div class="test-top">
             <a class="brand" href="/dashboard">Resilio</a>
-            <div class="language-switcher" role="group" aria-label="Idioma">
-                <button type="button" class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
-                <button type="button" class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
-                <button type="button" class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
-            </div>
+            {% include "_idioma.html" %}
         </div>
 
         <div class="test-header">
-            <h1 data-i18n="testBat12">Test BAT-12</h1>
-            <p data-i18n="evaluacionAgotamiento">Evaluación de Agotamiento Laboral</p>
+            <h1>{{ _("Test BAT-12") }}</h1>
+            <p>{{ _("Evaluación de Agotamiento Laboral") }}</p>
         </div>
 
         <div class="info-box">
-            <h3><i class="fas fa-info-circle" aria-hidden="true"></i><span data-i18n="comoResponder">Como responder?</span></h3>
-            <p data-i18n="instruccionesTest">Responde cada pregunta pensando en <strong>como te has sentido en las ultimas semanas</strong>. 
-            La escala va de 1 (Nunca) a 5 (Siempre). No hay respuestas correctas o incorrectas.</p>
+            <h3><i class="fas fa-info-circle" aria-hidden="true"></i><span>{{ _("Instrucciones") }}</span></h3>
+            <p>{{ _("Las siguientes frases están relacionadas con su situación laboral y cómo experimenta esta situación. Indique con qué frecuencia cada frase se aplica a usted.") }}</p>
         </div>
         
-        <p id="nota-traduccion" data-i18n="traduccionNoValidada" hidden style="color: var(--muted); font-size: 0.85rem; margin: 12px 0;"></p>
+        {% if get_locale()|string == 'ca' %}
+        <p style="color: var(--muted); font-size: 0.85rem; margin: 12px 0;">{{ _("Estas preguntas son una traducción no oficial y no validada del BAT-12.") }}</p>
+        {% endif %}
         <div id="paso" aria-live="polite">
             {% include "_test_paso.html" %}
         </div>
+        <p style="color: var(--muted); font-size: 0.75rem; margin-top: 24px;">{{ _("Cuestionario: Burnout Assessment Tool (BAT-12) de Schaufeli, Desart y De Witte (2020). Uso libre, más información en burnoutassessmenttool.be.") }}</p>
         
     </div>
-    
-    <script>
-        // Textos de esta página (el motor está en static/js/i18n.js)
-        Resilio.i18n.add({
-            "es": {
-                "testBat12": "Test BAT-12",
-                "evaluacionAgotamiento": "Evaluación de Agotamiento Laboral",
-                "comoResponder": "Como responder?",
-                "instruccionesTest": "Responde cada pregunta pensando en como te has sentido en las ultimas semanas. La escala va de 1 (Nunca) a 5 (Siempre). No hay respuestas correctas o incorrectas.",
-                "progreso": "Progreso",
-                "enviarRespuestas": "Enviar Respuestas",
-                "pregunta": "Pregunta",
-                "de": "de",
-                "nunca": "Nunca",
-                "raramente": "Raramente",
-                "aVeces": "A veces",
-                "aMenudo": "A menudo",
-                "siempre": "Siempre",
-                "atras": "Atrás",
-                "siguiente": "Siguiente",
-                "listoEnviar": "Has respondido todas las preguntas.",
-                "faltanRespuestas": "Aún te quedan preguntas por responder."
-            },
-            "en": {
-                "testBat12": "BAT-12 Test",
-                "evaluacionAgotamiento": "Workplace Burnout Assessment",
-                "comoResponder": "How to answer?",
-                "instruccionesTest": "Answer each question thinking about how you have felt in the last few weeks. The scale goes from 1 (Never) to 5 (Always). There are no right or wrong answers.",
-                "progreso": "Progress",
-                "enviarRespuestas": "Submit Answers",
-                "pregunta": "Question",
-                "de": "of",
-                "nunca": "Never",
-                "raramente": "Rarely",
-                "aVeces": "Sometimes",
-                "aMenudo": "Often",
-                "siempre": "Always",
-                "atras": "Back",
-                "siguiente": "Next",
-                "listoEnviar": "You have answered all the questions.",
-                "faltanRespuestas": "You still have unanswered questions.",
-                "traduccionNoValidada": "These questions are an unofficial, non-validated translation of the BAT-12."
-            },
-            "ca": {
-                "testBat12": "Test BAT-12",
-                "evaluacionAgotamiento": "Avaluació d'Esgotament Laboral",
-                "comoResponder": "Com respondre?",
-                "instruccionesTest": "Respon a cada pregunta pensant com t'has sentit les últimes setmanes. L'escala va de 1 (Mai) a 5 (Sempre). No hi ha respostes correctes o incorrectes.",
-                "progreso": "Progrés",
-                "enviarRespuestas": "Enviar Respostes",
-                "pregunta": "Pregunta",
-                "de": "de",
-                "nunca": "Mai",
-                "raramente": "Rarament",
-                "aVeces": "A vegades",
-                "aMenudo": "Sovint",
-                "siempre": "Sempre",
-                "atras": "Enrere",
-                "siguiente": "Següent",
-                "listoEnviar": "Has respost totes les preguntes.",
-                "faltanRespuestas": "Encara et queden preguntes per respondre.",
-                "traduccionNoValidada": "Aquestes preguntes són una traducció no oficial i no validada del BAT-12."
-            }
-        });
-
-        // Preguntas en es/en/ca (vienen de la BD)
-        Resilio.i18n.add({{ i18n_preguntas|tojson }});
-        // El idioma elegido viaja con el formulario (idioma de los consejos) y las traducciones se avisan
-        Resilio.i18n.onApply(function (lang) {
-            var campo = document.getElementById('lang-field');
-            if (campo) campo.value = lang;
-            document.getElementById('nota-traduccion').hidden = (lang === 'es');
-        });
-
-        // Al cambiar de pantalla (HTMX) se vuelven a aplicar las traducciones y el idioma del formulario
-        function idiomaActual() {
-            try { return localStorage.getItem('resilio-language') || 'es'; } catch (e) { return 'es'; }
-        }
-        document.addEventListener('htmx:afterSwap', function () { Resilio.i18n.apply(idiomaActual()); });
-    </script>
 {% endblock %}

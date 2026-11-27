@@ -1,6 +1,8 @@
 import secrets
 from datetime import date
 
+from flask_babel import gettext as _
+
 from ..models import Departamento, Empresa
 
 
@@ -21,8 +23,8 @@ def resolver_codigo(codigo, hoy=None):
     else:
         origen = Empresa.query.filter_by(codigo_registro=codigo).first()
         if not origen:
-            raise CodigoInvalido("El código de empresa no es válido.")
+            raise CodigoInvalido(_("El código de empresa no es válido."))
         empresa_id, dep_id = origen.id, None
     if origen.codigo_expira and origen.codigo_expira < hoy:
-        raise CodigoInvalido("El código ha caducado. Pide uno nuevo a tu equipo de RR. HH.")
+        raise CodigoInvalido(_("El código ha caducado. Pide uno nuevo a tu equipo de RR. HH."))
     return empresa_id, dep_id

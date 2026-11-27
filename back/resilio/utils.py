@@ -1,6 +1,7 @@
-import calendar
 from datetime import date, datetime
 
+from babel.dates import format_date, format_timedelta
+from flask_babel import get_locale, gettext as _
 from sqlalchemy import text
 
 from .extensions import db
@@ -16,18 +17,19 @@ def fila(sql, **params):
     return r[0] if r else None
 
 
+def mes_corto(fecha):
+    """Fecha -> 'nov 2026' / 'Nov 2026' / 'de nov. 2026' según el idioma del servidor."""
+    return format_date(fecha, "MMM yyyy", locale=str(get_locale()))
+
+
 def tiempo_relativo(fecha):
-    """'hace 5 min', 'hace 2h', etc."""
+    """'hace 5 minutos', 'hace 2 horas'... en el idioma del servidor."""
     if not fecha:
         return "—"
-    sec = int((datetime.now() - fecha.replace(tzinfo=None)).total_seconds())
-    if sec < 60:
-        return "ahora mismo"
-    if sec < 3600:
-        return f"hace {sec // 60} min"
-    if sec < 86400:
-        return f"hace {sec // 3600}h"
-    return f"hace {sec // 86400}d"
+    diff = datetime.now() - fecha.replace(tzinfo=None)
+    if diff.total_seconds() < 60:
+        return _("ahora mismo")
+    return format_timedelta(-diff, add_direction=True, locale=str(get_locale()))
 
 
 def ultimos_meses(**vacio):
@@ -37,7 +39,7 @@ def ultimos_meses(**vacio):
         m, y = hoy.month - i, hoy.year
         while m <= 0:
             m, y = m + 12, y - 1
-        meses.append({"mes": f"{calendar.month_abbr[m]} {y}", **vacio})
+        meses.append({"mes": mes_corto(date(y, m, 1)), **vacio})
     return meses
 
 

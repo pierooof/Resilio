@@ -1,0 +1,7 @@
+{# Selector de idioma: enlaces a /idioma/<código> (guarda cookie y, si hay sesión, usuarios.idioma). #}
+<div class="language-switcher" role="group" aria-label="{{ _('Idioma') }}">
+    {% for codigo in ('es', 'en', 'ca') %}
+    <a class="language-btn{% if get_locale()|string == codigo %} active{% endif %}" href="/idioma/{{ codigo }}?next={{ request.full_path.rstrip('?')|urlencode }}"
+       lang="{{ codigo }}" hreflang="{{ codigo }}" {% if get_locale()|string == codigo %}aria-current="true"{% endif %}>{{ codigo|upper }}</a>
+    {% endfor %}
+</div>

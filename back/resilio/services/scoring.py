@@ -5,6 +5,8 @@
 import json
 import os
 
+from flask_babel import gettext as _
+
 from ..extensions import db
 from ..models import Evaluacion, Pregunta, RespuestaEvaluacion, Usuario
 from .consejos import generar_consejos, normalizar_idioma
@@ -38,9 +40,9 @@ def parsear_respuestas(form_data):
         try:
             pid, valor = int(key.split("_", 1)[1]), int(value)
         except ValueError:
-            raise ValueError("Respuesta no válida.") from None
+            raise ValueError(_("Respuesta no válida.")) from None
         if not 1 <= valor <= 5:
-            raise ValueError("Respuesta no válida.")
+            raise ValueError(_("Respuesta no válida."))
         respuestas[pid] = valor
     return respuestas
 
@@ -53,13 +55,13 @@ def calcular_bat12(respuestas, mapa_preguntas):
     """
     validas = {p: v for p, v in respuestas.items() if mapa_preguntas.get(p) in DIMENSIONES}
     if len(validas) != N_PREGUNTAS:
-        raise ValueError("Debes responder a todas las preguntas.")
+        raise ValueError(_("Debes responder a todas las preguntas."))
 
     valores = {d: [] for d in DIMENSIONES}
     for pid, valor in validas.items():
         valores[mapa_preguntas[pid]].append(valor)
     if not all(valores.values()):
-        raise ValueError("Debes responder a todas las preguntas.")
+        raise ValueError(_("Debes responder a todas las preguntas."))
 
     dims = {DIMENSIONES[d]: round(sum(v) / len(v), 2) for d, v in valores.items()}
     return {

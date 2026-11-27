@@ -5,3 +5,4 @@ CLAUDE.md
 .claude
 # Documentación local
 /docs/
+*.mo

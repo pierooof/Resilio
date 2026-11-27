@@ -4,97 +4,95 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
 {% endblock %}
 
-{% block title %}Dashboard HR{% endblock %}
+{% block title %}{{ _("Dashboard HR") }}{% endblock %}
 
 {% block content %}
 <div class="dashboard-content hr-dashboard">
     <div class="page-header">
         <div>
-            <h1>Panel de Recursos Humanos</h1>
+            <h1>{{ _("Panel de Recursos Humanos") }}</h1>
             <p class="page-subtitle">
-                Vista agregada y anónima de la empresa
+                {{ _("Vista agregada y anónima de la empresa") }}
                 {% if empresa %}<strong>{{ empresa.nombre }}</strong>{% endif %}
             </p>
         </div>
         <div class="hr-actions no-print">
-            <nav class="periodo-nav" aria-label="Periodo">
+            <nav class="periodo-nav" aria-label="{{ _('Periodo') }}">
                 {% for m in periodos %}
                 <a href="?periodo={{ m }}" class="{% if m == periodo %}active{% endif %}" {% if m == periodo %}aria-current="true"{% endif %}>
-                    {{ (m ~ ' meses') if m else 'Todo' }}</a>
+                    {{ _('%(n)s meses', n=m) if m else _('Todo') }}</a>
                 {% endfor %}
             </nav>
             <a class="btn-sec" href="/hr/exportar_csv?periodo={{ periodo }}"><i class="fas fa-file-csv" aria-hidden="true"></i> CSV</a>
-            <button type="button" class="btn-sec" onclick="window.print()"><i class="fas fa-print" aria-hidden="true"></i> Imprimir / PDF</button>
+            <button type="button" class="btn-sec" onclick="window.print()"><i class="fas fa-print" aria-hidden="true"></i> {{ _("Imprimir / PDF") }}</button>
         </div>
     </div>
 
     {% if alerta %}
     <div class="hr-alert" role="alert">
         <i class="fas fa-bell" aria-hidden="true"></i>
-        <span><strong>{{ d.pct_riesgo_alto }}%</strong> de los empleados evaluados está en riesgo alto, por encima de
-        vuestro umbral de alerta ({{ empresa.umbral_alerta_pct }}%).</span>
+        <span>{{ _("<strong>%(pct)s%%</strong> de los empleados evaluados está en riesgo alto, por encima de vuestro umbral de alerta (%(umbral)s%%).", pct=d.pct_riesgo_alto, umbral=empresa.umbral_alerta_pct)|safe }}</span>
     </div>
     {% endif %}
 
     {% if not d.suficiente %}
     <div class="hr-panel-card hr-aviso">
-        <p><strong>Aún no hay datos suficientes para mostrar resultados agregados.</strong></p>
-        <p>Para proteger el anonimato solo se muestran datos cuando al menos {{ K }} empleados han hecho el test en el periodo
-        elegido. Ahora hay {{ d.n_evaluados }} de {{ d.total_empleados }} empleados registrados.</p>
+        <p><strong>{{ _("Aún no hay datos suficientes para mostrar resultados agregados.") }}</strong></p>
+        <p>{{ _("Para proteger el anonimato solo se muestran datos cuando al menos %(k)s empleados han hecho el test en el periodo elegido. Ahora hay %(n)s de %(total)s empleados registrados.", k=K, n=d.n_evaluados, total=d.total_empleados) }}</p>
     </div>
     {% else %}
     <section class="stats-grid">
         <article class="stat-card">
             <div class="stat-icon green"><i class="fas fa-users"></i></div>
-            <span class="stat-label">Empleados evaluados</span>
+            <span class="stat-label">{{ _("Empleados evaluados") }}</span>
             <strong class="stat-value">{{ d.n_evaluados }} <small>/ {{ d.total_empleados }}</small></strong>
         </article>
         <article class="stat-card">
             <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
-            <span class="stat-label">Riesgo alto</span>
+            <span class="stat-label">{{ _("Riesgo alto") }}</span>
             <strong class="stat-value">{{ d.empleados_riesgo_alto }}</strong>
         </article>
         <article class="stat-card">
             <div class="stat-icon yellow"><i class="fas fa-chart-pie"></i></div>
-            <span class="stat-label">% riesgo alto</span>
+            <span class="stat-label">{{ _("%% riesgo alto") }}</span>
             <strong class="stat-value">{{ d.pct_riesgo_alto }}%</strong>
         </article>
         <article class="stat-card">
             <div class="stat-icon green"><i class="fas fa-bullseye"></i></div>
-            <span class="stat-label">Dimensión más afectada</span>
+            <span class="stat-label">{{ _("Dimensión más afectada") }}</span>
             <strong class="stat-value stat-text">{{ d.dim_max.nombre }} <small>{{ d.dim_max.valor }}</small></strong>
         </article>
     </section>
 
     <section class="charts-grid">
         <article class="hr-panel-card">
-            <div class="hr-panel-header"><h2>Tendencia mensual</h2></div>
+            <div class="hr-panel-header"><h2>{{ _("Tendencia mensual") }}</h2></div>
             <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
-            {% if not tendencia_mensual %}<p class="empty-cell">Aún no hay meses con {{ K }} o más empleados evaluados.</p>{% endif %}
+            {% if not tendencia_mensual %}<p class="empty-cell">{{ _("Aún no hay meses con %(k)s o más empleados evaluados.", k=K) }}</p>{% endif %}
         </article>
         <article class="hr-panel-card">
-            <div class="hr-panel-header"><h2>Distribución de riesgo</h2></div>
+            <div class="hr-panel-header"><h2>{{ _("Distribución de riesgo") }}</h2></div>
             <div class="chart-wrap doughnut-wrap"><canvas id="riskChart"></canvas></div>
         </article>
     </section>
 
     <section class="tables-grid">
         <article class="hr-panel-card">
-            <div class="hr-panel-header"><h2>Promedios BAT-12</h2></div>
+            <div class="hr-panel-header"><h2>{{ _("Promedios BAT-12") }}</h2></div>
             <div class="metrics-list">
-                <div class="metric-item"><span>Media global</span><strong>{{ d.medias.media_global }}</strong></div>
-                <div class="metric-item"><span>Agotamiento</span><strong>{{ d.medias.agotamiento }}</strong></div>
-                <div class="metric-item"><span>Distanciamiento</span><strong>{{ d.medias.distanciamiento }}</strong></div>
-                <div class="metric-item"><span>Deterioro cognitivo</span><strong>{{ d.medias.cognitivo }}</strong></div>
-                <div class="metric-item"><span>Deterioro emocional</span><strong>{{ d.medias.emocional }}</strong></div>
+                <div class="metric-item"><span>{{ _("Media global") }}</span><strong>{{ d.medias.media_global }}</strong></div>
+                <div class="metric-item"><span>{{ _("Agotamiento") }}</span><strong>{{ d.medias.agotamiento }}</strong></div>
+                <div class="metric-item"><span>{{ _("Distanciamiento") }}</span><strong>{{ d.medias.distanciamiento }}</strong></div>
+                <div class="metric-item"><span>{{ _("Deterioro cognitivo") }}</span><strong>{{ d.medias.cognitivo }}</strong></div>
+                <div class="metric-item"><span>{{ _("Deterioro emocional") }}</span><strong>{{ d.medias.emocional }}</strong></div>
             </div>
         </article>
 
         <article class="hr-panel-card">
-            <div class="hr-panel-header"><h2>Departamentos</h2></div>
+            <div class="hr-panel-header"><h2>{{ _("Departamentos") }}</h2></div>
             <div class="table-wrap">
                 <div class="table-scroll"><table class="resilio-table">
-                    <thead><tr><th>Departamento</th><th>Empleados</th><th>Evaluaciones</th><th>Media global</th></tr></thead>
+                    <thead><tr><th>{{ _("Departamento") }}</th><th>{{ _("Empleados") }}</th><th>{{ _("Evaluaciones") }}</th><th>{{ _("Media global") }}</th></tr></thead>
                     <tbody>
                         {% for depto in d.departamentos %}
                         <tr>
@@ -104,62 +102,62 @@
                             <td>{{ depto.media_global if depto.media_global is not none else "—" }}</td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="4" class="empty-cell">No hay datos disponibles.</td></tr>
+                        <tr><td colspan="4" class="empty-cell">{{ _("No hay datos disponibles.") }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table></div>
-                <p class="nota-k">Los grupos con menos de {{ K }} empleados evaluados se agrupan en «Otros grupos» para proteger el anonimato.</p>
+                <p class="nota-k">{{ _("Los grupos con menos de %(k)s empleados evaluados se agrupan en «Otros grupos» para proteger el anonimato.", k=K) }}</p>
             </div>
         </article>
     </section>
     {% endif %}
 
     <section class="hr-panel-card no-print">
-        <div class="hr-panel-header"><h2>Acceso y avisos</h2></div>
+        <div class="hr-panel-header"><h2>{{ _("Acceso y avisos") }}</h2></div>
         <div class="hr-gestion">
-            <h3>Códigos de registro</h3>
-            <p class="nota-k">Quien se registra con un código entra en su empresa (y en el departamento del código, si lo tiene).</p>
+            <h3>{{ _("Códigos de registro") }}</h3>
+            <p class="nota-k">{{ _("Quien se registra con un código entra en su empresa (y en el departamento del código, si lo tiene).") }}</p>
             <div class="codigo-fila">
-                <span>Código general de la empresa: <code>{{ empresa.codigo_registro or '—' }}</code>
-                    {% if empresa.codigo_expira %}· caduca el {{ empresa.codigo_expira.strftime('%d/%m/%Y') }}
-                    {% if empresa.codigo_expira < hoy %}<strong class="caducado">(caducado)</strong>{% endif %}{% else %}· no caduca{% endif %}</span>
+                <span>{{ _("Código general de la empresa:") }} <code>{{ empresa.codigo_registro or '—' }}</code>
+                    {% if empresa.codigo_expira %}{{ _("· caduca el %(fecha)s", fecha=empresa.codigo_expira.strftime('%d/%m/%Y')) }}
+                    {% if empresa.codigo_expira < hoy %}<strong class="caducado">{{ _("(caducado)") }}</strong>{% endif %}{% else %}{{ _("· no caduca") }}{% endif %}</span>
                 <form action="/hr/codigo_empresa" method="POST" class="inline-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <label>Caduca en (días, 0 = nunca) <input type="number" name="dias" min="0" max="365" value="0"></label>
-                    <button type="submit" class="btn-sec">Guardar</button>
+                    <label>{{ _("Caduca en (días, 0 = nunca)") }} <input type="number" name="dias" min="0" max="365" value="0"></label>
+                    <button type="submit" class="btn-sec">{{ _("Guardar") }}</button>
                 </form>
             </div>
             {% for dep in gestion %}
             <div class="codigo-fila">
                 <span><strong>{{ dep.nombre }}</strong> ·
                     {% if dep.codigo_registro %}<code>{{ dep.codigo_registro }}</code>
-                        {% if dep.codigo_expira %}· caduca el {{ dep.codigo_expira.strftime('%d/%m/%Y') }}
-                        {% if dep.codigo_expira < hoy %}<strong class="caducado">(caducado)</strong>{% endif %}{% else %}· no caduca{% endif %}
-                    {% else %}sin código{% endif %}</span>
+                        {% if dep.codigo_expira %}{{ _("· caduca el %(fecha)s", fecha=dep.codigo_expira.strftime('%d/%m/%Y')) }}
+                        {% if dep.codigo_expira < hoy %}<strong class="caducado">{{ _("(caducado)") }}</strong>{% endif %}{% else %}{{ _("· no caduca") }}{% endif %}
+                    {% else %}{{ _("sin código") }}{% endif %}</span>
                 <form action="/hr/departamentos/{{ dep.id }}/codigo" method="POST" class="inline-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <label>Caduca en (días, 0 = nunca) <input type="number" name="dias" min="0" max="365" value="0"></label>
-                    <button type="submit" class="btn-sec">{{ 'Nuevo código' if dep.codigo_registro else 'Generar código' }}</button>
+                    <label>{{ _("Caduca en (días, 0 = nunca)") }} <input type="number" name="dias" min="0" max="365" value="0"></label>
+                    <button type="submit" class="btn-sec">{{ _('Nuevo código') if dep.codigo_registro else _('Generar código') }}</button>
                 </form>
                 {% if dep.codigo_registro %}
                 <form action="/hr/departamentos/{{ dep.id }}/codigo/revocar" method="POST" class="inline-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn-sec">Revocar</button>
+                    <button type="submit" class="btn-sec">{{ _("Revocar") }}</button>
                 </form>
                 {% endif %}
             </div>
             {% endfor %}
             <form action="/hr/departamentos" method="POST" class="inline-form" style="margin-top: 14px;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <label>Nuevo departamento <input type="text" name="nombre" maxlength="100" required></label>
-                <button type="submit" class="btn-sec">Crear</button>
+                <label>{{ _("Nuevo departamento") }} <input type="text" name="nombre" maxlength="100" required></label>
+                <button type="submit" class="btn-sec">{{ _("Crear") }}</button>
             </form>
 
-            <h3 style="margin-top: 24px;">Alerta de riesgo alto</h3>
+            <h3 style="margin-top: 24px;">{{ _("Alerta de riesgo alto") }}</h3>
             <form action="/hr/umbral" method="POST" class="inline-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <label>Avisar cuando el % en riesgo alto llegue a <input type="number" name="pct" min="1" max="100" value="{{ empresa.umbral_alerta_pct }}"> %</label>
-                <button type="submit" class="btn-sec">Guardar</button>
+                <label>{{ _("Avisar cuando el %% en riesgo alto llegue a") }} <input type="number" name="pct" min="1" max="100" value="{{ empresa.umbral_alerta_pct }}"> %</label>
+                <button type="submit" class="btn-sec">{{ _("Guardar") }}</button>
             </form>
         </div>
     </section>
@@ -187,7 +185,7 @@
                 labels: trendData.map(d => d.mes),
                 datasets: [
                     {
-                        label: 'Evaluaciones',
+                        label: {{ _("Evaluaciones")|tojson }},
                         data: trendData.map(d => d.total),
                         borderColor: neonGreen,
                         backgroundColor: 'rgba(73,243,190,0.12)',
@@ -196,7 +194,7 @@
                         borderWidth: 2.5
                     },
                     {
-                        label: 'Riesgo alto',
+                        label: {{ _("Riesgo alto")|tojson }},
                         data: trendData.map(d => d.riesgo_alto),
                         borderColor: coralRed,
                         backgroundColor: 'rgba(243,73,73,0.08)',
@@ -232,7 +230,7 @@
         new Chart(riskCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Riesgo bajo', 'Riesgo medio', 'Riesgo alto'],
+                labels: [{{ _("Riesgo bajo")|tojson }}, {{ _("Riesgo medio")|tojson }}, {{ _("Riesgo alto")|tojson }}],
                 datasets: [{
                     data: [riskData.bajo || 0, riskData.medio || 0, riskData.alto || 0],
                     backgroundColor: [neonGreen, yellow, coralRed],

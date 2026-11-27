@@ -1,17 +1,16 @@
 {% extends "base.html" %}
 
 {% block body_class %}dashboard-body{% endblock %}
-{% block head_end %}<script src="{{ url_for('static', filename='js/i18n-app.js') }}"></script>{% endblock %}
 
 {% block body %}
-    <a class="skip-link" href="#main">Saltar al contenido</a>
-    <nav class="sidebar" aria-label="Principal">
+    <a class="skip-link" href="#main">{{ _("Saltar al contenido") }}</a>
+    <nav class="sidebar" aria-label="{{ _('Principal') }}">
         <div class="logo">Resilio</div>
         <ul>
     <li>
         <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}" {% if request.path == '/dashboard' %}aria-current="page"{% endif %}>
             <i class="fas fa-home" aria-hidden="true"></i>
-            <span data-i18n="inicio">Inicio</span>
+            <span>{{ _("Inicio") }}</span>
         </a>
     </li>
 
@@ -19,13 +18,13 @@
     <li>
         <a href="/test" class="{% if request.path == '/test' %}active{% endif %}" {% if request.path == '/test' %}aria-current="page"{% endif %}>
             <i class="fas fa-clipboard-list" aria-hidden="true"></i>
-            <span data-i18n="realizarTest">Realizar Test</span>
+            <span>{{ _("Realizar Test") }}</span>
         </a>
     </li>
     <li>
         <a href="/historial" class="{% if request.path == '/historial' %}active{% endif %}" {% if request.path == '/historial' %}aria-current="page"{% endif %}>
             <i class="fas fa-history" aria-hidden="true"></i>
-            <span data-i18n="historial">Historial</span>
+            <span>{{ _("Historial") }}</span>
         </a>
     </li>
     {% endif %}
@@ -33,7 +32,7 @@
     <li>
         <a href="/configuracion" class="{% if request.path == '/configuracion' %}active{% endif %}" {% if request.path == '/configuracion' %}aria-current="page"{% endif %}>
             <i class="fas fa-cog" aria-hidden="true"></i>
-            <span data-i18n="configuracion">Configuracion</span>
+            <span>{{ _("Configuracion") }}</span>
         </a>
     </li>
 </ul>
@@ -43,7 +42,7 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="logout-link">
                     <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-                    <span data-i18n="cerrarSesion">Cerrar Sesion</span>
+                    <span>{{ _("Cerrar Sesion") }}</span>
                 </button>
             </form>
         </div>
@@ -52,15 +51,11 @@
   <main class="content" id="main" tabindex="-1">
         <header class="top-bar">
             <div>
-                <span class="header-title"><span data-i18n="hola">Hola</span>, <strong>{{ session['nombre'] }}</strong></span>
+                <span class="header-title"><span>{{ _("Hola") }}</span>, <strong>{{ session['nombre'] }}</strong></span>
             </div>
 
             <div class="top-bar-right">
-                <div class="language-switcher" role="group" aria-label="Idioma">
-                    <button type="button" class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
-                    <button type="button" class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
-                    <button type="button" class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
-                </div>
+                {% include "_idioma.html" %}
                 {% if session['nombre_empresa'] %}
                 <span class="badge">
                     <i class="fas fa-building" aria-hidden="true" style="margin-right: 8px;"></i>
