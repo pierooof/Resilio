@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% from "_consejos.html" import consejos %}
 {% from "_tendencia.html" import tendencia as grafico_tendencia %}
+{% block head_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/paginas/resultado.css') }}">{% endblock %}
 {% block head_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
 {% endblock %}
@@ -62,14 +63,10 @@
 {% endif %}
 
 <div class="btn-action">
-    <a href="/historial" class="btn-test" data-i18n="resHistorial">Ver historial</a>
+    <a href="/historial" class="btn-sec" data-i18n="resHistorial">Ver historial</a>
 </div>
 
-<style>
-    .res-score { font-size: 3rem; font-family: var(--font-display); letter-spacing: -0.03em; line-height: 1.1; }
-    .progress-item .progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; }
-    .btn-action { margin-top: 8px; }
-</style>
+
 <script>
     Resilio.i18n.add({
         es: {

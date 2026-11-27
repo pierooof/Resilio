@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% block head_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/paginas/configuracion.css') }}">{% endblock %}
 
 {% block content %}
 <div class="welcome-section">
@@ -40,7 +41,7 @@
         <div class="setting-item">
             <div class="setting-info">
                 <span class="setting-title">Email</span>
-                <span class="setting-desc">{{ session.get('email', 'No disponible') }}</span>
+                <span class="setting-desc">{{ usuario.email }}</span>
             </div>
         </div>
         
@@ -68,7 +69,7 @@
                 <option value="{{ w }}" {% if usuario.recordatorio_semanas == w %}selected{% endif %} data-i18n="rec{{ w }}">Cada {{ w }} semanas</option>
                 {% endfor %}
             </select>
-            <button type="submit" class="btn-test" data-i18n="guardar">Guardar</button>
+            <button type="submit" class="btn-sec" data-i18n="guardar">Guardar</button>
         </form>
     </div>
 
@@ -79,7 +80,7 @@
                 <span class="setting-title" data-i18n="exportarDatos">Exportar mis datos</span>
                 <span class="setting-desc" data-i18n="exportarDatosDesc">Descarga tus respuestas, puntuaciones y consejos en JSON</span>
             </div>
-            <a class="btn-test" href="/configuracion/exportar" data-i18n="descargar">Descargar</a>
+            <a class="btn-sec" href="/configuracion/exportar" data-i18n="descargar">Descargar</a>
         </div>
     </div>
 
@@ -98,185 +99,7 @@
     </div>
 </div>
 
-<style>
-    .settings-container {
-        max-width: 800px;
-    }
-    
-    .settings-section {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: var(--r);
-        padding: 24px;
-        margin-bottom: 24px;
-    }
-    
-    .settings-section h2 {
-        font-size: var(--t2);
-        letter-spacing: -0.025em;
-        margin-bottom: 20px;
-        color: var(--ink);
-    }
-    
-    .settings-section.danger {
-        border-color: var(--danger-dim);
-    }
-    
-    .settings-section.danger {
-        border-color: var(--danger);
-    }
 
-    .settings-section.danger h2 {
-        color: var(--danger-ink);
-    }
-    
-    .setting-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 0;
-        border-bottom: 1px solid var(--line);
-    }
-    
-    .setting-item:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-    
-    .setting-item:first-of-type {
-        padding-top: 0;
-    }
-    
-    .setting-info {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-    
-    .setting-title {
-        font-weight: 600;
-        color: var(--ink);
-    }
-    
-    .setting-desc {
-        font-size: 0.85rem;
-        color: var(--muted);
-    }
-    
-    .theme-switcher {
-        display: flex;
-        gap: 10px;
-    }
-    
-    .theme-btn {
-        padding: 10px 20px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        background: transparent;
-        color: var(--muted);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .theme-btn:hover {
-        border-color: var(--accent-ink);
-        color: var(--ink);
-    }
-    
-    .theme-btn.active {
-        background: var(--accent);
-        color: var(--on-accent);
-        border-color: var(--accent-ink);
-    }
-    
-    .language-select {
-        padding: 10px 16px;
-        border-radius: 10px;
-        border: 1px solid var(--line);
-        background: var(--ground);
-        color: var(--ink);
-        cursor: pointer;
-        min-width: 150px;
-    }
-    
-    .language-select:focus {
-        outline: none;
-        border-color: var(--accent-ink);
-    }
-    
-    .toggle {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 26px;
-    }
-    
-    .toggle input {
-        position: absolute;
-        opacity: 0;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        cursor: pointer;
-        z-index: 1;
-    }
-    
-    .toggle-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: var(--fill-3);
-        transition: background-color 0.3s var(--ease);
-        border-radius: 34px;
-    }
-    
-    .toggle-slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 4px;
-        bottom: 4px;
-        background-color: #fff;
-        transition: transform 0.3s var(--ease);
-        border-radius: 50%;
-    }
-    
-    .toggle input:focus-visible + .toggle-slider {
-        outline: 2px solid var(--accent-ink);
-        outline-offset: 3px;
-    }
-
-    .toggle input:checked + .toggle-slider {
-        background-color: var(--accent);
-    }
-    
-    .toggle input:checked + .toggle-slider:before {
-        transform: translateX(24px);
-    }
-    
-    .btn-danger {
-        padding: 10px 20px;
-        border: 1px solid var(--danger-ink);
-        border-radius: 10px;
-        background: transparent;
-        color: var(--danger-ink);
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-danger:hover {
-        background: var(--danger);
-        color: white;
-    }
-</style>
 
 <script>
     // Textos de esta página (el motor está en static/js/i18n.js)

@@ -1,0 +1,3 @@
+    .res-score { font-size: 3rem; font-family: var(--font-display); letter-spacing: -0.03em; line-height: 1.1; }
+    .progress-item .progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .btn-action { margin-top: 8px; }

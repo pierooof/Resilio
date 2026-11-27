@@ -913,3 +913,113 @@ button.logout-link { width: 100%; background: none; border: 0; font-family: inhe
     .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
     .stat-card { padding: 18px; }
 }
+
+
+/* ── Componentes compartidos (antes inline en varias páginas) ── */
+.settings-section {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+.settings-section h2 {
+        font-size: var(--t2);
+        letter-spacing: -0.025em;
+        margin-bottom: 20px;
+        color: var(--ink);
+    }
+.settings-section.danger {
+        border-color: var(--danger-dim);
+    }
+.settings-section.danger {
+        border-color: var(--danger);
+    }
+.settings-section.danger h2 {
+        color: var(--danger-ink);
+    }
+.setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line);
+    }
+.setting-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+.setting-item:first-of-type {
+        padding-top: 0;
+    }
+.setting-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+.setting-title {
+        font-weight: 600;
+        color: var(--ink);
+    }
+.setting-desc {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+.btn-danger {
+        padding: 10px 20px;
+        border: 1px solid var(--danger-ink);
+        border-radius: 10px;
+        background: transparent;
+        color: var(--danger-ink);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+.btn-danger:hover {
+        background: var(--danger);
+        color: white;
+    }
+.risk-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+.risk-badge.low {
+        background: var(--accent-dim);
+        color: var(--accent-ink);
+    }
+.risk-badge.medium {
+        background: var(--warn-dim);
+        color: var(--warn-ink);
+    }
+.risk-badge.high {
+        background: var(--danger-dim);
+        color: var(--danger-ink);
+    }
+.btn-test {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 20px;
+            background: var(--accent);
+            border: 0;
+            border-radius: var(--r);
+            color: var(--on-accent);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -0.01em;
+            margin-top: 28px;
+            transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+        }
+.btn-test:hover { transform: scale(1.01); box-shadow: 0 0 0 6px var(--accent-dim); }
+.btn-test:active { transform: scale(0.99); }
+.btn-test:disabled { opacity: 0.7; cursor: progress; }
+.btn-back { background: none; border: 1px solid var(--line); color: var(--ink); border-radius: var(--r-sm);
+                padding: 10px 16px; cursor: pointer; font: inherit; }
+.btn-back:hover { border-color: var(--accent); }
+.btn-sec { background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); border-radius: var(--r-sm);
+           padding: 8px 14px; cursor: pointer; font: inherit; font-size: 0.85rem; text-decoration: none; }
+.btn-sec:hover { border-color: var(--accent); }

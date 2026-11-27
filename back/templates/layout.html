@@ -1,28 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Resilio{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    {% block head_scripts %}{% endblock %}
-    <script>
-        // Aplicar tema ANTES de que cargue el body para evitar parpadeo
-        (function() {
-            const savedTheme = localStorage.getItem('resilio-theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
-    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/i18n-app.js') }}"></script>
-</head>
+{% block body_class %}dashboard-body{% endblock %}
+{% block head_end %}<script src="{{ url_for('static', filename='js/i18n-app.js') }}"></script>{% endblock %}
 
-<body class="dashboard-body">
+{% block body %}
     <a class="skip-link" href="#main">Saltar al contenido</a>
     <nav class="sidebar" aria-label="Principal">
         <div class="logo">Resilio</div>
@@ -102,6 +83,4 @@
             {% block content %}{% endblock %}
         </section>
     </main>
-</body>
-
-</html>
+{% endblock %}
