@@ -83,7 +83,7 @@
                 {% if session['nombre_empresa'] %}
                 <span class="badge">
                     <i class="fas fa-building" aria-hidden="true" style="margin-right: 8px;"></i>
-                    {{ session['nombre_empresa'] }} | {{ session['nombre_dept'] }}
+                    {{ session['nombre_empresa'] }}{% if session['nombre_dept'] %} | {{ session['nombre_dept'] }}{% endif %}
                 </span>
                 {% endif %}
             </div>

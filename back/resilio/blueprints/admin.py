@@ -10,9 +10,8 @@ from ..extensions import db
 from ..models import Departamento, Empresa, Rol, Usuario
 from ..security import solo_admin
 from ..services.scoring import RIESGO
-from ..utils import fila, filas, ultimos_meses
+from ..utils import ULTIMA, fila, filas, ultimos_meses
 from .auth import MIN_PASSWORD
-from .dashboard import ULTIMA
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
 

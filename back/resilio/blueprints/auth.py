@@ -9,7 +9,8 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from ..extensions import db, limiter, mail
-from ..models import Empresa, Usuario
+from ..models import Usuario
+from ..services.codigos import CodigoInvalido, resolver_codigo
 
 bp = Blueprint("auth", __name__)
 
@@ -88,19 +89,21 @@ def register():
             flash("Este email ya está registrado. Por favor, inicia sesión.", "error")
             return redirect(url_for("auth.register"))
 
-        rol_id, empresa_id = 3, None
+        rol_id, empresa_id, departamento_id = 3, None, None
         codigo = f.get("codigo_empresa", "").strip()
         if codigo:
-            empresa = Empresa.query.filter_by(codigo_registro=codigo).first()
-            if not empresa:
-                flash("El código de empresa no es válido.", "error")
+            try:
+                empresa_id, departamento_id = resolver_codigo(codigo)
+            except CodigoInvalido as e:
+                flash(str(e), "error")
                 return redirect(url_for("auth.register"))
-            rol_id, empresa_id = 4, empresa.id
+            rol_id = 4
 
         db.session.add(
             Usuario(
                 rol_id=rol_id,
                 empresa_id=empresa_id,
+                departamento_id=departamento_id,
                 nombre=nombre,
                 apellidos=f.get("apellidos", "").strip() or None,
                 email=email,

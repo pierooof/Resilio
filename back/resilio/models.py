@@ -17,6 +17,8 @@ class Empresa(db.Model):
     nombre = db.Column(db.String(100), nullable=False)
     sector = db.Column(db.String(100))
     codigo_registro = db.Column(db.String(50), unique=True)
+    codigo_expira = db.Column(db.Date)  # NULL = no caduca
+    umbral_alerta_pct = db.Column(db.Integer, nullable=False, default=20, server_default="20")
 
 
 class Departamento(db.Model):
@@ -24,6 +26,8 @@ class Departamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     empresa_id = db.Column(db.Integer, db.ForeignKey("empresas.id", ondelete="CASCADE"), nullable=False)
     nombre = db.Column(db.String(100), nullable=False)
+    codigo_registro = db.Column(db.String(50), unique=True)  # quien lo usa entra ya en este departamento
+    codigo_expira = db.Column(db.Date)  # NULL = no caduca
 
 
 class Usuario(db.Model):

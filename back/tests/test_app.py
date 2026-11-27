@@ -323,7 +323,7 @@ def test_dashboards_por_rol_y_exports(client):
     usuario(rol=3, email="per@x.com")
     calcular_y_guardar_bat12(emp.id, RESPUESTAS)
 
-    for email, esperado in (("admin@x.com", "Acme"), ("hr@x.com", "Empleado 01"),
+    for email, esperado in (("admin@x.com", "Acme"), ("hr@x.com", "Aún no hay datos suficientes"),
                             ("emp@x.com", "3.0"), ("per@x.com", "")):
         c = client.application.test_client()
         login(c, email)

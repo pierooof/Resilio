@@ -55,8 +55,8 @@ def create_app(config=None):
     limiter.init_app(app)
     mail.init_app(app)
 
-    from .blueprints import admin, auth, cuenta, dashboard, test
-    for modulo in (auth, dashboard, admin, test, cuenta):
+    from .blueprints import admin, auth, cuenta, dashboard, hr, test
+    for modulo in (auth, dashboard, admin, test, cuenta, hr):
         app.register_blueprint(modulo.bp)
 
     from .services.scoring import UMBRAL_ALTO, UMBRAL_MEDIO

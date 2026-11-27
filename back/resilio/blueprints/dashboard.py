@@ -3,20 +3,11 @@ from flask import Blueprint, current_app, flash, redirect, render_template, sess
 from ..extensions import db
 from ..models import Evaluacion
 from ..security import login_required
+from . import hr
 from ..services.scoring import RIESGO
-from ..utils import fila, filas, tiempo_relativo, ultimos_meses
+from ..utils import SOLO_EMPLEADOS, ULTIMA, fila, filas, tiempo_relativo, ultimos_meses
 
 bp = Blueprint("dashboard", __name__)
-
-# Última evaluación de cada usuario (opcionalmente filtrada por un WHERE sobre usuarios u)
-ULTIMA = """
-    SELECT DISTINCT ON (ev.usuario_id) ev.usuario_id, ev.puntuacion_total
-    FROM evaluaciones ev JOIN usuarios u ON u.id = ev.usuario_id
-    {where}
-    ORDER BY ev.usuario_id, ev.fecha DESC
-"""
-SOLO_EMPLEADOS = "WHERE u.empresa_id = :empresa_id AND u.rol_id = 4"
-
 
 def _tendencia(rows):
     rows = [{"mes": r["mes"], "total": int(r["total"]), "riesgo_alto": int(r["riesgo_alto"])} for r in rows]
@@ -30,7 +21,7 @@ def dashboard():
     if rol == 1:
         return _admin()
     if rol == 2:
-        return _hr()
+        return hr.panel()
     todas = Evaluacion.query.filter_by(usuario_id=session["user_id"]).order_by(Evaluacion.fecha, Evaluacion.id).all()
     template = "dashboards/personal.html" if rol == 3 else "dashboards/empleado.html"
     return render_template(template, evaluacion=todas[-1] if todas else None, tendencia=todas)
@@ -125,99 +116,4 @@ def _admin():
     return render_template(
         "dashboards/admin.html", stats=stats, usuarios=usuarios, empresas=empresas,
         usuarios_riesgo=usuarios_riesgo, actividad=actividad, tendencia_mensual=tendencia_mensual,
-    )
-
-
-def _hr():
-    empresa_id = session.get("empresa_id")
-    if not empresa_id:
-        flash("Tu usuario HR no tiene una empresa asignada.", "error")
-        session.clear()
-        return redirect(url_for("auth.login"))
-
-    p = dict(empresa_id=empresa_id, **RIESGO)
-    ultima = ULTIMA.format(where=SOLO_EMPLEADOS)
-    try:
-        total_empleados = fila("SELECT COUNT(*) AS t FROM usuarios WHERE empresa_id = :empresa_id AND rol_id = 4", **p)["t"]
-        alto = fila(f"SELECT COUNT(*) AS t FROM ({ultima}) x WHERE puntuacion_total >= :alto", **p)["t"]
-        stats = dict(
-            total_empleados=total_empleados,
-            total_evaluaciones=fila(
-                f"SELECT COUNT(*) AS t FROM evaluaciones ev JOIN usuarios u ON u.id = ev.usuario_id {SOLO_EMPLEADOS}", **p
-            )["t"],
-            empleados_riesgo_alto=alto,
-            pct_riesgo_alto=round(alto / total_empleados * 100, 1) if total_empleados else 0,
-        )
-        medias = fila(
-            f"""
-            SELECT ROUND(AVG(ev.puntuacion_total), 2) AS media_global,
-                   ROUND(AVG(ev.dim_agotamiento), 2) AS agotamiento,
-                   ROUND(AVG(ev.dim_distanciamiento), 2) AS distanciamiento,
-                   ROUND(AVG(ev.dim_cognitivo), 2) AS cognitivo,
-                   ROUND(AVG(ev.dim_emocional), 2) AS emocional
-            FROM evaluaciones ev JOIN usuarios u ON u.id = ev.usuario_id {SOLO_EMPLEADOS}
-        """,
-            **p,
-        )
-        riesgo = fila(
-            f"""
-            SELECT COALESCE(SUM(CASE WHEN puntuacion_total < :medio THEN 1 ELSE 0 END), 0) AS bajo,
-                   COALESCE(SUM(CASE WHEN puntuacion_total >= :medio AND puntuacion_total < :alto THEN 1 ELSE 0 END), 0) AS medio,
-                   COALESCE(SUM(CASE WHEN puntuacion_total >= :alto THEN 1 ELSE 0 END), 0) AS alto
-            FROM ({ultima}) t
-        """,
-            **p,
-        )
-        departamentos = filas(
-            """
-            SELECT COALESCE(d.nombre, 'Sin departamento') AS departamento,
-                   COUNT(DISTINCT u.id) AS empleados, COUNT(ev.id) AS evaluaciones,
-                   ROUND(AVG(ev.puntuacion_total), 2) AS media_global
-            FROM usuarios u
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
-            LEFT JOIN evaluaciones ev ON ev.usuario_id = u.id
-            WHERE u.empresa_id = :empresa_id AND u.rol_id = 4
-            GROUP BY d.id, d.nombre
-            ORDER BY media_global DESC NULLS LAST
-        """,
-            **p,
-        )
-        tendencia_mensual = _tendencia(filas(
-            """
-            SELECT to_char(date_trunc('month', ev.fecha), 'Mon YYYY') AS mes, COUNT(*) AS total,
-                   SUM(CASE WHEN ev.puntuacion_total >= :alto THEN 1 ELSE 0 END) AS riesgo_alto
-            FROM evaluaciones ev JOIN usuarios u ON u.id = ev.usuario_id
-            WHERE u.empresa_id = :empresa_id AND u.rol_id = 4 AND ev.fecha >= now() - interval '6 months'
-            GROUP BY date_trunc('month', ev.fecha) ORDER BY date_trunc('month', ev.fecha)
-        """,
-            **p,
-        ))
-        # Alias anónimos: HR nunca ve nombres de empleados
-        evaluaciones_recientes = filas(
-            """
-            WITH ult AS (
-                SELECT DISTINCT ON (ev.usuario_id) ev.usuario_id, ev.fecha, ev.puntuacion_total
-                FROM evaluaciones ev JOIN usuarios u ON u.id = ev.usuario_id
-                WHERE u.empresa_id = :empresa_id AND u.rol_id = 4
-                ORDER BY ev.usuario_id, ev.fecha DESC
-            )
-            SELECT to_char(fecha, 'DD/MM/YYYY') AS fecha,
-                   'Empleado ' || LPAD(CAST(ROW_NUMBER() OVER (ORDER BY fecha DESC, usuario_id) AS text), 2, '0') AS alias,
-                   ROUND(puntuacion_total, 2) AS puntuacion_total
-            FROM ult ORDER BY fecha DESC LIMIT 10
-        """,
-            **p,
-        )
-    except Exception:
-        db.session.rollback()
-        current_app.logger.exception("Error al cargar el panel HR")
-        flash("Error al cargar el panel HR.", "error")
-        stats = dict(total_empleados=0, total_evaluaciones=0, empleados_riesgo_alto=0, pct_riesgo_alto=0)
-        medias = dict(media_global=0, agotamiento=0, distanciamiento=0, cognitivo=0, emocional=0)
-        riesgo = dict(bajo=0, medio=0, alto=0)
-        departamentos = tendencia_mensual = evaluaciones_recientes = []
-
-    return render_template(
-        "dashboards/hr.html", stats=stats, medias=medias, riesgo=riesgo, departamentos=departamentos,
-        tendencia_mensual=tendencia_mensual, evaluaciones_recientes=evaluaciones_recientes,
     )

@@ -39,3 +39,13 @@ def ultimos_meses(**vacio):
             m, y = m + 12, y - 1
         meses.append({"mes": f"{calendar.month_abbr[m]} {y}", **vacio})
     return meses
+
+
+# Última evaluación de cada usuario (opcionalmente filtrada por un WHERE sobre usuarios u)
+ULTIMA = """
+    SELECT DISTINCT ON (ev.usuario_id) ev.usuario_id, ev.puntuacion_total
+    FROM evaluaciones ev JOIN usuarios u ON u.id = ev.usuario_id
+    {where}
+    ORDER BY ev.usuario_id, ev.fecha DESC
+"""
+SOLO_EMPLEADOS = "WHERE u.empresa_id = :empresa_id AND u.rol_id = 4"
