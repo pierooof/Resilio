@@ -263,13 +263,15 @@
         
         <form action="/procesar_test" method="POST" id="test-form" onsubmit="this.querySelector('button').innerHTML='Enviando...'; this.querySelector('button').disabled=true;">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="lang" id="lang-field" value="es">
+            <p class="question-text" id="nota-traduccion" data-i18n="traduccionNoValidada" hidden></p>
             
             {% for pregunta in preguntas %}
             <div class="question-card" data-question="{{ loop.index }}">
                 
                 <span class="question-number">Pregunta {{ loop.index }} de {{ preguntas|length }}</span>
                 
-                <p class="question-text">{{ pregunta.texto }}</p>
+                <p class="question-text" data-i18n="q_{{ pregunta.id }}">{{ pregunta.texto }}</p>
                 
                 <div class="options-grid">
                     {% for i in range(1, 6) %}
@@ -329,7 +331,8 @@
                 "raramente": "Rarely",
                 "aVeces": "Sometimes",
                 "aMenudo": "Often",
-                "siempre": "Always"
+                "siempre": "Always",
+                "traduccionNoValidada": "These questions are an unofficial, non-validated translation of the BAT-12."
             },
             "ca": {
                 "testBat12": "Test BAT-12",
@@ -344,8 +347,17 @@
                 "raramente": "Rarament",
                 "aVeces": "A vegades",
                 "aMenudo": "Sovint",
-                "siempre": "Sempre"
+                "siempre": "Sempre",
+                "traduccionNoValidada": "Aquestes preguntes són una traducció no oficial i no validada del BAT-12."
             }
+        });
+
+        // Preguntas en es/en/ca (vienen de la BD)
+        Resilio.i18n.add({{ i18n_preguntas|tojson }});
+        // El idioma elegido viaja con el formulario (idioma de los consejos) y las traducciones se avisan
+        Resilio.i18n.onApply(function (lang) {
+            document.getElementById('lang-field').value = lang;
+            document.getElementById('nota-traduccion').hidden = (lang === 'es');
         });
 
         // Número de pregunta traducido ("Pregunta 3 de 12")

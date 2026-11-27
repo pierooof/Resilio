@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from "_consejos.html" import consejos %}
 {% block head_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
 {% endblock %}
@@ -63,7 +64,7 @@
                 <span>{{ evaluacion.dim_agotamiento }}/5</span>
             </div>
             <div class="progress-bg">
-                <div class="progress-fill {% if evaluacion.dim_agotamiento < 2.5 %}green{% elif evaluacion.dim_agotamiento < 3.5 %}yellow{% else %}red{% endif %}"
+                <div class="progress-fill neutral"
                     style="width: {{ (evaluacion.dim_agotamiento / 5 * 100)|int }}%;">
                 </div>
             </div>
@@ -75,7 +76,7 @@
                 <span>{{ evaluacion.dim_distanciamiento }}/5</span>
             </div>
             <div class="progress-bg">
-                <div class="progress-fill {% if evaluacion.dim_distanciamiento < 2.5 %}green{% elif evaluacion.dim_distanciamiento < 3.5 %}yellow{% else %}red{% endif %}"
+                <div class="progress-fill neutral"
                     style="width: {{ (evaluacion.dim_distanciamiento / 5 * 100)|int }}%;">
                 </div>
             </div>
@@ -87,7 +88,7 @@
                 <span>{{ evaluacion.dim_cognitivo }}/5</span>
             </div>
             <div class="progress-bg">
-                <div class="progress-fill {% if evaluacion.dim_cognitivo < 2.5 %}green{% elif evaluacion.dim_cognitivo < 3.5 %}yellow{% else %}red{% endif %}"
+                <div class="progress-fill neutral"
                     style="width: {{ (evaluacion.dim_cognitivo / 5 * 100)|int }}%;">
                 </div>
             </div>
@@ -99,7 +100,7 @@
                 <span>{{ evaluacion.dim_emocional }}/5</span>
             </div>
             <div class="progress-bg">
-                <div class="progress-fill {% if evaluacion.dim_emocional < 2.5 %}green{% elif evaluacion.dim_emocional < 3.5 %}yellow{% else %}red{% endif %}"
+                <div class="progress-fill neutral"
                     style="width: {{ (evaluacion.dim_emocional / 5 * 100)|int }}%;">
                 </div>
             </div>
@@ -118,7 +119,7 @@
     </div>
 </div>
 
-{% if evaluacion.consejos %}
+{% if evaluacion.consejos_data %}
 <div class="consejos-panel">
 
     <div class="consejo-header" style="margin-bottom: 10px;">
@@ -127,7 +128,7 @@
     </div>
 
 
-    {{ evaluacion.consejos | safe }}
+    {{ consejos(evaluacion.consejos_data) }}
 
 </div>
 {% endif %}

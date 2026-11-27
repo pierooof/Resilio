@@ -58,6 +58,9 @@ def create_app(config=None):
     for modulo in (auth, dashboard, admin, test):
         app.register_blueprint(modulo.bp)
 
+    from .services.scoring import UMBRAL_ALTO, UMBRAL_MEDIO
+    app.jinja_env.globals.update(UMBRAL_ALTO=UMBRAL_ALTO, UMBRAL_MEDIO=UMBRAL_MEDIO)
+
     from .cli import registrar
     registrar(app)
     return app

@@ -2,18 +2,24 @@
 
 12 preguntas, 4 dimensiones × 3, escala 1-5, media simple.
 """
+import json
 import os
 
 from ..extensions import db
-from ..models import Evaluacion, Pregunta, RespuestaEvaluacion
-from .ia_service import generar_consejos_ia
+from ..models import Evaluacion, Pregunta, RespuestaEvaluacion, Usuario
+from .consejos import generar_consejos, normalizar_idioma
 
 N_PREGUNTAS = 12
 DIMENSIONES = {1: "agotamiento", 2: "distanciamiento", 3: "cognitivo", 4: "emocional"}
 
-# Umbrales de riesgo: bajo < MEDIO <= medio < ALTO <= alto. Único sitio donde viven.
-UMBRAL_MEDIO = 2.5
-UMBRAL_ALTO = 3.5
+# Umbrales de riesgo sobre la media global BAT-12 (escala 1-5):
+#   bajo < MEDIO <= medio < ALTO <= alto
+# Valores "pooled" de Schaufeli, De Witte, Hakanen, Kaltiainen y Kok (2023), Scand J Work
+# Environ Health, Tabla 3 (BAT-12 total): naranja "en riesgo" 2.54, rojo "burnout severo" 2.96.
+# Son provisionales y solo para la puntuación total: el artículo no da puntos de corte por
+# subescala para el BAT-12. Resilio es un cribado, no un diagnóstico.
+UMBRAL_MEDIO = 2.54
+UMBRAL_ALTO = 2.96
 RIESGO = {"medio": UMBRAL_MEDIO, "alto": UMBRAL_ALTO}  # parámetros para las consultas SQL
 
 
@@ -64,7 +70,7 @@ def calcular_bat12(respuestas, mapa_preguntas):
     }
 
 
-def calcular_y_guardar_bat12(user_id, form_data):
+def calcular_y_guardar_bat12(user_id, form_data, idioma="es"):
     """Procesa el formulario, genera consejos y guarda la evaluación.
 
     Devuelve (True, media_total) o (False, mensaje_de_error).
@@ -75,10 +81,10 @@ def calcular_y_guardar_bat12(user_id, form_data):
     except ValueError as e:
         return False, str(e)
 
-    consejos = "No se han generado consejos. Configura la API de Gemini para obtener recomendaciones personalizadas."
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if api_key:
-        consejos = generar_consejos_ia(r["media_total"], r["dimension_maxima"], api_key)
+    idioma = normalizar_idioma(idioma)
+    consejos = generar_consejos(
+        r["media_total"], r["dims"], r["dimension_maxima"], idioma, os.environ.get("GEMINI_API_KEY")
+    )
 
     d = r["dims"]
     db.session.add(
@@ -89,9 +95,12 @@ def calcular_y_guardar_bat12(user_id, form_data):
             dim_distanciamiento=d["distanciamiento"],
             dim_cognitivo=d["cognitivo"],
             dim_emocional=d["emocional"],
-            consejos=consejos,
+            consejos=json.dumps(consejos, ensure_ascii=False),
             respuestas=[RespuestaEvaluacion(pregunta_id=p, valor=v) for p, v in r["respuestas"].items()],
         )
     )
+    usuario = db.session.get(Usuario, user_id)
+    if usuario:
+        usuario.idioma = idioma  # para comunicaciones futuras (recordatorios)
     db.session.commit()
     return True, r["media_total"]

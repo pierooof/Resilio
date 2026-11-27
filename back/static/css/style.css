@@ -664,6 +664,7 @@ button.logout-link { width: 100%; background: none; border: 0; font-family: inhe
     border-radius: 999px;
     transition: width 1s var(--ease);
 }
+.progress-fill.neutral { background: var(--accent); }
 .progress-fill.green { background: var(--accent); }
 .progress-fill.yellow { background: var(--warn); }
 .progress-fill.red { background: var(--danger); }

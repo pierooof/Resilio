@@ -1,3 +1,4 @@
+import json
 import re
 
 from werkzeug.security import generate_password_hash
@@ -145,6 +146,37 @@ def test_procesar_test_guarda_y_historial_muestra_preguntas(client):
     client.post("/procesar_test", data={"pregunta_1": "3"})  # incompleto: no guarda
     assert Evaluacion.query.count() == 1
     assert "agotado/a en el trabajo" in client.get("/historial").get_data(as_text=True)
+
+
+def test_preguntas_en_los_tres_idiomas(client):
+    usuario()
+    login(client)
+    html = client.get("/test").get_data(as_text=True)
+    assert "At work, I feel mentally exhausted." in html and "A la feina, em sento mentalment esgotat/ada." in html
+    assert 'name="lang"' in html
+    for i in range(1, 13):
+        assert f"q_{i}" in html
+    assert "non-validated" in html and "no validada" in html
+
+
+def test_test_envia_idioma_y_consejos_estructurados(client):
+    u = usuario()
+    login(client)
+    client.post("/procesar_test", data={**RESPUESTAS, "lang": "en"})
+    assert Evaluacion.query.one().consejos_data["lang"] == "en" and db.session.get(Usuario, u.id).idioma == "en"
+
+
+def test_consejos_se_escapan_sin_safe(client):
+    u = usuario()
+    malo = {"intro": "<script>alert(1)</script>", "ia": True, "lang": "es",
+            "consejos": [{"titulo": "<img src=x onerror=alert(2)>", "texto": "ok"}] * 3}
+    db.session.add(Evaluacion(usuario_id=u.id, puntuacion_total=3, dim_agotamiento=3, dim_distanciamiento=3,
+                              dim_cognitivo=3, dim_emocional=3, consejos=json.dumps(malo)))
+    db.session.commit()
+    login(client)
+    for url in ("/dashboard", "/historial"):
+        html = client.get(url).get_data(as_text=True)
+        assert "<script>alert(1)" not in html and "<img src=x" not in html and "&lt;script&gt;alert(1)" in html, url
 
 
 # ── Dashboards (SQL de Postgres) ───────────────────────────────────────────────

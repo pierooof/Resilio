@@ -1,3 +1,5 @@
+import json
+
 from sqlalchemy import CheckConstraint, Index, UniqueConstraint, func
 
 from .extensions import db
@@ -35,6 +37,7 @@ class Usuario(db.Model):
     email = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
     fecha_registro = db.Column(db.DateTime, server_default=func.now())
+    idioma = db.Column(db.String(2), nullable=False, default="es", server_default="es")
 
     empresa = db.relationship("Empresa")
     departamento = db.relationship("Departamento")
@@ -55,6 +58,15 @@ class Pregunta(db.Model):
     es_activo = db.Column(db.Boolean, nullable=False, default=True, server_default="true")
 
 
+class PreguntaTraduccion(db.Model):
+    """Texto de una pregunta en otro idioma (en/ca). El español vive en Pregunta.texto."""
+
+    __tablename__ = "pregunta_traducciones"
+    pregunta_id = db.Column(db.Integer, db.ForeignKey("preguntas.id", ondelete="CASCADE"), primary_key=True)
+    idioma = db.Column(db.String(2), primary_key=True)
+    texto = db.Column(db.String(255), nullable=False)
+
+
 class Evaluacion(db.Model):
     __tablename__ = "evaluaciones"
     id = db.Column(db.Integer, primary_key=True)
@@ -68,6 +80,16 @@ class Evaluacion(db.Model):
     consejos = db.Column(db.Text)
 
     respuestas = db.relationship("RespuestaEvaluacion", cascade="all, delete-orphan")
+
+    @property
+    def consejos_data(self):
+        """Consejos estructurados (dict) o None. `consejos` guarda JSON, nunca HTML."""
+        try:
+            data = json.loads(self.consejos or "")
+        except ValueError:
+            return None
+        return data if isinstance(data, dict) else None
+
     __table_args__ = (Index("ix_evaluaciones_usuario_fecha", "usuario_id", "fecha"),)
 
 

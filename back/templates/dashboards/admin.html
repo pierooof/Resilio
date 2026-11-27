@@ -363,8 +363,8 @@
                     <div class="riesgo-name">{{ u.nombre }} {{ u.apellidos or '' }}</div>
                     <div class="riesgo-score">Puntuación: {{ u.ultima_puntuacion }}/5 · {{ u.empresa_nombre or 'Personal' }}</div>
                 </div>
-                <span class="riesgo-badge {% if u.ultima_puntuacion >= 3.5 %}alto{% elif u.ultima_puntuacion >= 2.5 %}medio{% else %}bajo{% endif %}">
-                    {% if u.ultima_puntuacion >= 3.5 %}Alto{% elif u.ultima_puntuacion >= 2.5 %}Medio{% else %}Bajo{% endif %}
+                <span class="riesgo-badge {% if u.ultima_puntuacion >= UMBRAL_ALTO %}alto{% elif u.ultima_puntuacion >= UMBRAL_MEDIO %}medio{% else %}bajo{% endif %}">
+                    {% if u.ultima_puntuacion >= UMBRAL_ALTO %}Alto{% elif u.ultima_puntuacion >= UMBRAL_MEDIO %}Medio{% else %}Bajo{% endif %}
                 </span>
             </div>
             {% endfor %}

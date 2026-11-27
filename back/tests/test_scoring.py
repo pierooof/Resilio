@@ -39,7 +39,8 @@ def test_ignora_campos_ajenos_al_test():
 
 
 def test_umbrales_de_riesgo():
-    assert [nivel_riesgo(x) for x in (1, 2.49, 2.5, 3.49, 3.5, 5)] == ["Bajo", "Bajo", "Medio", "Medio", "Alto", "Alto"]
+    # puntos de corte BAT-12 pooled (Schaufeli et al. 2023): 2.54 y 2.96
+    assert [nivel_riesgo(x) for x in (1, 2.53, 2.54, 2.95, 2.96, 5)] == ["Bajo", "Bajo", "Medio", "Medio", "Alto", "Alto"]
 
 
 def test_guardar_crea_evaluacion_y_12_respuestas(app, monkeypatch):
@@ -53,9 +54,21 @@ def test_guardar_crea_evaluacion_y_12_respuestas(app, monkeypatch):
     ev = Evaluacion.query.one()
     assert ok and media == 2.83
     assert (float(ev.puntuacion_total), float(ev.dim_agotamiento), float(ev.dim_emocional)) == (2.83, 2.0, 1.33)
-    assert RespuestaEvaluacion.query.count() == 12 and "Gemini" in ev.consejos
+    assert RespuestaEvaluacion.query.count() == 12
+    assert ev.consejos_data["ia"] is False and len(ev.consejos_data["consejos"]) == 3
 
 
 def test_guardar_incompleto_no_escribe(app):
     ok, msg = calcular_y_guardar_bat12(1, form([3] * 11))
     assert not ok and "todas" in msg and Evaluacion.query.count() == 0
+
+
+def test_guardar_usa_idioma_del_formulario_y_lo_recuerda(app, monkeypatch):
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    u = Usuario(rol_id=3, nombre="A", email="a@x.com", password="x")
+    db.session.add(u)
+    db.session.commit()
+    calcular_y_guardar_bat12(u.id, form([3] * 12), "ca")
+    assert Evaluacion.query.one().consejos_data["lang"] == "ca" and db.session.get(Usuario, u.id).idioma == "ca"
+    calcular_y_guardar_bat12(u.id, form([3] * 12), "klingon")  # idioma desconocido -> es
+    assert db.session.get(Usuario, u.id).idioma == "es"

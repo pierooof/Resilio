@@ -164,25 +164,25 @@
         <div class="dim-bar">
             <div class="dim-bar-header"><span>Agotamiento</span><span>{{ medias.agotamiento }}/5</span></div>
             <div class="dim-bar-track">
-                <div class="dim-bar-fill" style="width:{{ (medias.agotamiento/5*100)|round }}%;background:{% if medias.agotamiento < 2.5 %}var(--accent){% elif medias.agotamiento < 3.5 %}var(--warn){% else %}var(--danger){% endif %};"></div>
+                <div class="dim-bar-fill" style="width:{{ (medias.agotamiento/5*100)|round }}%;background:{% if medias.agotamiento < UMBRAL_MEDIO %}var(--accent){% elif medias.agotamiento < UMBRAL_ALTO %}var(--warn){% else %}var(--danger){% endif %};"></div>
             </div>
         </div>
         <div class="dim-bar">
             <div class="dim-bar-header"><span>Distanciamiento</span><span>{{ medias.distanciamiento }}/5</span></div>
             <div class="dim-bar-track">
-                <div class="dim-bar-fill" style="width:{{ (medias.distanciamiento/5*100)|round }}%;background:{% if medias.distanciamiento < 2.5 %}var(--accent){% elif medias.distanciamiento < 3.5 %}var(--warn){% else %}var(--danger){% endif %};"></div>
+                <div class="dim-bar-fill" style="width:{{ (medias.distanciamiento/5*100)|round }}%;background:{% if medias.distanciamiento < UMBRAL_MEDIO %}var(--accent){% elif medias.distanciamiento < UMBRAL_ALTO %}var(--warn){% else %}var(--danger){% endif %};"></div>
             </div>
         </div>
         <div class="dim-bar">
             <div class="dim-bar-header"><span>Deterioro Cognitivo</span><span>{{ medias.cognitivo }}/5</span></div>
             <div class="dim-bar-track">
-                <div class="dim-bar-fill" style="width:{{ (medias.cognitivo/5*100)|round }}%;background:{% if medias.cognitivo < 2.5 %}var(--accent){% elif medias.cognitivo < 3.5 %}var(--warn){% else %}var(--danger){% endif %};"></div>
+                <div class="dim-bar-fill" style="width:{{ (medias.cognitivo/5*100)|round }}%;background:{% if medias.cognitivo < UMBRAL_MEDIO %}var(--accent){% elif medias.cognitivo < UMBRAL_ALTO %}var(--warn){% else %}var(--danger){% endif %};"></div>
             </div>
         </div>
         <div class="dim-bar">
             <div class="dim-bar-header"><span>Deterioro Emocional</span><span>{{ medias.emocional }}/5</span></div>
             <div class="dim-bar-track">
-                <div class="dim-bar-fill" style="width:{{ (medias.emocional/5*100)|round }}%;background:{% if medias.emocional < 2.5 %}var(--accent){% elif medias.emocional < 3.5 %}var(--warn){% else %}var(--danger){% endif %};"></div>
+                <div class="dim-bar-fill" style="width:{{ (medias.emocional/5*100)|round }}%;background:{% if medias.emocional < UMBRAL_MEDIO %}var(--accent){% elif medias.emocional < UMBRAL_ALTO %}var(--warn){% else %}var(--danger){% endif %};"></div>
             </div>
         </div>
         <div class="dim-bar" style="margin-bottom:0;">
@@ -233,15 +233,15 @@
                 <td>
                     <div class="mini-bar-wrapper">
                         <div class="mini-bar-track">
-                            <div class="mini-bar-fill" style="width:{{ (e.media_global/5*100)|round if e.media_global else 0 }}%;background:{% if e.media_global and e.media_global < 2.5 %}var(--accent){% elif e.media_global and e.media_global < 3.5 %}var(--warn){% else %}var(--danger){% endif %};"></div>
+                            <div class="mini-bar-fill" style="width:{{ (e.media_global/5*100)|round if e.media_global else 0 }}%;background:{% if e.media_global and e.media_global < UMBRAL_MEDIO %}var(--accent){% elif e.media_global and e.media_global < UMBRAL_ALTO %}var(--warn){% else %}var(--danger){% endif %};"></div>
                         </div>
                         <span style="font-size:0.82rem;font-weight:700;">{{ e.media_global or '—' }}</span>
                     </div>
                 </td>
                 <td>
                     {% if e.media_global %}
-                        {% if e.media_global < 2.5 %}<span class="score-pill bajo">Bajo</span>
-                        {% elif e.media_global < 3.5 %}<span class="score-pill medio">Medio</span>
+                        {% if e.media_global < UMBRAL_MEDIO %}<span class="score-pill bajo">Bajo</span>
+                        {% elif e.media_global < UMBRAL_ALTO %}<span class="score-pill medio">Medio</span>
                         {% else %}<span class="score-pill alto">Alto</span>{% endif %}
                     {% else %}<span style="color:var(--muted);">—</span>{% endif %}
                 </td>
@@ -278,7 +278,7 @@
                 <tr>
                     <td style="font-weight:600;">{{ u.nombre }} {{ u.apellidos or '' }}</td>
                     <td>
-                        <span class="score-pill {% if u.puntuacion_total >= 3.5 %}alto{% elif u.puntuacion_total >= 2.5 %}medio{% else %}bajo{% endif %}">
+                        <span class="score-pill {% if u.puntuacion_total >= UMBRAL_ALTO %}alto{% elif u.puntuacion_total >= UMBRAL_MEDIO %}medio{% else %}bajo{% endif %}">
                             {{ u.puntuacion_total }}/5
                         </span>
                     </td>

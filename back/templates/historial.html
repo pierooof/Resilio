@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from "_consejos.html" import consejos %}
 
 {% block content %}
 <div class="welcome-section">
@@ -41,16 +42,16 @@
                 </div>
                 
                 <div class="history-risk">
-                    {% if eval.puntuacion_total < 2.5 %}
+                    {% if eval.puntuacion_total < UMBRAL_MEDIO %}
                         <span class="risk-badge low" data-i18n="bajoRiesgo">Bajo Riesgo</span>
-                    {% elif eval.puntuacion_total < 3.5 %}
+                    {% elif eval.puntuacion_total < UMBRAL_ALTO %}
                         <span class="risk-badge medium" data-i18n="riesgoMedio">Riesgo Medio</span>
                     {% else %}
                         <span class="risk-badge high" data-i18n="riesgoAlto">Riesgo Alto</span>
                     {% endif %}
                 </div>
                 
-                {% if eval.consejos %}
+                {% if eval.consejos_data %}
                 <div class="history-consejos">
                     <i class="fas fa-lightbulb" aria-hidden="true" style="color: var(--accent-ink);"></i>
                     <span data-i18n="consejos">Consejos</span>
@@ -63,14 +64,14 @@
             </div>
             
           <div class="history-details-expandable" id="eval-{{ loop.index }}">
-                {% if eval.consejos %}
+                {% if eval.consejos_data %}
                 <div class="consejos-section" style="margin-bottom: 24px;">
                     <h4 style="color: var(--accent-ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-lightbulb"></i>
                         <span data-i18n="consejosPersonalizados">Consejos Personalizados</span>
                     </h4>
                     <div class="consejos-historial-wrapper">
-                        {{ eval.consejos | safe }}
+                        {{ consejos(eval.consejos_data) }}
                     </div>
                 </div>
                 {% endif %}
@@ -79,7 +80,7 @@
                     <div class="question-item">
                         <div class="question-number">{{ loop.index }}</div>
                         <div class="question-content">
-                            <p class="question-text">{{ detalle.texto }}</p>
+                            <p class="question-text" data-i18n="q_{{ detalle.pregunta_id }}">{{ detalle.texto }}</p>
                             <div class="answer-value">
                                 {% if detalle.valor == 1 %}
                                     <span class="answer-badge answer-1">Nunca</span>
@@ -118,6 +119,7 @@
 {% endif %}
 
 <script>
+    Resilio.i18n.add({{ i18n_preguntas|tojson }});
     function toggleDetails(id) {
         const details = document.getElementById(id);
         const btn = document.getElementById('btn-' + id);
