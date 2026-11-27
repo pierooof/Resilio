@@ -1,9 +1,12 @@
 {% extends "layout.html" %}
+{% block head_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
+{% endblock %}
 
 {% block content %}
-<div class="welcome-section" style="margin-bottom: 40px;">
-    <h1 style="color: var(--text-primary); margin-bottom: 10px; font-size: 1.8rem;">Tu Panel de Empleado</h1>
-    <p style="color: var(--text-secondary);">Consulta tu estado de burnout y bienestar laboral.</p>
+<div class="welcome-section">
+    <h1>Tu Panel de Empleado</h1>
+    <p>Consulta tu estado de burnout y bienestar laboral.</p>
 </div>
 
 {% if evaluacion %}
@@ -41,7 +44,7 @@
 
 <div class="results-section">
     <div class="result-card" style="flex: 1;">
-        <h2><i class="fas fa-chart-pie" style="margin-right: 10px; color: var(--neon-green);"></i>Resumen de Dimensiones</h2>
+        <h2><i class="fas fa-chart-pie" style="margin-right: 10px; color: var(--accent-ink);"></i>Resumen de Dimensiones</h2>
         
         <div class="dimension-bar">
             <div class="label">
@@ -83,14 +86,14 @@
             </div>
         </div>
         
-        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 20px;">
+        <p style="color: var(--muted); font-size: 0.8rem; margin-top: 20px;">
             <i class="fas fa-calendar-alt" style="margin-right: 6px;"></i>
             Última evaluación: {{ evaluacion.fecha.strftime('%d/%m/%Y') }}
         </p>
     </div>
     
     <div class="result-card">
-        <h2><i class="fas fa-radar" style="margin-right: 10px; color: var(--neon-green);"></i>Visualización</h2>
+        <h2><i class="fas fa-radar" style="margin-right: 10px; color: var(--accent-ink);"></i>Visualización</h2>
         <canvas id="burnoutChart" style="max-height: 300px;"></canvas>
     </div>
 </div>
@@ -98,7 +101,7 @@
 {% if evaluacion.consejos %}
 <div class="consejos-panel">
     <h2>
-        <i class="fas fa-lightbulb" style="margin-right: 10px; color: var(--neon-green);"></i>
+        <i class="fas fa-lightbulb" style="margin-right: 10px; color: var(--accent-ink);"></i>
         Consejos Personalizados
     </h2>
 
@@ -115,11 +118,11 @@
 
 {% else %}
 <div class="result-card" style="text-align: center; padding: 60px 40px;">
-    <div style="width: 80px; height: 80px; background: var(--neon-green-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
-        <i class="fas fa-clipboard-check" style="font-size: 2rem; color: var(--neon-green);"></i>
+    <div style="width: 80px; height: 80px; background: var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+        <i class="fas fa-clipboard-check" style="font-size: 2rem; color: var(--accent-ink);"></i>
     </div>
     <h2 style="margin-bottom: 15px;">¿Listo para evaluar tu bienestar?</h2>
-    <p style="color: var(--text-secondary); margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">
+    <p style="color: var(--muted); margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">
         El test BAT-12 evaluará tu nivel de agotamiento laboral. Tus resultados son confidenciales y solo tú puedes verlos.
     </p>
     <a href="/test" class="btn-primary" style="max-width: 280px;">
@@ -129,87 +132,6 @@
  </div>
 {% endif %}
 
-<style>
-    .results-section {
-        display: flex;
-        gap: 24px;
-        flex-wrap: wrap;
-    }
-    
-    .results-section .result-card {
-        flex: 1;
-        min-width: 300px;
-    }
-    
-    .consejos-panel {
-        background: var(--card-bg);
-        border: 1px solid var(--border-subtle);
-        border-radius: 16px;
-        padding: 30px;
-        margin-top: 24px;
-    }
-    
-    .consejos-panel h2 {
-        color: var(--text-primary);
-        font-size: 1.3rem;
-        margin-bottom: 24px;
-        display: flex;
-        align-items: center;
-    }
-    
-    .consejos-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-    
-    .consejo-card {
-        background: linear-gradient(135deg, rgba(73, 243, 190, 0.1), rgba(73, 243, 190, 0.05));
-        border: 1px solid rgba(73, 243, 190, 0.3);
-        border-radius: 16px;
-        padding: 24px;
-        position: relative;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .consejo-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 30px rgba(73, 243, 190, 0.2);
-    }
-    
-    .consejo-number {
-        position: absolute;
-        top: -12px;
-        left: 20px;
-        width: 32px;
-        height: 32px;
-        background: var(--neon-green);
-        color: #0a0a0a;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 0.9rem;
-    }
-    
-    .consejo-card p {
-        color: var(--text-primary);
-        line-height: 1.6;
-        font-size: 0.95rem;
-        margin-top: 8px;
-    }
-    
-    @media (max-width: 900px) {
-        .consejos-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .results-section {
-            flex-direction: column;
-        }
-    }
-</style>
 
 {% if evaluacion %}
 <script>
@@ -242,8 +164,8 @@
                         // AQUÍ ESTÁ LA CORRECCIÓN CLAVE: min y max van directamente en "r"
                         min: 0,
                         max: 5,
-                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        angleLines: { color: 'rgba(128,128,128,0.25)' },
+                        grid: { color: 'rgba(128,128,128,0.25)' },
                         pointLabels: { color: '#888', font: { size: 12 } },
                         ticks: { 
                             stepSize: 1, 

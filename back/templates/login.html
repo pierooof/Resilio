@@ -5,40 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resilio | Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .language-switcher {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .language-btn {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-        }
-
-        .language-btn:hover {
-            color: var(--text-primary);
-            border-color: var(--neon-green);
-        }
-
-        .language-btn.active {
-            background: rgba(73, 243, 190, 0.1);
-            color: var(--neon-green);
-            border-color: var(--neon-green);
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script>
         // Aplicar tema antes de cargar
         (function() {
@@ -46,45 +17,49 @@
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
     </script>
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
 </head>
 
 <body class="auth-page">
-    <div class="language-switcher">
-        <button class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
-        <button class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
-        <button class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
-    </div>
+    <aside class="auth-brand" aria-hidden="true">
+        <span class="brand-mark">Resilio</span>
+        <div class="brand-word">Resilio</div>
+        <div class="brand-foot">BAT-12 · Burnout Assessment Tool</div>
+    </aside>
+    <main class="auth-main">
+        <div class="language-switcher" role="group" aria-label="Idioma">
+            <button type="button" class="language-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
+            <button type="button" class="language-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+            <button type="button" class="language-btn" data-lang="ca" onclick="setLanguage('ca')">CA</button>
+        </div>
     <div class="login-wrapper">
         <div class="login-card">
             <header class="logo-container">
-                <img src="{{ url_for('static', filename='img/resilio-logo-sinfondo.png') }}" 
-                     alt="Resilio Logo"
-                     class="main-logo">
                 <p class="tagline" data-i18n="tagline">Equilibrio entre mente y código</p>
             </header>
 
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                        <div class="alert alert-{{ category }}" role="{{ 'alert' if category == 'error' else 'status' }}">{{ message }}</div>
                     {% endfor %}
                 {% endif %}
             {% endwith %}
 
             <form action="/login" method="POST" class="login-form">
                 <div class="input-field">
-                    <label data-i18n="emailLabel">Email Corporativo o Personal</label>
+                    <label for="login-email" data-i18n="emailLabel">Email Corporativo o Personal</label>
                     <div class="input-icon-wrapper">
-                        <i class="fas fa-at"></i>
-                        <input type="email" name="email" placeholder="usuario@resilio.com" required>
+                        <i class="fas fa-at" aria-hidden="true"></i>
+                        <input id="login-email" autocomplete="email" type="email" name="email" placeholder="usuario@resilio.com" required>
                     </div>
                 </div>
 
                 <div class="input-field">
-                    <label data-i18n="passwordLabel">Contraseña</label>
+                    <label for="login-password" data-i18n="passwordLabel">Contraseña</label>
                     <div class="input-icon-wrapper">
-                        <i class="fas fa-fingerprint"></i>
-                        <input type="password" name="password" placeholder="••••••••" required>
+                        <i class="fas fa-fingerprint" aria-hidden="true"></i>
+                        <input id="login-password" autocomplete="current-password" type="password" name="password" placeholder="••••••••" required>
                     </div>
                 </div>
 
@@ -105,69 +80,41 @@
             </form>
         </div>
     </div>
+    </main>
 
     <script>
-        // Sistema de traducciones
-        const translations = {
-            es: {
-                tagline: "Equilibrio entre mente y código",
-                emailLabel: "Email Corporativo o Personal",
-                passwordLabel: "Contraseña",
-                recordarme: "Recordarme",
-                olvidasteContrasena: "¿Olvidaste tu contraseña?",
-                iniciarSesion: "Iniciar Sesión",
-                noTienesCuenta: "¿Aún no tienes cuenta?",
-                registrate: "Regístrate"
+        // Textos de esta página (el motor está en static/js/i18n.js)
+        Resilio.i18n.add({
+            "es": {
+                "tagline": "Equilibrio entre mente y código",
+                "emailLabel": "Email Corporativo o Personal",
+                "passwordLabel": "Contraseña",
+                "recordarme": "Recordarme",
+                "olvidasteContrasena": "¿Olvidaste tu contraseña?",
+                "iniciarSesion": "Iniciar Sesión",
+                "noTienesCuenta": "¿Aún no tienes cuenta?",
+                "registrate": "Regístrate"
             },
-            en: {
-                tagline: "Balance between mind and code",
-                emailLabel: "Corporate or Personal Email",
-                passwordLabel: "Password",
-                recordarme: "Remember me",
-                olvidasteContrasena: "Forgot your password?",
-                iniciarSesion: "Sign In",
-                noTienesCuenta: "Don't have an account?",
-                registrate: "Sign up"
+            "en": {
+                "tagline": "Balance between mind and code",
+                "emailLabel": "Corporate or Personal Email",
+                "passwordLabel": "Password",
+                "recordarme": "Remember me",
+                "olvidasteContrasena": "Forgot your password?",
+                "iniciarSesion": "Sign In",
+                "noTienesCuenta": "Don't have an account?",
+                "registrate": "Sign up"
             },
-            ca: {
-                tagline: "Equilibri entre ment i codi",
-                emailLabel: "Email Corporatiu o Personal",
-                passwordLabel: "Contrasenya",
-                recordarme: "Recorda'm",
-                olvidasteContrasena: "Has oblidat la contrasenya?",
-                iniciarSesion: "Iniciar Sessió",
-                noTienesCuenta: "Encara no tens compte?",
-                registrate: "Registra't"
+            "ca": {
+                "tagline": "Equilibri entre ment i codi",
+                "emailLabel": "Email Corporatiu o Personal",
+                "passwordLabel": "Contrasenya",
+                "recordarme": "Recorda'm",
+                "olvidasteContrasena": "Has oblidat la contrasenya?",
+                "iniciarSesion": "Iniciar Sessió",
+                "noTienesCuenta": "Encara no tens compte?",
+                "registrate": "Registra't"
             }
-        };
-        
-        function setLanguage(lang) {
-            localStorage.setItem('resilio-language', lang);
-            applyTranslations(lang);
-        }
-        
-        function applyTranslations(lang) {
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
-            });
-            document.documentElement.lang = lang;
-
-            // Update language switcher buttons
-            document.querySelectorAll('.language-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.lang === lang) {
-                    btn.classList.add('active');
-                }
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('resilio-language') || 'es';
-            applyTranslations(savedLang);
         });
     </script>
 </body>
